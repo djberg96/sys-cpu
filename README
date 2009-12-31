@@ -1,0 +1,84 @@
+== Description
+   A Ruby interface for getting cpu information.
+
+== Installation
+=== Standard Installation
+   rake test (optional)
+   rake install (non-gem)
+=== Gem installation
+   rake test (optional)
+   ruby sys-cpu.gemspec
+   gem install sys-cpu-X.Y.Z.gem # where 'X.Y.Z' corresponds to the version.
+
+== Notes
+=== All Platforms
+   As of version 0.5.0 Ruby 1.8.0 or later is required.  It may work with
+   earlier versions, but I will not support it.
+   
+   I do not support any Ruby 1.8.x branch after 1.8.6. It should work on those
+   versions of Ruby but if it breaks I'm not going to go out of my way to fix
+   it. I will, however, support the 1.9.x/2.x branch.
+
+=== Solaris
+   Currently there is no 'processors()' iterative method for multi-cpu systems.
+   I plan to add it this in a future release.
+   
+=== OS X
+   The CPU.freq method is not supported at the moment. The sysctl() approach
+   returns a bogus, hard coded value of some sort. I suspect it's possible
+   by using kernel modules via kldload(), but I'm not sure how yet.
+
+=== Linux
+   This is pure Ruby.  This version reads information out of /proc/cpuinfo and
+   /proc/loadavg, so if /proc isn't mounted it won't work.
+
+   The key-value information in /proc/cpuinfo is stored internally (i.e. in
+   memory) as an array of hashes when you first 'require' this package.  This
+   overhead is exceptionally minimal, given that your average cpuinfo file
+   contains less than 1k of text (and I don't store whitespace or newlines).
+
+   The text documentation for Linux is dynamically generated during the
+   build process because the fields vary depending on your setup.  So, don't
+   look at it until *after* you've installed it.  You will see a doc/linux.txt
+   file after you run 'rake install' (via install.rb).
+
+=== HP-UX
+   Unlike other platforms, you can get load averages for an individual cpu in
+   multi-cpu systems. See documentation for more details.
+
+=== MS Windows
+   This is a pure Ruby implementation using the win32ole package + WMI. The C
+   version has been scrapped. 
+
+   As of version 0.5.0, the CPU.usage method has been removed in favor of the
+   CPU.load_avg method.  This does not (currently) use a perf counter, so there
+   is no longer any delay.  Also, the 'processors' method has been
+   added and the 'supported' method has been dropped.  See the documentation
+   for other changes.
+   
+== Acknowledgements
+   Thanks go to the MPlayer team for some source code that helped me on
+   certain versions of FreeBSD.
+
+== Known Bugs
+   None that I'm aware of. Please report bugs on the project page at
+   http://www.rubyforge.org/projects/sysutils.
+
+== Future Plans
+   Add iterative CPU.processors method.
+   Make CPU.freq work on OS X.
+   Add more information in general, such as what 'prtdiag' shows.
+
+== License
+   Artistic 2.0
+
+== Copyright
+   (C) 2003-2009 Daniel J. Berger, All Rights Reserved
+
+== Warranty
+   This package is provided "as is" and without any express or
+   implied warranties, including, without limitation, the implied
+   warranties of merchantability and fitness for a particular purpose.
+
+== Author
+   Daniel J. Berger

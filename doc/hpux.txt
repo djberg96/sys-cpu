@@ -1,0 +1,54 @@
+== Description
+   Sys::CPU - An interface for various cpu statistics
+   
+== Synopsis
+   require "sys/cpu"
+   include Sys
+
+   puts "Mhz: " + CPU.cpu_freq.to_s
+   puts "State: " + CPU.state(0)
+   puts "Number of cpu's on this system: " + CPU.num_cpu.to_s
+   puts "Number of active cpu's: " + CPU.num_active_cpu.to_s
+   puts "Load averages: " + CPU.load_avg.join(", ")
+   
+== Constants
+VERSION
+   Returns the current version number for this package.
+    
+== Class Methods
+CPU.architecture
+   Returns the cpu architecture, e.g. PA RISC 1.2, etc.
+    
+CPU.freq(cpu_num=0)
+   Returns an integer indicating the speed (i.e. frequency in Mhz) of
+   the cpu.
+    
+CPU.load_avg
+CPU.load_avg(cpu_num)
+CPU.load_avg{ |cpu| ... }
+
+   In non-block form returns an array of three floats indicating the 1, 5
+   and 15 minute overall load average.
+
+   In block form, it returns an array of three floats indicating the 1, 5
+   and 15 minute load average for each cpu.  Only useful on multi-cpu
+   systems.
+
+   If 'cpu_num' is provided, returns the load average (as a 3-element
+   array) for that cpu only.
+
+   You cannot provide a cpu number and use block form at the same time.
+    
+CPU.num_cpu
+   Returns an integer indicating the number of cpu's on the system.
+    
+CPU.num_active_cpu
+   Returns an integer indicating the number of active cpu's on the system.
+    
+== Error Classes
+CPU::Error < StandardError
+   Raised is response to internal function errors, usually relating to an
+   invalid cpu number.
+    
+== More Information
+See the README file for more information.

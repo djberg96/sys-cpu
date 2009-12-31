@@ -1,0 +1,130 @@
+== Description
+   Sys::CPU - An interface for various cpu statistics
+    
+== Synopsis
+   require "sys/cpu"
+   include Sys
+
+   CPU.processors{ |cs|
+      cs.members.each{ |m|
+         puts "#{m}: " + cs[m].to_s
+      }
+   }
+
+   puts "CPU Speed (Frequency): " + CPU.freq(0).to_s
+   puts "Load avg: " + CPU.load_avg.to_s
+   puts "Num CPU: " + CPU.num_cpu.to_s
+   puts "Type: " + CPU.type
+   puts "Model: " + CPU.model
+   puts "Architecture: " + CPU.architecture
+    
+== Constants
+VERSION
+   Returns the current version number for this package.
+    
+== Class Methods
+CPU.architecture(host=localhost)
+   Returns the architecture of the cpu, e.g. x86 Family 15 Model 2
+    
+CPU.freq(cpu_num=0, host=localhost)
+   Returns an integer indicating the speed (i.e. frequency in Mhz) of
+   'cpu_num'.  If cpu_num+1 is greater than the number of cpu's on
+   your system, or this call fails for any other reason, a CPUError
+   is raised.
+    
+CPU.load_avg(host=localhost)
+   Returns the load capacity of each processor, averaged to the last second.
+   Processor loading refers to the total computing burden for each
+   processor at one time.
+	
+   Note that this attribute is actually the LoadPercentage.  I may use
+   one of the Win32_Perf* classes in the future.
+	
+CPU.model(host=localhost)
+   Returns a string indicating the cpu model, e.g. Intel Pentium 4
+    
+CPU.num_cpu(host=localhost)
+   Returns an integer indicating the number of cpu's on the system.
+    
+CPU.processors(host=localhost){ |cpu| ... }
+   Returns a CPUStruct for each CPU on the system containing the following
+   members:
+	
+   * address_width
+   * architecture
+   * availability
+   * caption
+   * config_manager_error_code
+   * config_manager_user_config
+   * cpu_status
+   * creation_class_name
+   * freq
+   * voltage
+   * data_width
+   * description
+   * device_id
+   * error_cleared?
+   * error_description
+   * ext_clock
+   * family
+   * install_date
+   * l2_cache_size
+   * l2_cache_speed
+   * last_error_code
+   * level
+   * load_avg
+   * manufacturer
+   * max_clock_speed
+   * name
+   * other_family_description
+   * pnp_device_id
+   * power_management_supported?
+   * power_management_capabilities
+   * processor_id
+   * processor_type
+   * revision
+   * role
+   * socket_designation
+   * status
+   * status_info
+   * stepping
+   * system_creation_class_name
+   * system_name
+   * unique_id
+   * upgrade_method
+   * version
+   * voltage_caps
+   
+   Note that not all of these members will necessarily be defined.  See the
+   NOTES section below.
+    
+CPU.type(host=localhost)
+    Returns a string indicating the type of processor, e.g. GenuineIntel.
+    
+== Exception Classes
+CPU::Error < StandardError
+   Raised is response to internal function errors, most likely to be raised
+   in the event that in invalid cpu number is provided for the 'freq'
+   method.
+    
+== Notes
+   Some of the CPUStruct members may be nil.  As far as I can tell, this
+   means that Windows is unable to determine the value for the attribute due
+   to your BIOS and/or BIOS settings.  There is nothing clear in the
+   documentation I could find for this, however.
+	
+   The 'family' attribute may contain the trademark symbol.
+	
+   The 'status_info' attribute was not converted to a string because the
+   'status' attribute already is a string.  I'm not even sure why MS has both
+   versions.
+	
+   The 'system_name' attribute appears to be the hostname.  I have no idea
+   why this is included as part of the CPU information, but there you go.
+	
+   See http://tinyurl.com/2mros (and click on 'Win32_Processor' in the left
+   frame) for a list of attributes and their meaning.  Link courtesy of
+   tinyurl.com.	
+
+== More Information
+See the README file for more information.

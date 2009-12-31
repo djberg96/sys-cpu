@@ -1,0 +1,144 @@
+== 0.6.2 - ???
+* Fixed a bug in the cpu_freq function (which would only be noticed on
+  certain platforms in cases where the CPU.freq method failed). Thanks
+  go to Edho P Arief for the spot.
+* Explicitly add sys/param.h on OpenBSD, and default to the HW_MODEL mib
+  because HW_MACHINE does not exist. Thanks go to Edho P Arief for the patch.
+* Updated my support notes. In short I will support 1.8.6 and 1.9.x. I will
+  not support any 1.8.x branch later than 1.8.6.
+* Removed redundant information in the various .txt files that is already
+  covered in the README file.
+* Test files renamed.
+* Added test-unit 2.x as a development dependency.
+
+== 0.6.1 - 4-Jan-2009
+* Fix for OS X 10.5.x. Thanks go to Victor Costan for the spot and the patch.
+* Updated the gemspec and some other minor changes.
+* On MS Windows the impersonation level is now explicitly set to 'impersonate'
+  to avoid issues where systems might be using an older version of WMI.
+
+== 0.6.0 - 26-Apr-2007
+* Added support for most BSD flavors, including OS X. The freebsd.c file is
+  now just bsd.c.
+* The CPU.type method for Solaris has been changed to CPU.cpu_type to avoid
+  conflicting with the Object.type method.
+* Added a Rakefile. There are now tasks for building, testing and installing,
+  among other things. Run 'rake -T' to check your options.
+* Many internal directory layout changes - C source files are now under the
+  'ext' directory.
+* Improved RDoc comments in the C source files.
+* Changed CPUError to CPU::Error.
+
+== 0.5.5 - 17-Nov-2006
+* Fixed a bug in the Linux version where there could be a key but no
+   associated value, causing a String#strip! call to fail.  Now the value is
+   simply left at nil.
+* Refactored the CPU.processors method on Linux, including the removal of '?'
+  from the CPUStruct members for the boolean methods (Ruby doesn't like them).
+* Minor tweaks and updates to the documentation, including the README.
+* Modified the gemspec so that it sets the platform properly for Linux
+  and Windows.
+
+== 0.5.4 - 12-Jul-2006
+* Added a gemspec (and a gem on RubyForge).
+* The CPU.architecture method on HP-UX now returns nil if it cannot be
+  determined instead of "Unknown" for consistency with the other
+  platforms.
+* Inlined the RDoc and made some minor cosmetic source code changes.
+
+== 0.5.3 - 4-May-2006
+* Fixed in a bug in the Solaris version where CPU.load_avg returned bad values
+  when compiled in 64 bit mode.  Thanks go to James Hranicky for the spot and
+  both James Hranicky and Peter Tribble (via comp.unix.solaris) for patches.
+* Made some modifications to the test suite.  You know longer need to know
+  which test suite to run.  All platforms now use 'ts_all.rb', which will run
+  the appropriate test case behind the scenes.
+
+== 0.5.2 - 24-Jun-2005
+* Bug fixed on Linux where empty lines could cause problems.  This affected
+  both the install.rb and linux.rb files, though it only seems to have been
+  an issue on the 2.6+ kernel.
+* Altered the behavior of the CPU.cpu_stats method on Linux.  Now, only the
+  numbered cpu entries return associated data, unless the numberless entry
+  is the only entry.
+* Added a sample program for Linux under the 'examples' directory.
+
+== 0.5.1 - 5-May-2005
+* Fixed a potential bug in the FreeBSD version of CPU.model.
+* Eliminated some warnings in the FreeBSD version.
+* Moved examples directory to the toplevel package directory.
+* Renamed and updated the sample scripts.
+* Added a sample script for FreeBSD.
+* Removed the INSTALL file.  That information is now included in the README.
+* Made the CHANGES, README, and .txt files rdoc friendly.
+* The dynamic documentation generation for Linux has been altered.  Anything
+  relating to rd2 has been removed.  The doc file generated is now
+  doc/linux.txt.
+* Some $LOAD_PATH setup changes in the unit tests.
+
+== 0.5.0 - 26-Jun-2004
+* Now requires Ruby 1.8.0 or later.
+* FreeBSD support added.
+* Replaced 'CPUException' with 'CPUError'
+* The MS Windows version has been completely revamped to use WMI instead of
+  the C API.  Some method names have changed and some methods have been
+  dropped entirely.  Please see the documentation for details.
+* Corresponding documentation updates and test suite changes.
+* Sample programs have been moved to doc/examples.
+* Installation procedure somewhat revamped.
+* No longer autogenerates test file.
+* The .html files have been removed.  You can generate the html on your own
+  if you like.
+
+== 0.4.0 - 18-Sep-2003
+* Added MS Windows support
+* Changed some method names.  The "cpu" has been dropped from most method
+  names.  See documentation for details.
+* The state() and freq() methods (where supported) now assume a default 
+  value of zero.
+* More unit tests added.
+* Fixed minor issue with test.rb for those without TestUnit installed.
+* Fixed issue with linux.rb file being auto-installed on non-Linux platforms.
+* Minor API change for the load_avg() method on HP-UX.  It now accepts a
+  CPU number as an argument.
+
+== 0.3.1 - 16-Jul-2003
+* Fixed a bug in the Solaris version that was using up and not
+  freeing file descriptors.
+* Added html doc for Solaris under doc directory.
+* Minor changes to test_hpux.rb and test_sunos.rb
+* Minor README changes.
+
+== 0.3.0 - 30-Jun-2003
+* Added HP-UX support
+* Removed the VERSION class method.  Use the constant instead
+* Changed license to "Artistic"
+* Moved version info into its own file for convenience
+* Some minor mods to the test suites
+* Modified extconf.rb, moving some of the dynamic test generation
+  into separate files
+
+== 0.2.2 - 25-Mar-2003
+* fpu_type and cpu_type now return nil if not found (Solaris)
+* CPUException is now a direct subclass of StandardError
+* Modified extconf.rb script
+* Minor doc updates
+* Added another test to the solaris test suite
+* Important note added to INSTALL file
+
+== 0.2.1 - 12-Mar-2003
+* Added the cpu_stats() class method for Linux, which contains the
+  data from the 'cpu' lines of /proc/stat
+* Minor fix for extconf.rb (thanks Michael Granger)
+* Some tests added to Linux test suite
+* MANIFEST correction
+
+== 0.2.0 - 13-Feb-2003
+* Linux support added (pure Ruby only)
+* Many changes to extconf.rb to support Linux version
+* sys-uname prerequisite dropped
+* rd2 documentation now kept separate from source
+
+== 0.1.0 - 3-Feb-2003
+* Initial release
+* Currently supports Solaris (only)

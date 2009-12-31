@@ -88,5 +88,5 @@ Rake::TestTask.new do |t|
    end
 
    t.libs << 'test'
-   t.test_files = FileList['test/tc_cpu.rb']
+   t.test_files = FileList['test/test_sys_cpu.rb']
 end

@@ -3,6 +3,7 @@
 
 == Installation
    gem install sys-cpu
+   gem install sys-cpu --platform mswin32 # MS Windows
 
 == Notes
 === All Platforms

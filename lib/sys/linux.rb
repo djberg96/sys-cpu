@@ -2,104 +2,121 @@
 # linux.rb (sys-cpu) - pure Ruby version for Linux
 ##########################################################
 module Sys
-   cpu_file     = "/proc/cpuinfo"
-   cpu_hash     = {}
-   $cpu_array   = []
 
-   # Parse the info out of the /proc/cpuinfo file
-   IO.foreach(cpu_file){ |line|
-      line.strip!
-      next if line.empty?
+  # :stopdoc:
+  
+  cpu_file   = "/proc/cpuinfo"
+  cpu_hash   = {}
+  $cpu_array = []
 
-      key, val = line.split(":")
-      key.strip!
-      key.gsub!(/\s+/,"_")
-      key.downcase!
-      val.strip! if val
+  # Parse the info out of the /proc/cpuinfo file
+  IO.foreach(cpu_file){ |line|
+    line.strip!
+    next if line.empty?
 
-      if cpu_hash.has_key?(key)
-         $cpu_array.push(cpu_hash.dup)
-         cpu_hash.clear
-      end
+    key, val = line.split(":")
+    key.strip!
+    key.gsub!(/\s+/,"_")
+    key.downcase!
+    val.strip! if val
+
+    if cpu_hash.has_key?(key)
+      $cpu_array.push(cpu_hash.dup)
+      cpu_hash.clear
+    end
       
-      # Turn yes/no attributes into booleans
-      if val == 'yes'
-         val = true
-      elsif val == 'no'
-         val = false
+    # Turn yes/no attributes into booleans
+    if val == 'yes'
+      val = true
+    elsif val == 'no'
+      val = false
+    end
+
+    cpu_hash[key] = val
+  }
+
+  $cpu_array.push(cpu_hash)
+
+  # :startdoc:
+
+  class CPU
+
+    # The version of the sys-cpu library.
+    VERSION = '0.6.2'
+
+    # :stopdoc:
+
+    CPUStruct = Struct.new("CPUStruct", *$cpu_array.first.keys)
+
+    # :startdoc:
+
+    # In block form, yields a CPUStruct for each CPU on the system.  In
+    # non-block form, returns an Array of CPUStruct's.
+    #
+    # The exact members of the struct vary on Linux systems.
+    #
+    def self.processors
+      array = []
+      $cpu_array.each{ |hash|
+        struct = CPUStruct.new
+        struct.members.each{ |m| struct.send("#{m}=", hash[m]) }
+        if block_given?
+          yield struct
+        else
+          array << struct
+        end
+      }
+      array unless block_given?
+    end
+
+    private
+
+    # Create singleton methods for each of the attributes.
+    #
+    def self.method_missing(id, arg=0)
+      rv = $cpu_array[arg][id.to_s]
+      if rv.nil?
+        id = id.to_s + "?"
+        rv = $cpu_array[arg][id]
       end
-      cpu_hash[key] = val
-   }
+      rv
+    end
 
-   $cpu_array.push(cpu_hash)
+    public
 
-   class CPU
+    # Returns a 3 element Array corresponding to the 1, 5 and 15 minute
+    # load average for the system.
+    #
+    def self.load_avg
+      load_avg_file = "/proc/loadavg"
+      IO.readlines(load_avg_file).first.split[0..2].map{ |e| e.to_f }
+    end
 
-      VERSION = '0.6.2'
-      CPUStruct = Struct.new("CPUStruct", *$cpu_array.first.keys)
+    # Returns a hash of arrays that contain the number of seconds that the
+    # system spent in user mode, user mode with low priority (nice), system
+    # mode, and the idle task, respectively.
+    #
+    def self.cpu_stats
+      cpu_stat_file = "/proc/stat"
+      hash = {} # Hash needed for multi-cpu systems
 
-      # In block form, yields a CPUStruct for each CPU on the system.  In
-      # non-block form, returns an Array of CPUStruct's.
-      #
-      # The exact members of the struct vary on Linux systems.
-      #
-      def self.processors
-         array = []
-         $cpu_array.each{ |hash|
-            struct = CPUStruct.new
-            struct.members.each{ |m| struct.send("#{m}=", hash[m]) }
-            if block_given?
-               yield struct
-            else
-               array << struct
-            end
-         }
-         array unless block_given?
-      end
+      lines = IO.readlines(cpu_stat_file)
 
-      #--
-      # Create singleton methods for each of the attributes
-      #
-      def self.method_missing(id,arg=0)
-         rv = $cpu_array[arg][id.to_s]
-         if rv.nil?
-            id = id.to_s + "?"
-            rv = $cpu_array[arg][id]
-         end
-         rv
-      end
-
-      # Returns a 3 element Array corresponding to the 1, 5 and 15 minute
-      # load average for the system.
-      #
-      def self.load_avg
-         load_avg_file = "/proc/loadavg"
-         IO.readlines(load_avg_file).first.split[0..2].map{|e| e.to_f}
-      end
-
-      # Returns a hash of arrays that contain the number of seconds that the
-      # system spent in user mode, user mode with low priority (nice), system
-      # mode, and the idle task, respectively.
-      #
-      def self.cpu_stats
-         cpu_stat_file = "/proc/stat"
-         hash = {} # Hash needed for multi-cpu systems
-
-         lines = IO.readlines(cpu_stat_file)
-         lines.each_with_index{ |line, i|
-            array = line.split
-            break unless array[0] =~ /cpu/   # 'cpu' entries always on top
+      lines.each_with_index{ |line, i|
+        array = line.split
+        break unless array[0] =~ /cpu/   # 'cpu' entries always on top
             
-            # Some machines list a 'cpu' and a 'cpu0'.  In this case, only
-            # return values for the numbered cpu entry.
-            if lines[i].split[0] == "cpu" && lines[i+1].split[0] =~ /cpu\d/
-               next
-            end
+        # Some machines list a 'cpu' and a 'cpu0'. In this case only
+        # return values for the numbered cpu entry.
+        if lines[i].split[0] == "cpu" && lines[i+1].split[0] =~ /cpu\d/
+          next
+        end
 
-            vals = array[1..-1].map{ |e| e = e.to_i / 100 } # 100 jiffies/sec.
-            hash[array[0]] = vals
-         }
-         hash
-      end
-   end
+        vals = array[1..-1].map{ |e| e = e.to_i / 100 } # 100 jiffies/sec.
+        hash[array[0]] = vals
+      }
+
+      hash
+    end
+  end
 end

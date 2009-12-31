@@ -2,13 +2,7 @@
    A Ruby interface for getting cpu information.
 
 == Installation
-=== Standard Installation
-   rake test (optional)
-   rake install (non-gem)
-=== Gem installation
-   rake test (optional)
-   ruby sys-cpu.gemspec
-   gem install sys-cpu-X.Y.Z.gem # where 'X.Y.Z' corresponds to the version.
+   gem install sys-cpu
 
 == Notes
 === All Platforms

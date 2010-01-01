@@ -30,6 +30,12 @@ task :build => [:clean] do
   end
 end
 
+desc "Build the gem."
+task :gem do
+  spec = eval(IO.read('sys-cpu.gemspec'))
+  Gem::Builder.new(spec).build
+end
+
 if Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
   desc "Install the sys-cpu library"
   task :install do

@@ -37,14 +37,11 @@ Gem::Specification.new do |spec|
       spec.require_paths = ['lib', 'lib/windows']
       spec.extra_rdoc_files << 'lib/sys/cpu.rb'
       spec.platform = Gem::Platform::CURRENT
-      spec.files.reject!{ |f| f.include?('ext') }
     when /linux/i
       spec.require_paths = ['lib', 'lib/linux']
       spec.extra_rdoc_files << 'lib/sys/cpu.rb'
       spec.platform = Gem::Platform::CURRENT
-      spec.files.reject!{ |f| f.include?('ext') }
     else
       spec.extensions = ['ext/extconf.rb']
-      spec.files.reject!{ |f| f.include?('lib') }
    end
 end

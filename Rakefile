@@ -80,13 +80,10 @@ task :example => [:build] do
 end
 
 Rake::TestTask.new do |t|
-  if Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
-    t.libs << 'lib'
-    if Config::CONFIG['host_os'].match('linux')
-       FileUtils.cp('lib/sys/linux.rb', 'lib/sys/cpu.rb')
-     else
-       FileUtils.cp('lib/sys/windows.rb', 'lib/sys/cpu.rb')
-     end
+  if Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|windows/i
+    t.libs << 'lib/windows'
+  elsif Config::CONFIG['host_os'] =~ /linux/i
+    t.libs << 'lib/windows'
   else
     task :test => :build
     t.libs << 'ext'

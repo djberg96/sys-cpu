@@ -12,16 +12,16 @@ install_dir = File.join(CONFIG['sitelibdir'], 'sys')
 file = ""
 
 case CONFIG['host_os']
-   when /windows|win32|mingw|cygwin|dos/i
-      file = "lib/sys/windows.rb"
-   when /linux/i
-      file = "lib/sys/linux.rb"
-   when /sunos|solaris|hpux|freebsd/i
-      STDERR.puts "Use 'extconf.rb/make/make site-install' for this platform"
-      exit
-   else
-      STDERR.puts "This platform is not currently supported.  Exiting..."
-      exit
+  when /windows|win32|mingw|cygwin|dos/i
+    file = "lib/windows/sys/cpu.rb"
+  when /linux/i
+    file = "lib/linux/sys/cpu.rb"
+  when /sunos|solaris|hpux|freebsd/i
+    STDERR.puts "Use 'extconf.rb/make/make site-install' for this platform"
+    exit
+  else
+    STDERR.puts "This platform is not currently supported.  Exiting..."
+    exit
 end
 
 #######################################################################
@@ -32,7 +32,7 @@ end
 if CONFIG['host_os'] =~ /linux/
    cpu_file = "/proc/cpuinfo"
    text_file = "doc/linux.txt"
-   rb_file  = "lib/sys/linux.rb"
+   rb_file  = "lib/linux/sys/cpu.rb"
 
    if File.size(text_file) > 1400
       puts "You appear to have already created the documentation."
@@ -70,12 +70,12 @@ end
 
 # Create the 'sys' toplevel directory if it doesn't already exist
 begin
-   unless File.exist?(install_dir)
-      Dir.mkdir(install_dir)
-   end
+  unless File.exist?(install_dir)
+    Dir.mkdir(install_dir)
+  end
 rescue Errno::EACCES => e
-   puts "Unable to create #{install_dir}: #{e}"
-   exit
+  puts "Unable to create #{install_dir}: #{e}"
+  exit
 end
 
 # Finally, copy the file to the appropriate directory

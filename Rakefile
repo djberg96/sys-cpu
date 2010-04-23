@@ -83,7 +83,7 @@ Rake::TestTask.new do |t|
   if Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|windows/i
     t.libs << 'lib/windows'
   elsif Config::CONFIG['host_os'] =~ /linux/i
-    t.libs << 'lib/windows'
+    t.libs << 'lib/linux'
   else
     task :test => :build
     t.libs << 'ext'

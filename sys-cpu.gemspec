@@ -35,11 +35,11 @@ Gem::Specification.new do |spec|
   case Config::CONFIG['host_os']
     when /mswin|dos|windows|win32|mingw|cygwin/i
       spec.require_paths = ['lib', 'lib/windows']
-      spec.extra_rdoc_files << 'lib/sys/cpu.rb'
+      spec.extra_rdoc_files << 'lib/windows/sys/cpu.rb'
       spec.platform = Gem::Platform::CURRENT
     when /linux/i
       spec.require_paths = ['lib', 'lib/linux']
-      spec.extra_rdoc_files << 'lib/sys/cpu.rb'
+      spec.extra_rdoc_files << 'lib/linux/sys/cpu.rb'
       spec.platform = Gem::Platform::CURRENT
     else
       spec.extensions = ['ext/extconf.rb']

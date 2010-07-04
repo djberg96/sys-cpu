@@ -30,42 +30,43 @@ end
 # has already been written at some point previously and skip it.
 #######################################################################
 if CONFIG['host_os'] =~ /linux/
-   cpu_file = "/proc/cpuinfo"
-   text_file = "doc/linux.txt"
-   rb_file  = "lib/linux/sys/cpu.rb"
+  cpu_file  = "/proc/cpuinfo"
+  text_file = "doc/linux.txt"
+  rb_file   = "lib/linux/sys/cpu.rb"
 
-   if File.size(text_file) > 1400
-      puts "You appear to have already created the documentation."
-      puts "Skipping..."
-   else
-      puts "Dynamically generating documentation..."
-      fh = File.open(text_file,"a+")
+  if File.size(text_file) > 1400
+    puts "You appear to have already created the documentation."
+    puts "Skipping..."
+  else
+    puts "Dynamically generating documentation..."
+    fh = File.open(text_file, 'a')
 
-      IO.foreach(cpu_file){ |line|
-         next if line =~ /^$/
-         k,v = line.split(":")
-         v.strip!.chomp!
-         k.strip!.gsub!(/\s+/,"_")
-         k.downcase!
-         if v =~ /yes|no/i
-	        k += "?"
-         end
-         fh.puts("CPU.#{k}")
-         if v =~ /yes|no/i
-	        k.chop!
-	        msg = "     Returns true if a " + k.gsub(/_/," ") + "exists on"
-	        msg << " this system"
-	        fh.puts(msg)
-         else
-	        fh.puts("     Returns the " + k.gsub(/_/," "))
-         end
-         fh.puts # Add a blank line
-      }
+    IO.foreach(cpu_file){ |line|
+      next if line =~ /^$/
+      k,v = line.split(":")
+         
+      v = v.strip.chomp
+      k = k.strip.gsub(/\s+/, '_').downcase
 
-      fh.puts(doc)
-      fh.close
-      puts "Documentation creation complete"
-   end
+      k += "?" if v =~ /yes|no/i
+
+      fh.puts("CPU.#{k}")
+
+      if v =~ /yes|no/i
+        k.chop!
+        msg = "     Returns true if a " + k.gsub(/_/," ") + "exists on"
+        msg << " this system"
+        fh.puts(msg)
+      else
+        fh.puts("     Returns the " + k.gsub(/_/," "))
+      end
+
+      fh.puts # Add a blank line
+    }
+
+    fh.close
+    puts "Documentation creation complete"
+  end
 end
 
 # Create the 'sys' toplevel directory if it doesn't already exist

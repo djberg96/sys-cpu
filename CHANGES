@@ -1,6 +1,8 @@
 == 0.6.3 - ???
 * Fixed a bug in the install.rb file and refactored it a bit. Thanks go
-  to Di-an Jan for the spot.
+  to Di-an Jan for the spot. Note, however, that this file will eventually
+  be removed and/or integrated into the Linux source file.
+* Fixed the example Rake task, and refactored some of the other tasks.
 
 == 0.6.2 - 1-Jan-2010
 * Fixed a bug in the cpu_freq function (which would only be noticed on

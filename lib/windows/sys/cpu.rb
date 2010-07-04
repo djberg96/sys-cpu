@@ -8,8 +8,8 @@ module Sys
       # Error raised if any of the Sys::CPU methods fail.
       class Error < StandardError; end
 
-      # The version of this library
-      VERSION = '0.6.2'
+      # The version of the sys-cpu library
+      VERSION = '0.6.3'
 
       # Base connect string
       BASE_CS = "winmgmts:{impersonationLevel=impersonate}" # :nodoc:

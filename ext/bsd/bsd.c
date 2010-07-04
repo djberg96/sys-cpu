@@ -281,7 +281,7 @@ void Init_cpu()
     */
    cCPUError = rb_define_class_under(cCPU, "Error", rb_eStandardError);
 
-   /* 0.6.2: The version of the sys-cpu library */
+   /* 0.6.3: The version of the sys-cpu library */
    rb_define_const(cCPU, "VERSION", rb_str_new2(SYS_CPU_VERSION));
 
    /* Class Methods */

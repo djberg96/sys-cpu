@@ -5,6 +5,7 @@ require 'rbconfig'
 
 desc "Clean the build files for the sys-cpu source for UNIX systems"
 task :clean do
+  Dir["*.gem"].each{ |f| File.delete(f) }
   FileUtils.rm_rf('sys') if File.exists?('sys')
   FileUtils.rm_rf('lib/sys/cpu.rb') if File.exists?('lib/sys/cpu.rb')
   Dir.chdir('ext') do
@@ -30,23 +31,17 @@ task :build => [:clean] do
   end
 end
 
-desc "Build the gem."
-task :gem do
-  spec = eval(IO.read('sys-cpu.gemspec'))
-  Gem::Builder.new(spec).build
-end
-
-if Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
-  desc "Install the sys-cpu library"
-  task :install do
-    sh 'ruby install.rb'
+namespace 'gem' do
+  desc "Create the sys-cpu gem"
+  task :create => [:clean] do
+    spec = eval(IO.read('sys-cpu.gemspec'))
+    Gem::Builder.new(spec).build
   end
-else
-  desc "Install the sys-cpu library"
-  task :install => [:build] do
-    Dir.chdir('ext') do
-      sh 'make install'
-    end
+
+  desc "Install the sys-cpu gem"
+  task :install => [:create] do
+    file = Dir["*.gem"].first
+    sh "gem install #{file}"
   end
 end
 
@@ -55,26 +50,26 @@ task :example => [:build] do
   Dir.mkdir('sys') unless File.exists?('sys')
   if Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
     if Config::CONFIG['host_os'].match('linux')
-       FileUtils.cp('lib/sys/linux.rb', 'sys/cpu.rb')
+      cp 'lib/linux/sys/cpu.rb', 'sys' 
     else
-       FileUtils.cp('lib/sys/windows.rb', 'sys/cpu.rb')
+      cp 'lib/windows/sys/cpu.rb', 'sys'
     end
   else
     build_file = 'ext/cpu.' + Config::CONFIG['DLEXT']
-    FileUtils.cp(build_file, 'sys')
+    cp build_file, 'sys'
   end
 
   case Config::CONFIG['host_os']
     when /bsd|darwin|mach|osx/i
-      file = 'examples/test_cpu_bsd.rb'
+      file = 'examples/example_sys_cpu_bsd.rb'
     when /hpux/i
-      file = 'examples/test_cpu_hpux.rb'
+      file = 'examples/example_sys_cpu_hpux.rb'
     when /linux/i
-      file = 'examples/test_cpu_linux.rb'
+      file = 'examples/example_sys_cpu_linux.rb'
     when /sunos|solaris/i
-      file = 'examples/test_cpu_sunos.rb'
+      file = 'examples/example_sys_cpu_sunos.rb'
     when /mswin|win32|cygwin|mingw|dos/i
-      file = 'examples/test_cpu_windows.rb'
+      file = 'examples/example_sys_cpu_windows.rb'
   end
   sh "ruby -I. -Iext -Ilib #{file}"
 end

@@ -1,9 +1,10 @@
-require "mkmf"
-require "fileutils"
+require 'mkmf'
+require 'fileutils'
+require 'rbconfig'
 
 File.delete('cpu.c') if File.exists?('cpu.c')
 
-case RUBY_PLATFORM
+case Config::CONFIG['host_os']
    when /hpux/i
       FileUtils.cp("hpux/hpux.c", "cpu.c")
    when /sunos|solaris/i
@@ -17,7 +18,7 @@ case RUBY_PLATFORM
       have_library("kvm")
       have_header("kvm.h")
    when /linux|dos|windows|win32|mingw|cygwin/i
-      STDERR.puts "Run 'ruby install.rb' instead for this platform"
+      STDERR.puts "Run 'rake gem:install' instead for this platform"
    else
       STDERR.puts "This platform is not currently supported.  Exiting..."
 end

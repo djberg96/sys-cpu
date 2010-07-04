@@ -3,37 +3,39 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'rbconfig'
 
-desc "Clean the build files for the sys-cpu source for UNIX systems"
-task :clean do
-  Dir["*.gem"].each{ |f| File.delete(f) }
-  FileUtils.rm_rf('sys') if File.exists?('sys')
-  FileUtils.rm_rf('lib/sys/cpu.rb') if File.exists?('lib/sys/cpu.rb')
-  Dir.chdir('ext') do
-    unless Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
-      FileUtils.rm_rf('sys') if File.exists?('sys')
-      FileUtils.rm_rf('cpu.c') if File.exists?('cpu.c')
-      build_file = 'cpu.' + Config::CONFIG['DLEXT']
-      sh 'make distclean' if File.exists?(build_file)
+namespace 'C' do
+  desc "Clean the build files for the sys-cpu source for UNIX systems"
+  task :clean do
+    Dir["*.gem"].each{ |f| File.delete(f) }
+    FileUtils.rm_rf('sys') if File.exists?('sys')
+    FileUtils.rm_rf('lib/sys/cpu.rb') if File.exists?('lib/sys/cpu.rb')
+    Dir.chdir('ext') do
+      unless Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
+        FileUtils.rm_rf('sys') if File.exists?('sys')
+        FileUtils.rm_rf('cpu.c') if File.exists?('cpu.c')
+        build_file = 'cpu.' + Config::CONFIG['DLEXT']
+        sh 'make distclean' if File.exists?(build_file)
+      end
     end
   end
-end
 
-desc "Build the sys-cpu library on UNIX systems (but don't install it)"
-task :build => [:clean] do
-  Dir.chdir('ext') do
-    unless Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
-      ruby 'extconf.rb'
-      sh 'make'
-      build_file = 'cpu.' + Config::CONFIG['DLEXT']
-      Dir.mkdir('sys') unless File.exists?('sys')
-      FileUtils.cp(build_file, 'sys')
+  desc "Build the sys-cpu library on UNIX systems"
+  task :build => [:clean] do
+    Dir.chdir('ext') do
+      unless Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
+        ruby 'extconf.rb'
+        sh 'make'
+        build_file = 'cpu.' + Config::CONFIG['DLEXT']
+        Dir.mkdir('sys') unless File.exists?('sys')
+        FileUtils.cp(build_file, 'sys')
+      end
     end
   end
 end
 
 namespace 'gem' do
   desc "Create the sys-cpu gem"
-  task :create => [:clean] do
+  task :create => ['C:clean'] do
     spec = eval(IO.read('sys-cpu.gemspec'))
     Gem::Builder.new(spec).build
   end

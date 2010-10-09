@@ -7,12 +7,15 @@ namespace 'C' do
   desc "Clean the build files for the sys-cpu source for UNIX systems"
   task :clean do
     Dir["*.gem"].each{ |f| File.delete(f) }
-    FileUtils.rm_rf('sys') if File.exists?('sys')
-    FileUtils.rm_rf('lib/sys/cpu.rb') if File.exists?('lib/sys/cpu.rb')
+    
+    rm_rf('sys') if File.exists?('sys')
+    rm_rf('lib/sys/cpu.rb') if File.exists?('lib/sys/cpu.rb')
+
     Dir.chdir('ext') do
       unless Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
-        FileUtils.rm_rf('sys') if File.exists?('sys')
-        FileUtils.rm_rf('cpu.c') if File.exists?('cpu.c')
+        rm_rf('conftest.dSYM') if File.exists?('conftest.dSYM') # OS X
+        rm_rf('sys') if File.exists?('sys')
+        rm_rf('cpu.c') if File.exists?('cpu.c')
         build_file = 'cpu.' + Config::CONFIG['DLEXT']
         sh 'make distclean' if File.exists?(build_file)
       end
@@ -82,7 +85,7 @@ Rake::TestTask.new do |t|
   elsif Config::CONFIG['host_os'] =~ /linux/i
     t.libs << 'lib/linux'
   else
-    task :test => :build
+    task :test => 'C:build'
     t.libs << 'ext'
     t.libs.delete('lib')
   end
@@ -92,3 +95,4 @@ Rake::TestTask.new do |t|
 end
 
 task :default => :test
+task :clean => 'C:clean'

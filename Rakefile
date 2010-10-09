@@ -90,3 +90,5 @@ Rake::TestTask.new do |t|
   t.libs << 'test'
   t.test_files = FileList['test/test_sys_cpu.rb']
 end
+
+task :default => :test

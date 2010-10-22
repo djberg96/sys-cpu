@@ -6,6 +6,7 @@ require 'rbconfig'
 namespace 'C' do
   desc "Clean the build files for the sys-cpu source for UNIX systems"
   task :clean do
+    Dir["**/*.rbc"].each{ |f| File.delete(f) } # Rubinius
     Dir["*.gem"].each{ |f| File.delete(f) }
     
     rm_rf('sys') if File.exists?('sys')

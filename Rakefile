@@ -2,44 +2,35 @@ require 'rake'
 require 'rake/clean'
 require 'rake/testtask'
 require 'rbconfig'
+include Config
 
-namespace 'C' do
-  desc "Clean the build files for the sys-cpu source for UNIX systems"
-  task :clean do
-    Dir["**/*.rbc"].each{ |f| File.delete(f) } # Rubinius
-    Dir["*.gem"].each{ |f| File.delete(f) }
-    
-    rm_rf('sys') if File.exists?('sys')
-    rm_rf('lib/sys/cpu.rb') if File.exists?('lib/sys/cpu.rb')
+CLEAN.include(
+  '**/*.gem',               # Gem files
+  '**/*.rbc',               # Rubinius
+  'ext/cpu.c',              # Temporary file
+  '**/*.o',                 # C object file
+  '**/*.log',               # Ruby extension build log
+  '**/Makefile',            # C Makefile
+  '**/conftest.dSYM',       # OS X build directory
+  "**/*.#{CONFIG['DLEXT']}" # C shared object
+)
 
-    Dir.chdir('ext') do
-      unless Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
-        rm_rf('conftest.dSYM') if File.exists?('conftest.dSYM') # OS X
-        rm_rf('sys') if File.exists?('sys')
-        rm_rf('cpu.c') if File.exists?('cpu.c')
-        build_file = 'cpu.' + Config::CONFIG['DLEXT']
-        sh 'make distclean' if File.exists?(build_file)
-      end
-    end
-  end
-
-  desc "Build the sys-cpu library on UNIX systems"
-  task :build => [:clean] do
-    Dir.chdir('ext') do
-      unless Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
-        ruby 'extconf.rb'
-        sh 'make'
-        build_file = 'cpu.' + Config::CONFIG['DLEXT']
-        Dir.mkdir('sys') unless File.exists?('sys')
-        FileUtils.cp(build_file, 'sys')
-      end
+desc "Build the sys-cpu library on UNIX systems"
+task :build => [:clean] do
+  Dir.chdir('ext') do
+    unless CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|windows|linux/i
+      ruby 'extconf.rb'
+      sh 'make'
+      build_file = 'cpu.' + CONFIG['DLEXT']
+      Dir.mkdir('sys') unless File.exists?('sys')
+      FileUtils.cp(build_file, 'sys')
     end
   end
 end
 
 namespace 'gem' do
   desc "Create the sys-cpu gem"
-  task :create => ['C:clean'] do
+  task :create => [:clean] do
     spec = eval(IO.read('sys-cpu.gemspec'))
     Gem::Builder.new(spec).build
   end
@@ -54,18 +45,18 @@ end
 desc "Run the example program"
 task :example => [:build] do
   Dir.mkdir('sys') unless File.exists?('sys')
-  if Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|linux/i
-    if Config::CONFIG['host_os'].match('linux')
+  if CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|windows|linux/i
+    if CONFIG['host_os'].match('linux')
       cp 'lib/linux/sys/cpu.rb', 'sys' 
     else
       cp 'lib/windows/sys/cpu.rb', 'sys'
     end
   else
-    build_file = 'ext/cpu.' + Config::CONFIG['DLEXT']
+    build_file = 'ext/cpu.' + CONFIG['DLEXT']
     cp build_file, 'sys'
   end
 
-  case Config::CONFIG['host_os']
+  case CONFIG['host_os']
     when /bsd|darwin|mach|osx/i
       file = 'examples/example_sys_cpu_bsd.rb'
     when /hpux/i
@@ -81,12 +72,12 @@ task :example => [:build] do
 end
 
 Rake::TestTask.new do |t|
-  if Config::CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|windows/i
+  if CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|windows/i
     t.libs << 'lib/windows'
-  elsif Config::CONFIG['host_os'] =~ /linux/i
+  elsif CONFIG['host_os'] =~ /linux/i
     t.libs << 'lib/linux'
   else
-    task :test => 'C:build'
+    task :test => :build
     t.libs << 'ext'
     t.libs.delete('lib')
   end
@@ -96,4 +87,3 @@ Rake::TestTask.new do |t|
 end
 
 task :default => :test
-task :clean => 'C:clean'

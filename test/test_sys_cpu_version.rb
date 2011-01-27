@@ -13,6 +13,6 @@ require 'test/unit'
 
 class TC_Sys_CPU_VERSION < Test::Unit::TestCase
   def test_version
-    assert_equal('0.6.3', Sys::CPU::VERSION)
+    assert_equal('0.6.4', Sys::CPU::VERSION)
   end
 end

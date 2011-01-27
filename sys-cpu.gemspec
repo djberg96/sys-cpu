@@ -2,7 +2,7 @@ require 'rubygems'
 
 Gem::Specification.new do |spec|
   spec.name      = 'sys-cpu'
-  spec.version   = '0.6.3'
+  spec.version   = '0.6.4'
   spec.author    = 'Daniel J. Berger'
   spec.email     = 'djberg96 at nospam at gmail dot com'
   spec.homepage  = 'http://www.rubyforge.org/projects/sysutils'
@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.rubyforge_project = 'sysutils'
   spec.extra_rdoc_files  = ['CHANGES', 'README', 'MANIFEST']
 
-  spec.add_development_dependency('test-unit', '>= 2.0.3')
+  spec.add_development_dependency('test-unit', '>= 2.1.2')
 
   spec.description = <<-EOF
     The sys-cpu library provides an interface for gathering information

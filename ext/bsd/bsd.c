@@ -53,45 +53,45 @@ static int64_t rdtsc(void){
  * average.
  */
 static VALUE cpu_load_avg(VALUE klass){
-   double avgs[3];
-   int n, max = 3;
+   int n;
    VALUE v_num_array = rb_ary_new();
 
 #ifdef HAVE_KVM_H
-   kvm_t* k;
+  int max = 3;
+  kvm_t* k;
+  double avgs[3];
 
-   k = malloc(sizeof(kvm_t*));
+  k = malloc(sizeof(kvm_t*));
 
-   if(!kvm_getloadavg(k, avgs, max)){
-      free(k);
-      rb_raise(cCPUError, "error calling kvm_getloadavg(): %s", strerror(errno));
-   }
+  if(!kvm_getloadavg(k, avgs, max)){
+    free(k);
+    rb_raise(cCPUError, "error calling kvm_getloadavg(): %s", strerror(errno));
+  }
 
-   for(n = 0; n < 3; n++)
-      rb_ary_push(v_num_array, rb_float_new(avgs[n]));
+  for(n = 0; n < 3; n++)
+    rb_ary_push(v_num_array, rb_float_new(avgs[n]));
 
-   free(k);
+  free(k);
 #else
 	struct loadavg k;
 	size_t len = sizeof(k);
 
 #ifdef HAVE_SYSCTLBYNAME
-   if(sysctlbyname("vm.loadavg", &k, &len, NULL, 0))
-      rb_raise(cCPUError, "error calling sysctlbyname(): %s", strerror(errno));
+  if(sysctlbyname("vm.loadavg", &k, &len, NULL, 0))
+    rb_raise(cCPUError, "error calling sysctlbyname(): %s", strerror(errno));
 #else
-   int mib[2];
-   mib[0] = CTL_HW;
-   mib[1] = VM_LOADAVG;
+  int mib[2];
+  mib[0] = CTL_HW;
+  mib[1] = VM_LOADAVG;
 
-   if(sysctl(mib, 2, &k, &len, NULL, 0))
-      rb_raise(cCPUError, "error calling sysctl(): %s", strerror(errno));
+  if(sysctl(mib, 2, &k, &len, NULL, 0))
+    rb_raise(cCPUError, "error calling sysctl(): %s", strerror(errno));
+#endif
+  for(n = 0; n < 3; n++)
+    rb_ary_push(v_num_array, rb_float_new(k.ldavg[n] / (float)k.fscale));
 #endif
 
-   for(n = 0; n < 3; n++)
-      rb_ary_push(v_num_array, rb_float_new(k.ldavg[n] / (float)k.fscale));
-#endif
-
-   return v_num_array;
+  return v_num_array;
 }
 
 /*

@@ -4,7 +4,7 @@
 module Sys
 
   # :stopdoc:
-  
+
   cpu_file   = "/proc/cpuinfo"
   cpu_hash   = {}
   $cpu_array = []
@@ -24,7 +24,7 @@ module Sys
       $cpu_array.push(cpu_hash.dup)
       cpu_hash.clear
     end
-      
+
     # Turn yes/no attributes into booleans
     if val == 'yes'
       val = true
@@ -42,7 +42,7 @@ module Sys
   class CPU
 
     # The version of the sys-cpu library.
-    VERSION = '0.6.3'
+    VERSION = '0.6.4'
 
     # :stopdoc:
 
@@ -105,7 +105,7 @@ module Sys
       lines.each_with_index{ |line, i|
         array = line.split
         break unless array[0] =~ /cpu/   # 'cpu' entries always on top
-            
+
         # Some machines list a 'cpu' and a 'cpu0'. In this case only
         # return values for the numbered cpu entry.
         if lines[i].split[0] == "cpu" && lines[i+1].split[0] =~ /cpu\d/

@@ -9,7 +9,7 @@ module Sys
     class Error < StandardError; end
 
     # The version of the sys-cpu library
-    VERSION = '0.6.3'
+    VERSION = '0.6.4'
 
     private
 
@@ -63,17 +63,17 @@ module Sys
       version
       voltage_caps
     /
-      
+
     # The struct returned by the CPU.processors method
     CPUStruct = Struct.new("CPUStruct", *fields) # :nodoc:
 
     public
-      
+
     # Returns the +host+ CPU's architecture, or nil if it cannot be
     # determined.
     #
     def self.architecture(host=Socket.gethostname)
-      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"     
+      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
       rescue WIN32OLERuntimeError => e
@@ -82,14 +82,14 @@ module Sys
         self.get_cpu_arch(wmi.Architecture)
       end
     end
-      
+
     # Returns an integer indicating the speed (i.e. frequency in Mhz) of
     # +cpu_num+ on +host+, or the localhost if no +host+ is specified.
     # If +cpu_num+ +1 is greater than the number of cpu's on your system
     # or this call fails for any other reason, a Error is raised.
     #
     def self.freq(cpu_num = 0, host = Socket.gethostname)
-      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu#{cpu_num}'"    
+      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu#{cpu_num}'"
       begin
         wmi = WIN32OLE.connect(cs)
       rescue WIN32OLERuntimeError => e
@@ -98,7 +98,7 @@ module Sys
         return wmi.CurrentClockSpeed
       end
     end
-      
+
     # Returns the load capacity for +cpu_num+ on +host+, or the localhost
     # if no host is specified, averaged to the last second. Processor
     # loading refers to the total computing burden for each processor at
@@ -108,20 +108,20 @@ module Sys
     # one of the Win32_Perf* classes in the future.
     #
     def self.load_avg(cpu_num = 0, host = Socket.gethostname)
-      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu#{cpu_num}'"    
+      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu#{cpu_num}'"
       begin
         wmi = WIN32OLE.connect(cs)
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
         return wmi.LoadPercentage
-      end    
+      end
     end
-      
+
     # Returns a string indicating the cpu model, e.g. Intel Pentium 4.
     #
     def self.model(host = Socket.gethostname)
-      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"    
+      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
       rescue WIN32OLERuntimeError => e
@@ -130,7 +130,7 @@ module Sys
         return wmi.Name
       end
     end
-      
+
     # Returns an integer indicating the number of cpu's on the system.
     #--
     # This (oddly) requires a different class.
@@ -145,7 +145,7 @@ module Sys
         return wmi.NumberOfProcessors
       end
     end
-      
+
     # Returns a CPUStruct for each CPU on +host+, or the localhost if no
     # +host+ is specified.  A CPUStruct contains the following members:
     #
@@ -250,13 +250,13 @@ module Sys
             self.get_voltage_caps(cpu.VoltageCaps)
           )
         }
-      end           
+      end
     end
 
     # Returns a string indicating the type of processor, e.g. GenuineIntel.
     #
     def self.type(host = Socket.gethostname)
-      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"    
+      cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
       rescue WIN32OLERuntimeError => e
@@ -265,9 +265,9 @@ module Sys
         return wmi.Manufacturer
       end
     end
-            
+
     private
-      
+
     # Convert the ConfigManagerErrorCode number to its corresponding string
     # Note that this value returns nil on my system.
     #
@@ -391,7 +391,7 @@ module Sys
           return nil
       end
     end
-    
+
     # Convert an cpu architecture number to a string
     def self.get_cpu_arch(num)
       case num
@@ -411,7 +411,7 @@ module Sys
           return nil
       end
     end
-    
+
     # convert an Availability number into a string
     def self.get_availability(num)
       case num
@@ -459,9 +459,9 @@ module Sys
           return "Quiesced"
         else
           return nil
-      end     
+      end
     end
-    
+
     # convert CpuStatus to a string form.  Note that values 5 and 6 are
     # skipped because they're reserved.
     def self.get_status(num)
@@ -482,7 +482,7 @@ module Sys
           return nil
       end
     end
-    
+
     # Convert a family number into the equivalent string
     def self.get_family(num)
       case num
@@ -696,7 +696,7 @@ module Sys
           return nil
       end
     end
-    
+
     # Convert power management capabilities number to its equivalent string
     def self.get_pmc(num)
       case num
@@ -720,7 +720,7 @@ module Sys
           return nil
       end
     end
-    
+
     # Convert a processor type into its equivalent string
     def self.get_processor_type(num)
       case num
@@ -740,7 +740,7 @@ module Sys
           return nil
       end
     end
-    
+
     # Convert an upgrade method into its equivalent string
     def self.get_upgrade_method(num)
       case num
@@ -772,7 +772,7 @@ module Sys
           return nil
       end
     end
-    
+
     # Convert return values to voltage cap values (floats)
     def self.get_voltage_caps(num)
       case num

@@ -8,7 +8,6 @@ Gem::Specification.new do |spec|
   spec.homepage  = 'http://www.rubyforge.org/projects/sysutils'
   spec.platform  = Gem::Platform::RUBY
   spec.summary   = 'A Ruby interface for providing CPU information'
-  spec.has_rdoc  = true
   spec.test_file = 'test/test_sys_cpu.rb'
   spec.files     = Dir['**/*'].reject{ |f| f.include?('git') }
 
@@ -25,11 +24,11 @@ Gem::Specification.new do |spec|
 
   case Config::CONFIG['host_os']
     when /hpux/i
-       spec.extra_rdoc_files += ['ext/hpux/hpux.c']
+      spec.extra_rdoc_files += ['ext/hpux/hpux.c']
     when /sunos|solaris/i
-       spec.extra_rdoc_files += ['ext/sunos/sunos.c']
+      spec.extra_rdoc_files += ['ext/sunos/sunos.c']
     when /bsd|darwin|mach|osx/i
-       spec.extra_rdoc_files += ['ext/bsd/bsd.c']
+      spec.extra_rdoc_files += ['ext/bsd/bsd.c']
   end
    
   case Config::CONFIG['host_os']
@@ -40,7 +39,7 @@ Gem::Specification.new do |spec|
     when /linux/i
       spec.require_paths = ['lib', 'lib/linux']
       spec.extra_rdoc_files << 'lib/linux/sys/cpu.rb'
-      spec.platform = Gem::Platform::CURRENT
+      spec.platform = Gem::Platform.new('universal-linux')
     else
       spec.extensions = ['ext/extconf.rb']
    end

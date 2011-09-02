@@ -36,10 +36,14 @@ Gem::Specification.new do |spec|
       spec.require_paths = ['lib', 'lib/windows']
       spec.extra_rdoc_files << 'lib/windows/sys/cpu.rb'
       spec.platform = Gem::Platform::CURRENT
+      spec.platform.cpu = 'universal'
+      spec.platform.version = nil
+      spec.original_platform = spec.platform
     when /linux/i
       spec.require_paths = ['lib', 'lib/linux']
       spec.extra_rdoc_files << 'lib/linux/sys/cpu.rb'
       spec.platform = Gem::Platform.new('universal-linux')
+      spec.original_platform = spec.platform
     else
       spec.extensions = ['ext/extconf.rb']
    end

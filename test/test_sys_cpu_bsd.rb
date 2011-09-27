@@ -24,7 +24,6 @@ class TC_Sys_CPU_BSD < Test::Unit::TestCase
    end
 
    def test_cpu_freq
-      omit_if(Config::CONFIG['host_os'] =~ /darwin/i, 'CPU.freq test skipped on OS X')
       assert_respond_to(CPU, :freq)
       assert_nothing_raised{ CPU.freq }
       assert_kind_of(Integer, CPU.freq)

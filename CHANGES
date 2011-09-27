@@ -1,8 +1,9 @@
-== 0.6.4 - ???
+== 0.6.4 - 27-Sep-2011
 * The CPU.freq method now works on OSX.
 * The CPU.model method on OSX has been altered. Previously it
   returned the machine model. However, the information is limited.
 * Fixed a couple unused variable warnings for the BSD/OSX code.
+* The Linux and Windows gems now have a 'universal' architecture.
 * Refactored the clean task in the Rakefile.
 
 == 0.6.3 - 9-Oct-2010

@@ -30,6 +30,10 @@
 #include <unistd.h>
 #endif
 
+#if defined(__MACH__) && defined(__APPLE__)
+#include <mach/machine.h>
+#endif
+
 VALUE cCPUError;
 
 /****************************************************************************
@@ -126,24 +130,54 @@ static VALUE cpu_num(VALUE klass){
  *    CPU.model
  *
  * Returns a string indicating the cpu model.
+ *--
+ * On OSX I use the hw.cputype instead of hw.model because OSX returns the
+ * machine model instead of the cpu model for some reason. Initial attempts
+ * to add the cpusubtype as well were unreliable.
  */
 static VALUE cpu_model(VALUE klass){
-   char model[64];
-   size_t len = sizeof(model);
+  char model[64];
+  size_t len = sizeof(model);
 
 #ifdef HAVE_SYSCTLBYNAME
-   if(sysctlbyname("hw.model", &model, &len, NULL, 0))
-      rb_raise(cCPUError, "error calling sysctlbyname(): %s", strerror(errno));
-#else
-   int mib[2];
-   mib[0] = CTL_HW;
-   mib[1] = HW_MODEL;
+#if defined(__MACH__) && defined(__APPLE__)
+  int cpu_type;
+  len = sizeof(cpu_type);
 
-   if(sysctl(mib, 2, &model, &len, NULL, 0))
-      rb_raise(cCPUError, "error calling sysctl(): %s", strerror(errno));
+  if(sysctlbyname("hw.cputype", &cpu_type, &len, NULL, 0))
+#else
+  if(sysctlbyname("hw.model", &model, &len, NULL, 0))
+#endif
+    rb_raise(cCPUError, "error calling sysctlbyname(): %s", strerror(errno));
+#else
+  int mib[2];
+
+  mib[0] = CTL_HW;
+  mib[1] = HW_MODEL;
+
+  if(sysctl(mib, 2, &model, &len, NULL, 0))
+    rb_raise(cCPUError, "error calling sysctl(): %s", strerror(errno));
 #endif
 
-   return rb_str_new2(model);
+#if defined(__MACH__) && defined(__APPLE__)
+  // Intel and PowerPC only.
+  switch(cpu_type){
+    case CPU_TYPE_X86:
+    case CPU_TYPE_X86_64:
+      strcpy(model, "Intel");
+      break;
+    case CPU_TYPE_POWERPC:
+    case CPU_TYPE_POWERPC64:
+      strcpy(model, "PowerPC");
+      break;
+    default:
+      strcpy(model, "Unknown"); 
+  }
+
+  // TODO: Add the subtype.
+#endif
+
+  return rb_str_new2(model);
 }
 
 /*

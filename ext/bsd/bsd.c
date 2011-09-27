@@ -218,13 +218,6 @@ static VALUE cpu_machine(VALUE klass){
  *    CPU.freq
  *
  * Returns an integer indicating the speed (i.e. frequency in Mhz) of the cpu.
- *
- * Not supported on OS X.
- *--
- * Not supported on OS X currently. The sysctl() approach returns a bogus
- * hard-coded value.
- *
- * TODO: Fix for OS X.
  */
 static VALUE cpu_freq(VALUE klass){
    int mhz;
@@ -250,8 +243,18 @@ static VALUE cpu_freq(VALUE klass){
 #else
    size_t len = sizeof(mhz);
 #ifdef HAVE_SYSCTLBYNAME
+#if defined(__MACH__) && defined(__APPLE__)
+   size_t freq;
+   len = sizeof(freq);
+
+   if(sysctlbyname("hw.cpufrequency", &freq, &len, 0, 0))
+      rb_raise(cCPUError, "error calling sysctlbyname(): %s", strerror(errno));
+
+   mhz = freq / 1000000;
+#else
    if(sysctlbyname("hw.clockrate", &mhz, &len, 0, 0))
       rb_raise(cCPUError, "error calling sysctlbyname(): %s", strerror(errno));
+#endif
 #else
    int mib[2];
 
@@ -281,7 +284,7 @@ void Init_cpu()
     */
    cCPUError = rb_define_class_under(cCPU, "Error", rb_eStandardError);
 
-   /* 0.6.3: The version of the sys-cpu library */
+   /* 0.6.4: The version of the sys-cpu library */
    rb_define_const(cCPU, "VERSION", rb_str_new2(SYS_CPU_VERSION));
 
    /* Class Methods */

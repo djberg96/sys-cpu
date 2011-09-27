@@ -1,4 +1,7 @@
 == 0.6.4 - ???
+* The CPU.freq method now works on OSX.
+* The CPU.model method on OSX has been altered. Previously it
+  returned the machine model. However, the information is limited.
 * Fixed a couple unused variable warnings for the BSD/OSX code.
 * Refactored the clean task in the Rakefile.
 

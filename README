@@ -3,22 +3,20 @@
 
 = Installation
   gem install sys-cpu
-  gem install sys-cpu --platform mswin32 # MS Windows
+
+  If that doesn't work try one of these:
+
+  gem install sys-cpu --platform linux   # Linux
+  gem install sys-cpu --platform mingw32 # MS Windows
 
 = Notes
-== All Platforms
-  I do not support any Ruby 1.8.x branch after 1.8.6. It should work on those
-  versions of Ruby but if it breaks I'm not going to go out of my way to fix
-  it. I will, however, support the 1.9.x/2.x branch.
-
 == Solaris
   Currently there is no 'processors()' iterative method for multi-cpu systems.
   I plan to add it this in a future release.
    
 == OS X
-  The CPU.freq method is not supported at the moment. The sysctl() approach
-  returns a bogus, hard coded value of some sort. I suspect it's possible
-  by using kernel modules via kldload(), but I'm not sure how yet.
+  The CPU.model method returns very limited information. I do not yet know
+  how to get more detailed information.
 
 == Linux
   This is pure Ruby. This version reads information out of /proc/cpuinfo and
@@ -58,14 +56,13 @@
 
 = Future Plans
   Add iterative CPU.processors method.
-  Make CPU.freq work on OS X.
   Add more information in general, such as what 'prtdiag' shows.
 
 = License
   Artistic 2.0
 
 = Copyright
-  (C) 2003-2009 Daniel J. Berger, All Rights Reserved
+  (C) 2003-2011 Daniel J. Berger, All Rights Reserved
 
 = Warranty
   This package is provided "as is" and without any express or

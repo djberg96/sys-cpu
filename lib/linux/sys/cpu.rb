@@ -42,7 +42,7 @@ module Sys
   class CPU
 
     # The version of the sys-cpu library.
-    VERSION = '0.6.4'
+    VERSION = '0.7.0'
 
     # :stopdoc:
 

@@ -90,23 +90,46 @@ module Sys
     end
 
     def self.machine
-      buf  = 0.chr * 32
-      mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MACHINE])
-      size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+      if respond_to?(:sysctl, true)
+        buf  = 0.chr * 32
+        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MACHINE])
+        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
 
-      sysctl(mib, 2, buf, size, nil, 0)
+        sysctl(mib, 2, buf, size, nil, 0)
 
-      buf.strip
+        buf.strip
+      else
+        buf = 0.chr * 257
+
+        if sysinfo(SI_MACHINE, buf, buf.size) < 0
+          raise Error, "sysinfo function failed"
+        end
+
+        buf.strip
+      end
     end
 
     def self.model
-      buf  = 0.chr * 64
-      mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MODEL])
-      size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+      if respond_to?(:sysctl, true)
+        buf  = 0.chr * 64
+        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MODEL])
+        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
 
-      sysctl(mib, 2, buf, size, nil, 0)
+        sysctl(mib, 2, buf, size, nil, 0)
 
-      buf.strip
+        buf.strip
+      else
+        pinfo = ProcInfo.new
+
+        # Some systems start at 0, some at 1
+        if processor_info(0, pinfo) < 0
+          if processor_info(1, pinfo) < 0
+            raise Error, "process_info function failed"
+          end
+        end
+
+        pinfo[:pi_processor_type].to_s
+      end
     end
 
     def self.freq

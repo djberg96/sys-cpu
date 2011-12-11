@@ -14,6 +14,8 @@ module Sys
     HW_MACHINE_ARCH = 12 # CPU frequency
     HW_CPU_FREQ     = 15 # CPU frequency
 
+    SI_MACHINE          = 5
+    SI_ARCHITECTURE     = 6
     SC_NPROCESSORS_ONLN = 15
 
     begin
@@ -28,10 +30,12 @@ module Sys
       attach_function :getloadavg, [:pointer, :int], :int
       attach_function :processor_info, [:int, :pointer], :int
       attach_function :sysconf, [:int], :long
+      attach_function :sysinfo, [:int, :pointer, :long], :int
 
       private_class_method :getloadavg
       private_class_method :processor_info
       private_class_method :sysconf
+      private_class_method :sysinfo
     rescue FFI::NotFoundError
       # Do nothing, not supported on this platform.
     end
@@ -46,13 +50,23 @@ module Sys
     end
 
     def self.architecture
-      buf  = 0.chr * 64
-      mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MACHINE_ARCH])
-      size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+      if self.respond_to?(:sysctl, true)
+        buf  = 0.chr * 64
+        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MACHINE_ARCH])
+        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
 
-      sysctl(mib, 2, buf, size, nil, 0)
+        sysctl(mib, 2, buf, size, nil, 0)
 
-      buf.strip
+        buf.strip
+      else
+        buf = 0.chr * 257
+
+        if sysinfo(SI_ARCHITECTURE, buf, buf.size) < 0
+          raise Error, "sysinfo function failed"
+        end
+
+        buf.strip
+      end
     end
 
     def self.num_cpu

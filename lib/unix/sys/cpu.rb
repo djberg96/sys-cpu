@@ -6,6 +6,12 @@ module Sys
     extend FFI::Library
     ffi_lib FFI::Library::LIBC
 
+    # Error raised if any of the CPU methods fail.
+    class Error < StandardError; end
+
+    # The version of the sys-cpu library
+    VERSION = '0.7.0'
+
     CTL_HW = 6 # Generic hardware/cpu
 
     HW_MACHINE      = 1  # Machine class

@@ -24,6 +24,13 @@ module Sys
     SI_ARCHITECTURE     = 6
     SC_NPROCESSORS_ONLN = 15
 
+    P_OFFLINE  = 1
+    P_ONLINE   = 2
+    P_FAULTED  = 4
+    P_POWEROFF = 5
+    P_NOINTR   = 6
+    P_SPARE    = 7
+
     begin
       attach_function :sysctl, [:pointer, :uint, :pointer, :pointer, :pointer, :size_t], :int
       private_class_method :sysctl
@@ -170,6 +177,33 @@ module Sys
         end
 
         loadavg.get_array_of_double(0, 3)
+      end
+    end
+
+    def self.state(num = 0)
+      raise NoMethodError unless respond_to?(:processor_info, true)
+
+      pinfo = ProcInfo.new
+
+      if processor_info(num, pinfo) < 0
+        raise Error, "process_info function failed"
+      end
+
+      case pinfo[:pi_state].to_i
+        when P_ONLINE
+          "online"
+        when P_OFFLINE
+          "offline"
+        when P_POWEROFF
+          "poweroff"
+        when P_FAULTED
+          "faulted"
+        when P_NOINTR
+          "nointr"
+        when P_SPARE
+          "spare"
+        else
+          "unknown"
       end
     end
   end

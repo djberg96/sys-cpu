@@ -133,13 +133,26 @@ module Sys
     end
 
     def self.freq
-      buf  = 0.chr * 16
-      mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_CPU_FREQ])
-      size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+      if respond_to?(:sysctl, true)
+        buf  = 0.chr * 16
+        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_CPU_FREQ])
+        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
 
-      sysctl(mib, 2, buf, size, nil, 0)
+        sysctl(mib, 2, buf, size, nil, 0)
 
-      buf.unpack("I*").first / 1000000
+        buf.unpack("I*").first / 1000000
+      else
+        pinfo = ProcInfo.new
+
+        # Some systems start at 0, some at 1
+        if processor_info(0, pinfo) < 0
+          if processor_info(1, pinfo) < 0
+            raise Error, "process_info function failed"
+          end
+        end
+
+        pinfo[:pi_clock].to_i
+      end
     end
 
     def self.load_avg

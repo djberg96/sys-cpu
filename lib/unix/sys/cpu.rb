@@ -14,6 +14,8 @@ module Sys
     HW_MACHINE_ARCH = 12 # CPU frequency
     HW_CPU_FREQ     = 15 # CPU frequency
 
+    SC_NPROCESSORS_ONLN = 15
+
     begin
       attach_function :sysctl, [:pointer, :uint, :pointer, :pointer, :pointer, :size_t], :int
       private_class_method :sysctl
@@ -21,11 +23,26 @@ module Sys
       # Do nothing, not supported on this platform.
     end
 
+    # Solaris
     begin
       attach_function :getloadavg, [:pointer, :int], :int
+      attach_function :processor_info, [:int, :pointer], :int
+      attach_function :sysconf, [:int], :long
+
       private_class_method :getloadavg
+      private_class_method :processor_info
+      private_class_method :sysconf
     rescue FFI::NotFoundError
       # Do nothing, not supported on this platform.
+    end
+
+    class ProcInfo < FFI::Struct
+      layout(
+        :pi_state, :int,
+        :pi_processor_type, [:char, 16],
+        :pi_fputypes, [:char, 32],
+        :pi_clock, :int
+      )
     end
 
     def self.architecture
@@ -39,13 +56,23 @@ module Sys
     end
 
     def self.num_cpu
-      buf  = 0.chr * 4
-      mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_NCPU])
-      size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+      if self.respond_to?(:sysctl, true)
+        buf  = 0.chr * 4
+        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_NCPU])
+        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
 
-      sysctl(mib, 2, buf, size, nil, 0)
+        sysctl(mib, 2, buf, size, nil, 0)
 
-      buf.strip.unpack("C").first
+        buf.strip.unpack("C").first
+      else
+        num = sysconf(SC_NPROCESSORS_ONLN)
+
+        if num < 0
+          raise Error, "sysconf function failed"
+        end
+
+        num
+      end
     end
 
     def self.machine
@@ -81,7 +108,11 @@ module Sys
     def self.load_avg
       if respond_to?(:getloadavg, true)
         loadavg = FFI::MemoryPointer.new(:double, 3)
-        getloadavg(loadavg, loadavg.size)
+
+        if getloadavg(loadavg, loadavg.size) < 0
+          raise Error, "getloadavg function failed"
+        end
+
         loadavg.get_array_of_double(0, 3)
       end
     end

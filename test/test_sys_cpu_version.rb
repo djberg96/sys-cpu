@@ -12,7 +12,7 @@ require 'sys/cpu'
 require 'test/unit'
 
 class TC_Sys_CPU_VERSION < Test::Unit::TestCase
-  def test_version
-    assert_equal('0.6.4', Sys::CPU::VERSION)
+  test "version number is set to the expected value" do
+    assert_equal('0.7.0', Sys::CPU::VERSION)
   end
 end

@@ -180,6 +180,20 @@ module Sys
       end
     end
 
+    def self.fpu_type
+      raise NoMethodError unless respond_to?(:processor_info, true)
+
+      pinfo = ProcInfo.new
+
+      if processor_info(0, pinfo) < 0
+        if processor_info(1, pinfo) < 0
+          raise Error, "process_info function failed"
+        end
+      end
+
+      pinfo[:pi_fputypes].to_s
+    end
+
     def self.state(num = 0)
       raise NoMethodError unless respond_to?(:processor_info, true)
 

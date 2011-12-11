@@ -6,7 +6,7 @@ module Sys
     extend FFI::Library
     ffi_lib FFI::Library::LIBC
 
-    CTL_HW     = 6 # Generic hardware/cpu
+    CTL_HW = 6 # Generic hardware/cpu
 
     HW_MACHINE      = 1  # Machine class
     HW_MODEL        = 2  # Specific machine model
@@ -14,8 +14,19 @@ module Sys
     HW_MACHINE_ARCH = 12 # CPU frequency
     HW_CPU_FREQ     = 15 # CPU frequency
 
-    attach_function :sysctl, [:pointer, :uint, :pointer, :pointer, :pointer, :size_t], :int
-    private_class_method :sysctl
+    begin
+      attach_function :sysctl, [:pointer, :uint, :pointer, :pointer, :pointer, :size_t], :int
+      private_class_method :sysctl
+    rescue FFI::NotFoundError
+      # Do nothing, not supported on this platform.
+    end
+
+    begin
+      attach_function :getloadavg, [:pointer, :int], :int
+      private_class_method :getloadavg
+    rescue FFI::NotFoundError
+      # Do nothing, not supported on this platform.
+    end
 
     def self.architecture
       buf  = 0.chr * 64
@@ -65,6 +76,14 @@ module Sys
       sysctl(mib, 2, buf, size, nil, 0)
 
       buf.unpack("I*").first / 1000000
+    end
+
+    def self.load_avg
+      if respond_to?(:getloadavg, true)
+        loadavg = FFI::MemoryPointer.new(:double, 3)
+        getloadavg(loadavg, loadavg.size)
+        loadavg.get_array_of_double(0, 3)
+      end
     end
   end
 end

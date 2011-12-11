@@ -45,5 +45,15 @@ module Sys
 
       buf.strip
     end
+
+    def self.freq
+      buf  = 0.chr * 16
+      mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_CPU_FREQ])
+      size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+
+      sysctl(mib, 2, buf, size, nil, 0)
+
+      buf.unpack("I*").first / 1000000
+    end
   end
 end

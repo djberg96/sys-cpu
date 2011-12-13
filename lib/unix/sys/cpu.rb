@@ -17,8 +17,13 @@ module Sys
     HW_MACHINE      = 1  # Machine class
     HW_MODEL        = 2  # Specific machine model
     HW_NCPU         = 3  # Number of CPU's
-    HW_MACHINE_ARCH = 12 # CPU frequency
     HW_CPU_FREQ     = 15 # CPU frequency
+
+    if RbConfig::CONFIG['host_os'] =~ /bsd/
+      HW_MACHINE_ARCH = 11 # Machine architecture
+    else
+      HW_MACHINE_ARCH = 12 # Machine architecture
+    end
 
     SI_MACHINE          = 5
     SI_ARCHITECTURE     = 6
@@ -63,7 +68,7 @@ module Sys
     end
 
     def self.architecture
-      if self.respond_to?(:sysctl, true)
+      if respond_to?(:sysctl, true)
         buf  = 0.chr * 64
         mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MACHINE_ARCH])
         size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
@@ -83,15 +88,7 @@ module Sys
     end
 
     def self.num_cpu
-      if self.respond_to?(:sysctl, true)
-        buf  = 0.chr * 4
-        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_NCPU])
-        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
-
-        sysctl(mib, 2, buf, size, nil, 0)
-
-        buf.strip.unpack("C").first
-      else
+      if respond_to?(:sysconf, true)
         num = sysconf(SC_NPROCESSORS_ONLN)
 
         if num < 0
@@ -99,6 +96,14 @@ module Sys
         end
 
         num
+      else
+        buf  = 0.chr * 4
+        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_NCPU])
+        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+
+        sysctl(mib, 2, buf, size, nil, 0)
+
+        buf.strip.unpack("C").first
       end
     end
 

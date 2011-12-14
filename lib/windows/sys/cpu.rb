@@ -17,7 +17,7 @@ module Sys
     BASE_CS = "winmgmts:{impersonationLevel=impersonate}" # :nodoc:
 
     # Fields used in the CPUStruct
-    fields = %w/
+    fields = %w[
       address_width
       architecture
       availability
@@ -62,7 +62,7 @@ module Sys
       upgrade_method
       version
       voltage_caps
-    /
+    ]
 
     # The struct returned by the CPU.processors method
     CPUStruct = Struct.new("CPUStruct", *fields) # :nodoc:
@@ -255,7 +255,7 @@ module Sys
 
     # Returns a string indicating the type of processor, e.g. GenuineIntel.
     #
-    def self.type(host = Socket.gethostname)
+    def self.cpu_type(host = Socket.gethostname)
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)

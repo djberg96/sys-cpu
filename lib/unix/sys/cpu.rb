@@ -125,7 +125,18 @@ module Sys
     end
 
     def self.num_cpu
-      if respond_to?(:sysconf, true)
+      if respond_to?(:sysctlbyname, true)
+        optr = FFI::MemoryPointer.new(:long)
+        size = FFI::MemoryPointer.new(:size_t)
+
+        size.write_long(optr.size)
+
+        if sysctlbyname('hw.ncpu', optr, size, nil, 0) < 0
+          raise Error, "sysctlbyname failed"
+        end
+
+        optr.read_long
+      elsif respond_to?(:sysconf, true)
         num = sysconf(SC_NPROCESSORS_ONLN)
 
         if num < 0

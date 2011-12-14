@@ -25,17 +25,21 @@ task :example => [:clean] do
   case CONFIG['host_os']
   when /bsd|darwin|osx/i
     file = "examples/example_sys_cpu_bsd.rb"
+    sh "ruby -Ilib/unix #{file}"
   when /hpux/i
     file = "examples/example_sys_cpu_hpux.rb"
+    sh "ruby -Ilib/unix #{file}"
   when /linux/i
     file = "examples/example_sys_cpu_linux.rb"
+    sh "ruby -Ilib/linux #{file}"
   when /windows|win32|cygwin|mingw|dos/i
     file = "examples/example_sys_cpu_windows.rb"
+    sh "ruby -Ilib/windows #{file}"
   when /sunos|solaris/i
     file = "examples/example_sys_cpu_sunos.rb"
+    sh "ruby -Ilib/unix #{file}"
   end
 
-  sh "ruby -Ilib -Ilib/windows -Ilib/linux -Ilib/unix #{file}"
 end
 
 Rake::TestTask.new do |t|

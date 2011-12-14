@@ -36,6 +36,13 @@ module Sys
     P_NOINTR   = 6
     P_SPARE    = 7
 
+    CPU_ARCH_ABI64     = 0x01000000
+    CPU_TYPE_X86       = 7
+    CPU_TYPE_X86_64    = (CPU_TYPE_X86 | CPU_ARCH_ABI64)
+    CPU_TYPE_SPARC     = 14
+    CPU_TYPE_POWERPC   = 18
+    CPU_TYPE_POWERPC64 = CPU_TYPE_POWERPC | CPU_ARCH_ABI64
+
     begin
       attach_function(
         :sysctl,
@@ -186,30 +193,52 @@ module Sys
     end
 
     def self.model
-      if respond_to?(:sysctl, true)
-        buf  = 0.chr * 64
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
+      if RbConfig::CONFIG['host_os'] =~ /darwin/i
+        ptr  = FFI::MemoryPointer.new(:long)
+        size = FFI::MemoryPointer.new(:size_t)
 
-        mib.write_array_of_int([CTL_HW, HW_MODEL])
-        size.write_int(buf.size)
+        size.write_long(ptr.size)
 
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, "sysctl function failed"
+        if sysctlbyname("hw.cputype", ptr, size, nil, 0) < 0
+          raise "sysctlbyname function failed"
         end
 
-        buf.strip
+        case ptr.read_long
+          when  CPU_TYPE_X86, CPU_TYPE_X86_64
+            "Intel"
+          when CPU_TYPE_SPARC
+            "Sparc"
+          when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
+            "PowerPC"
+          else
+            "Unknown"
+        end
       else
-        pinfo = ProcInfo.new
+        if respond_to?(:sysctl, true)
+          buf  = 0.chr * 64
+          mib  = FFI::MemoryPointer.new(:int, 2)
+          size = FFI::MemoryPointer.new(:long, 1)
 
-        # Some systems start at 0, some at 1
-        if processor_info(0, pinfo) < 0
-          if processor_info(1, pinfo) < 0
-            raise Error, "process_info function failed"
+          mib.write_array_of_int([CTL_HW, HW_MODEL])
+          size.write_int(buf.size)
+
+          if sysctl(mib, 2, buf, size, nil, 0) < 0
+            raise Error, "sysctl function failed"
           end
-        end
 
-        pinfo[:pi_processor_type].to_s
+          buf.strip
+        else
+          pinfo = ProcInfo.new
+
+          # Some systems start at 0, some at 1
+          if processor_info(0, pinfo) < 0
+            if processor_info(1, pinfo) < 0
+              raise Error, "process_info function failed"
+            end
+          end
+
+          pinfo[:pi_processor_type].to_s
+        end
       end
     end
 

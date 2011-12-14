@@ -37,8 +37,23 @@ module Sys
     P_SPARE    = 7
 
     begin
-      attach_function :sysctl, [:pointer, :uint, :pointer, :pointer, :pointer, :size_t], :int
+      attach_function(
+        :sysctl,
+        [:pointer, :uint, :pointer, :pointer, :pointer, :size_t],
+        :int
+      )
       private_class_method :sysctl
+    rescue FFI::NotFoundError
+      # Do nothing, not supported on this platform.
+    end
+
+    begin
+      attach_function(
+        :sysctlbyname,
+        [:string, :pointer, :pointer, :pointer, :size_t],
+        :int
+      )
+      private_class_method :sysctlbyname
     rescue FFI::NotFoundError
       # Do nothing, not supported on this platform.
     end
@@ -70,8 +85,11 @@ module Sys
     def self.architecture
       if respond_to?(:sysctl, true)
         buf  = 0.chr * 64
-        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MACHINE_ARCH])
-        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+        mib  = FFI::MemoryPointer.new(:int, 2)
+        size = FFI::MemoryPointer.new(:long, 1)
+
+        mib.write_array_of_int([CTL_HW, HW_MACHINE_ARCH])
+        size.write_int(buf.size)
 
         sysctl(mib, 2, buf, size, nil, 0)
 
@@ -98,8 +116,11 @@ module Sys
         num
       else
         buf  = 0.chr * 4
-        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_NCPU])
-        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+        mib  = FFI::MemoryPointer.new(:int, 2)
+        size = FFI::MemoryPointer.new(:long, 1)
+
+        mib.write_array_of_int([CTL_HW, HW_NCPU])
+        size.write_int(buf.size)
 
         sysctl(mib, 2, buf, size, nil, 0)
 
@@ -110,8 +131,11 @@ module Sys
     def self.machine
       if respond_to?(:sysctl, true)
         buf  = 0.chr * 32
-        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MACHINE])
-        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+        mib  = FFI::MemoryPointer.new(:int, 2)
+        size = FFI::MemoryPointer.new(:long, 1)
+
+        mib.write_array_of_int([CTL_HW, HW_MACHINE])
+        size.write_int(buf.size)
 
         sysctl(mib, 2, buf, size, nil, 0)
 
@@ -130,8 +154,11 @@ module Sys
     def self.model
       if respond_to?(:sysctl, true)
         buf  = 0.chr * 64
-        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_MODEL])
-        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+        mib  = FFI::MemoryPointer.new(:int, 2)
+        size = FFI::MemoryPointer.new(:long, 1)
+
+        mib.write_array_of_int([CTL_HW, HW_MODEL])
+        size.write_int(buf.size)
 
         sysctl(mib, 2, buf, size, nil, 0)
 
@@ -151,10 +178,34 @@ module Sys
     end
 
     def self.freq
-      if respond_to?(:sysctl, true)
+      if respond_to?(:sysctlbyname, true)
+        optr = FFI::MemoryPointer.new(:long)
+        size = FFI::MemoryPointer.new(:size_t)
+
+        size.write_long(optr.size)
+
+        if RbConfig::CONFIG['host_os'] =~ /bsd/i
+          name = 'hw.clockrate'
+        else
+          name = 'hw.cpufrequency'
+        end
+
+        if sysctlbyname(name, optr, size, nil, 0) < 0
+          raise Error, "sysctlbyname failed"
+        end
+
+        if RbConfig::CONFIG['host_os'] =~ /darwin/i
+          optr.read_long / 1000000
+        else
+          optr.read_long
+        end
+      elsif respond_to?(:sysctl, true)
         buf  = 0.chr * 16
-        mib  = FFI::MemoryPointer.new(:int, 2).write_array_of_int([CTL_HW, HW_CPU_FREQ])
-        size = FFI::MemoryPointer.new(:long, 1).write_int(buf.size)
+        mib  = FFI::MemoryPointer.new(:int, 2)
+        size = FFI::MemoryPointer.new(:long, 1)
+
+        mib.write_array_of_int([CTL_HW, HW_CPU_FREQ])
+        size.write_int(buf.size)
 
         sysctl(mib, 2, buf, size, nil, 0)
 

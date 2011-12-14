@@ -1,3 +1,11 @@
+== 0.7.0 - 14-Dec-2011
+* Code base now uses FFI. However, HP-UX is not currently supported.
+  HP-UX users should continue to use the 0.6.x version. Note that
+  the code base remains unchanged on Linux and Windows.
+* The cpu_type method has been replaced with the architecture method
+  on Solaris to keep the interface more in line with other platforms.
+* Some Rakefile and test suite updates.
+
 == 0.6.4 - 27-Sep-2011
 * The CPU.freq method now works on OSX.
 * The CPU.model method on OSX has been altered. Previously it

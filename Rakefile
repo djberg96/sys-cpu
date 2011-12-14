@@ -20,6 +20,24 @@ namespace 'gem' do
   end
 end
 
+desc "Run the example program"
+task :example => [:clean] do
+  case CONFIG['host_os']
+  when /bsd|darwin|osx/i
+    file = "examples/example_sys_cpu_bsd.rb"
+  when /hpux/i
+    file = "examples/example_sys_cpu_hpux.rb"
+  when /linux/i
+    file = "examples/example_sys_cpu_linux.rb"
+  when /windows|win32|cygwin|mingw|dos/i
+    file = "examples/example_sys_cpu_windows.rb"
+  when /sunos|solaris/i
+    file = "examples/example_sys_cpu_sunos.rb"
+  end
+
+  sh "ruby -Ilib -Ilib/windows -Ilib/linux -Ilib/unix #{file}"
+end
+
 Rake::TestTask.new do |t|
   if CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|windows/i
     t.libs << 'lib/windows'

@@ -2,7 +2,7 @@ require 'rubygems'
 
 Gem::Specification.new do |spec|
   spec.name      = 'sys-cpu'
-  spec.version   = '0.6.4'
+  spec.version   = '0.7.0'
   spec.author    = 'Daniel J. Berger'
   spec.email     = 'djberg96 at nospam at gmail dot com'
   spec.homepage  = 'http://www.rubyforge.org/projects/sysutils'
@@ -14,6 +14,7 @@ Gem::Specification.new do |spec|
   spec.rubyforge_project = 'sysutils'
   spec.extra_rdoc_files  = ['CHANGES', 'README', 'MANIFEST']
 
+  spec.add_dependency('ffi', '>= 1.0.0')
   spec.add_development_dependency('test-unit', '>= 2.1.2')
 
   spec.description = <<-EOF
@@ -22,15 +23,6 @@ Gem::Specification.new do |spec|
     and load average.
   EOF
 
-  case Config::CONFIG['host_os']
-    when /hpux/i
-      spec.extra_rdoc_files += ['ext/hpux/hpux.c']
-    when /sunos|solaris/i
-      spec.extra_rdoc_files += ['ext/sunos/sunos.c']
-    when /bsd|darwin|mach|osx/i
-      spec.extra_rdoc_files += ['ext/bsd/bsd.c']
-  end
-   
   case Config::CONFIG['host_os']
     when /mswin|dos|windows|win32|mingw|cygwin/i
       spec.require_paths = ['lib', 'lib/windows']
@@ -45,6 +37,7 @@ Gem::Specification.new do |spec|
       spec.platform = Gem::Platform.new('universal-linux')
       spec.original_platform = spec.platform
     else
-      spec.extensions = ['ext/extconf.rb']
+      spec.require_paths = ['lib', 'lib/unix']
+      spec.extra_rdoc_files << 'lib/unix/sys/cpu.rb'
    end
 end

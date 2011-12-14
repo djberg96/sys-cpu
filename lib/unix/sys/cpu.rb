@@ -83,7 +83,32 @@ module Sys
     end
 
     def self.architecture
-      if respond_to?(:sysctl, true)
+      if respond_to?(:sysinfo, true)
+        buf = 0.chr * 257
+
+        if sysinfo(SI_ARCHITECTURE, buf, buf.size) < 0
+          raise Error, "sysinfo function failed"
+        end
+
+        buf.strip
+      elsif respond_to?(:sysctlbyname, true)
+        optr = FFI::MemoryPointer.new(:char, 256)
+        size = FFI::MemoryPointer.new(:size_t)
+
+        size.write_int(optr.size)
+
+        if RbConfig::CONFIG['host_os'] =~ /darwin/i
+          name = 'hw.machine'
+        else
+          name = 'hw.machine_arch'
+        end
+
+        if sysctlbyname(name, optr, size, nil, 0) < 0
+          raise Error, "sysctlbyname function failed"
+        end
+
+        optr.read_string
+      else
         buf  = 0.chr * 64
         mib  = FFI::MemoryPointer.new(:int, 2)
         size = FFI::MemoryPointer.new(:long, 1)
@@ -91,14 +116,8 @@ module Sys
         mib.write_array_of_int([CTL_HW, HW_MACHINE_ARCH])
         size.write_int(buf.size)
 
-        sysctl(mib, 2, buf, size, nil, 0)
-
-        buf.strip
-      else
-        buf = 0.chr * 257
-
-        if sysinfo(SI_ARCHITECTURE, buf, buf.size) < 0
-          raise Error, "sysinfo function failed"
+        if sysctl(mib, 2, buf, size, nil, 0) < 0
+          raise Error, "sysctl function failed"
         end
 
         buf.strip
@@ -122,7 +141,9 @@ module Sys
         mib.write_array_of_int([CTL_HW, HW_NCPU])
         size.write_int(buf.size)
 
-        sysctl(mib, 2, buf, size, nil, 0)
+        if sysctl(mib, 2, buf, size, nil, 0) < 0
+          raise Error, "sysctl function failed"
+        end
 
         buf.strip.unpack("C").first
       end
@@ -137,7 +158,9 @@ module Sys
         mib.write_array_of_int([CTL_HW, HW_MACHINE])
         size.write_int(buf.size)
 
-        sysctl(mib, 2, buf, size, nil, 0)
+        if sysctl(mib, 2, buf, size, nil, 0) < 0
+          raise Error, "sysctl function failed"
+        end
 
         buf.strip
       else
@@ -160,7 +183,9 @@ module Sys
         mib.write_array_of_int([CTL_HW, HW_MODEL])
         size.write_int(buf.size)
 
-        sysctl(mib, 2, buf, size, nil, 0)
+        if sysctl(mib, 2, buf, size, nil, 0) < 0
+          raise Error, "sysctl function failed"
+        end
 
         buf.strip
       else
@@ -207,7 +232,9 @@ module Sys
         mib.write_array_of_int([CTL_HW, HW_CPU_FREQ])
         size.write_int(buf.size)
 
-        sysctl(mib, 2, buf, size, nil, 0)
+        if sysctl(mib, 2, buf, size, nil, 0) < 0
+          raise Error, "sysctl function failed"
+        end
 
         buf.unpack("I*").first / 1000000
       else

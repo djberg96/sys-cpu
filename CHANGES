@@ -4,6 +4,7 @@
   the code base remains unchanged on Linux and Windows.
 * The cpu_type method has been replaced with the architecture method
   on Solaris to keep the interface more in line with other platforms.
+* The type method has been changed to cpu_type on Windows.
 * Some Rakefile and test suite updates.
 
 == 0.6.4 - 27-Sep-2011

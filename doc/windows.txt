@@ -14,7 +14,7 @@
    puts "CPU Speed (Frequency): " + CPU.freq(0).to_s
    puts "Load avg: " + CPU.load_avg.to_s
    puts "Num CPU: " + CPU.num_cpu.to_s
-   puts "Type: " + CPU.type
+   puts "Type: " + CPU.cpu_type
    puts "Model: " + CPU.model
    puts "Architecture: " + CPU.architecture
     
@@ -98,7 +98,7 @@ CPU.processors(host=localhost){ |cpu| ... }
    Note that not all of these members will necessarily be defined.  See the
    NOTES section below.
     
-CPU.type(host=localhost)
+CPU.cpu_type(host=localhost)
     Returns a string indicating the type of processor, e.g. GenuineIntel.
     
 == Exception Classes

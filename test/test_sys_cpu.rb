@@ -7,7 +7,7 @@
 require 'rbconfig'
 require 'test_sys_cpu_version'
 
-case Config::CONFIG['host_os']
+case RbConfig::CONFIG['host_os']
   when /bsd|darwin|mach|osx/i
     require 'test_sys_cpu_bsd'
   when /hpux/i

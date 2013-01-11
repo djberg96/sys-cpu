@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
     and load average.
   EOF
 
-  case Config::CONFIG['host_os']
+  case RbConfig::CONFIG['host_os']
     when /mswin|dos|windows|win32|mingw|cygwin/i
       spec.require_paths = ['lib', 'lib/windows']
       spec.extra_rdoc_files << 'lib/windows/sys/cpu.rb'

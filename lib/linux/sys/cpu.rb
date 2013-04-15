@@ -59,7 +59,7 @@ module Sys
       array = []
       $cpu_array.each{ |hash|
         struct = CPUStruct.new
-        struct.members.each{ |m| struct.send("#{m}=", hash[m]) }
+        struct.members.each{ |m| struct.send("#{m}=", hash["#{m}"]) }
         if block_given?
           yield struct
         else

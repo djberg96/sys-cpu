@@ -1,3 +1,9 @@
+== 0.7.1 - 2-May-2013
+* Added a workaround for a win32ole bug in the Windows version.
+* Reorganized code so that there is now a single gem rather than three
+  separate platform gems.
+* Updated test-unit dependency which let me simplify the test files a bit.
+
 == 0.7.0 - 14-Dec-2011
 * Code base now uses FFI. However, HP-UX is not currently supported.
   HP-UX users should continue to use the 0.6.x version. Note that

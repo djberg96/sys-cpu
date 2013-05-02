@@ -4,10 +4,8 @@
 # Test suite for sys-cpu on Solaris. This should be run
 # via the 'rake test' task.
 ###########################################################
-require 'rubygems'
-gem 'test-unit'
 require 'sys/cpu'
-require 'test/unit'
+require 'test-unit'
 include Sys
 
 class TC_Sys_CPU_SunOS < Test::Unit::TestCase

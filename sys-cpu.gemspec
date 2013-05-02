@@ -15,29 +15,11 @@ Gem::Specification.new do |spec|
   spec.extra_rdoc_files  = ['CHANGES', 'README', 'MANIFEST']
 
   spec.add_dependency('ffi', '>= 1.0.0')
-  spec.add_development_dependency('test-unit', '>= 2.1.2')
+  spec.add_development_dependency('test-unit', '>= 2.4.0')
 
   spec.description = <<-EOF
     The sys-cpu library provides an interface for gathering information
     about your system's processor(s). Information includes speed, type,
     and load average.
   EOF
-
-  case RbConfig::CONFIG['host_os']
-    when /mswin|dos|windows|win32|mingw|cygwin/i
-      spec.require_paths = ['lib', 'lib/windows']
-      spec.extra_rdoc_files << 'lib/windows/sys/cpu.rb'
-      spec.platform = Gem::Platform::CURRENT
-      spec.platform.cpu = 'universal'
-      spec.platform.version = nil
-      spec.original_platform = spec.platform
-    when /linux/i
-      spec.require_paths = ['lib', 'lib/linux']
-      spec.extra_rdoc_files << 'lib/linux/sys/cpu.rb'
-      spec.platform = Gem::Platform.new('universal-linux')
-      spec.original_platform = spec.platform
-    else
-      spec.require_paths = ['lib', 'lib/unix']
-      spec.extra_rdoc_files << 'lib/unix/sys/cpu.rb'
-   end
 end

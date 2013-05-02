@@ -4,11 +4,8 @@
 # Test Suite for sys-cpu for Linux. This should be run via
 # the 'rake test' task.
 ###########################################################
-require 'rubygems'
-gem 'test-unit'
-
 require 'sys/cpu'
-require 'test/unit'
+require 'test-unit'
 require 'test_sys_cpu_version'
 include Sys
 

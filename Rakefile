@@ -43,14 +43,6 @@ task :example => [:clean] do
 end
 
 Rake::TestTask.new do |t|
-  if CONFIG['host_os'] =~ /mswin|win32|mingw|cygwin|dos|windows/i
-    t.libs << 'lib/windows'
-  elsif CONFIG['host_os'] =~ /linux/i
-    t.libs << 'lib/linux'
-  else
-    t.libs << 'lib/unix'
-  end
-
   t.libs << 'test'
   t.test_files = FileList['test/test_sys_cpu.rb']
 end

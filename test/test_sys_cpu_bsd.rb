@@ -3,12 +3,9 @@
 #
 # The test case for sys-cpu on BSD flavors, including OS X.
 #############################################################
-require 'rubygems'
-gem 'test-unit'
-
 require 'sys/cpu'
 require 'rbconfig'
-require 'test/unit'
+require 'test-unit'
 require 'test_sys_cpu_version'
 include Sys
 

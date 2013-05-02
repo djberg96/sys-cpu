@@ -10,7 +10,7 @@ module Sys
     class Error < StandardError; end
 
     # The version of the sys-cpu library
-    VERSION = '0.7.0'
+    VERSION = '0.7.1'
 
     CTL_HW = 6 # Generic hardware/cpu
 

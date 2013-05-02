@@ -4,11 +4,6 @@
 = Installation
   gem install sys-cpu
 
-  If that doesn't work try one of these:
-
-  gem install sys-cpu --platform linux   # Linux
-  gem install sys-cpu --platform mingw32 # MS Windows
-
 = Notes
 == Solaris
   Currently there is no 'processors()' iterative method for multi-cpu systems.
@@ -66,7 +61,7 @@
   Artistic 2.0
 
 = Copyright
-  (C) 2003-2011 Daniel J. Berger, All Rights Reserved
+  (C) 2003-2013 Daniel J. Berger, All Rights Reserved
 
 = Warranty
   This package is provided "as is" and without any express or

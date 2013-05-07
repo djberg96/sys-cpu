@@ -5,12 +5,12 @@ Gem::Specification.new do |spec|
   spec.version   = '0.7.1'
   spec.author    = 'Daniel J. Berger'
   spec.email     = 'djberg96 at nospam at gmail dot com'
+  spec.license   = 'Artistic 2.0'
   spec.homepage  = 'https://github.com/djberg96/sys-cpu'
   spec.summary   = 'A Ruby interface for providing CPU information'
   spec.test_file = 'test/test_sys_cpu.rb'
   spec.files     = Dir['**/*'].reject{ |f| f.include?('git') }
 
-  spec.rubyforge_project = 'sysutils'
   spec.extra_rdoc_files  = ['CHANGES', 'README', 'MANIFEST']
 
   # The ffi dependency is only relevent for the Unix version. Given the

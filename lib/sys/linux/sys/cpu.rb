@@ -7,7 +7,7 @@ module Sys
 
   cpu_file   = "/proc/cpuinfo"
   cpu_hash   = {}
-  $cpu_array = []
+  CPU_ARRAY = []
 
   # Parse the info out of the /proc/cpuinfo file
   IO.foreach(cpu_file){ |line|
@@ -21,7 +21,7 @@ module Sys
     val.strip! if val
 
     if cpu_hash.has_key?(key)
-      $cpu_array.push(cpu_hash.dup)
+      CPU_ARRAY.push(cpu_hash.dup)
       cpu_hash.clear
     end
 
@@ -35,7 +35,7 @@ module Sys
     cpu_hash[key] = val
   }
 
-  $cpu_array.push(cpu_hash)
+  CPU_ARRAY.push(cpu_hash)
 
   # :startdoc:
 
@@ -46,7 +46,7 @@ module Sys
 
     # :stopdoc:
 
-    CPUStruct = Struct.new("CPUStruct", *$cpu_array.first.keys)
+    CPUStruct = Struct.new("CPUStruct", *CPU_ARRAY.first.keys)
 
     # :startdoc:
 
@@ -57,7 +57,7 @@ module Sys
     #
     def self.processors
       array = []
-      $cpu_array.each{ |hash|
+      CPU_ARRAY.each{ |hash|
         struct = CPUStruct.new
         struct.members.each{ |m| struct.send("#{m}=", hash["#{m}"]) }
         if block_given?
@@ -74,10 +74,10 @@ module Sys
     # Create singleton methods for each of the attributes.
     #
     def self.method_missing(id, arg=0)
-      rv = $cpu_array[arg][id.to_s]
+      rv = CPU_ARRAY[arg][id.to_s]
       if rv.nil?
         id = id.to_s + "?"
-        rv = $cpu_array[arg][id]
+        rv = CPU_ARRAY[arg][id]
       end
       rv
     end

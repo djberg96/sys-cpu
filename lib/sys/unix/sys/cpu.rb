@@ -10,7 +10,7 @@ module Sys
     class Error < StandardError; end
 
     # The version of the sys-cpu library
-    VERSION = '0.7.1'
+    VERSION = '0.7.2'
 
     CTL_HW = 6 # Generic hardware/cpu
 
@@ -89,6 +89,10 @@ module Sys
       )
     end
 
+    # Returns the cpu's architecture. On most systems this will be identical
+    # to the CPU.machine method. On OpenBSD it will be identical to the CPU.model
+    # method.
+    #
     def self.architecture
       if respond_to?(:sysinfo, true)
         buf = 0.chr * 257
@@ -131,6 +135,10 @@ module Sys
       end
     end
 
+    # Returns the number of cpu's on your system. Note that each core on
+    # multi-core systems are counted as a cpu, e.g. one dual core cpu would
+    # return 2, not 1.
+    #
     def self.num_cpu
       if respond_to?(:sysctlbyname, true)
         optr = FFI::MemoryPointer.new(:long)
@@ -167,6 +175,10 @@ module Sys
       end
     end
 
+    # Returns the cpu's class type. On most systems this will be identical
+    # to the CPU.architecture method. On OpenBSD it will be identical to the
+    # CPU.model method.
+    #
     def self.machine
       if respond_to?(:sysctl, true)
         buf  = 0.chr * 32
@@ -192,6 +204,8 @@ module Sys
       end
     end
 
+    # Returns a string indicating the cpu model.
+    #
     def self.model
       if RbConfig::CONFIG['host_os'] =~ /darwin/i
         ptr  = FFI::MemoryPointer.new(:long)
@@ -242,6 +256,8 @@ module Sys
       end
     end
 
+    # Returns an integer indicating the speed of the CPU.
+    #
     def self.freq
       if respond_to?(:sysctlbyname, true)
         optr = FFI::MemoryPointer.new(:long)
@@ -291,6 +307,9 @@ module Sys
       end
     end
 
+    # Returns an array of three floats indicating the 1, 5 and 15 minute load
+    # average.
+    #
     def self.load_avg
       if respond_to?(:getloadavg, true)
         loadavg = FFI::MemoryPointer.new(:double, 3)
@@ -303,6 +322,10 @@ module Sys
       end
     end
 
+    # Returns the floating point processor type.
+    #
+    # Not supported on all platforms.
+    #
     def self.fpu_type
       raise NoMethodError unless respond_to?(:processor_info, true)
 
@@ -317,6 +340,11 @@ module Sys
       pinfo[:pi_fputypes].to_s
     end
 
+    # Returns the current state of processor +num+, or 0 if no number is
+    # specified.
+    #
+    # Not supported on all platforms.
+    #
     def self.state(num = 0)
       raise NoMethodError unless respond_to?(:processor_info, true)
 

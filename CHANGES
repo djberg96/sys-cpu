@@ -1,3 +1,7 @@
+== 0.7.2 - ???
+* Replaced a global array with a constant in the Linux version.
+* Added method constants back to the Unix version.
+
 == 0.7.1 - 2-May-2013
 * Added a workaround for a win32ole bug in the Windows version.
 * Reorganized code so that there is now a single gem rather than three

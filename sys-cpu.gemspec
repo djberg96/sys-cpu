@@ -1,15 +1,16 @@
 require 'rubygems'
 
 Gem::Specification.new do |spec|
-  spec.name      = 'sys-cpu'
-  spec.version   = '0.7.2'
-  spec.author    = 'Daniel J. Berger'
-  spec.email     = 'djberg96 at nospam at gmail dot com'
-  spec.license   = 'Artistic 2.0'
-  spec.homepage  = 'https://github.com/djberg96/sys-cpu'
-  spec.summary   = 'A Ruby interface for providing CPU information'
-  spec.test_file = 'test/test_sys_cpu.rb'
-  spec.files     = Dir['**/*'].reject{ |f| f.include?('git') }
+  spec.name       = 'sys-cpu'
+  spec.version    = '0.7.2'
+  spec.author     = 'Daniel J. Berger'
+  spec.email      = 'djberg96 at nospam at gmail dot com'
+  spec.license    = 'Artistic 2.0'
+  spec.homepage   = 'https://github.com/djberg96/sys-cpu'
+  spec.summary    = 'A Ruby interface for providing CPU information'
+  spec.test_file  = 'test/test_sys_cpu.rb'
+  spec.files      = Dir['**/*'].reject{ |f| f.include?('git') }
+  spec.cert_chain = ['certs/djberg96_pub.pem']
 
   spec.extra_rdoc_files  = ['CHANGES', 'README', 'MANIFEST']
 

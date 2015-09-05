@@ -17,9 +17,6 @@ module Sys
     # Error raised if any of the Sys::CPU methods fail.
     class Error < StandardError; end
 
-    # The version of the sys-cpu library
-    VERSION = '0.7.1'
-
     private
 
     # Base connect string

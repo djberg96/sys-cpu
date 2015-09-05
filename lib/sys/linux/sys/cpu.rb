@@ -41,9 +41,6 @@ module Sys
 
   class CPU
 
-    # The version of the sys-cpu library.
-    VERSION = '0.7.1'
-
     # :stopdoc:
 
     CPUStruct = Struct.new("CPUStruct", *CPU_ARRAY.first.keys)

@@ -2,6 +2,13 @@
 # depending on which platform you're on.
 require 'rbconfig'
 
+module Sys
+  class CPU
+    # The version of the sys-cpu gem.
+    VERSION = '0.7.2'
+  end
+end
+
 case RbConfig::CONFIG['host_os']
   when /linux/i
     require File.join(File.dirname(__FILE__), 'linux', 'sys', 'cpu')

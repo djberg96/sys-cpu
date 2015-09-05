@@ -1,6 +1,9 @@
-== 0.7.2 - ???
-* Replaced a global array with a constant in the Linux version.
-* Added method constants back to the Unix version.
+== 0.7.2 - 5-Sep-2015
+* Replaced a global array with a constant in the Linux version. Thanks go
+  to Yorick Peterse for the patch.
+* Added method comments back to the Unix version.
+* Added a sys-cpu.rb stub file for your convenience.
+* This gem is now signed.
 
 == 0.7.1 - 2-May-2013
 * Added a workaround for a win32ole bug in the Windows version.

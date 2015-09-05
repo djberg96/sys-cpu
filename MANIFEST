@@ -4,6 +4,7 @@
 * Rakefile
 * README
 * sys-cpu.gemspec
+* certs/djberg96_pub.pem
 * doc/bsd.txt
 * doc/hpux.txt
 * doc/linux.txt

@@ -4,11 +4,6 @@
 = Installation
   gem install sys-cpu
 
-  If that doesn't work try one of these:
-
-  gem install sys-cpu --platform linux   # Linux
-  gem install sys-cpu --platform mingw32 # MS Windows
-
 = Notes
 == Solaris
   Currently there is no 'processors()' iterative method for multi-cpu systems.
@@ -36,6 +31,10 @@
   Unlike other platforms, you can get load averages for an individual cpu in
   multi-cpu systems. See documentation for more details.
 
+  Note that version 0.7.x and later will not work on HP-UX because of the
+  switch to FFI and the lack of a testing platform. However, version 0.6.x
+  will work just fine.
+
 == MS Windows
   This is a pure Ruby implementation using the win32ole package + WMI. The C
   version has been scrapped. 
@@ -48,11 +47,11 @@
    
 = Acknowledgements
   Thanks go to the MPlayer team for some source code that helped me on
-  certain versions of FreeBSD.
+  certain versions of FreeBSD in the original C version.
 
 = Known Bugs
   None that I'm aware of. Please report bugs on the project page at
-  http://www.rubyforge.org/projects/sysutils.
+  https://github.com/djberg96/sys-cpu
 
 = Future Plans
   Add iterative CPU.processors method.
@@ -62,7 +61,7 @@
   Artistic 2.0
 
 = Copyright
-  (C) 2003-2011 Daniel J. Berger, All Rights Reserved
+  (C) 2003-2015 Daniel J. Berger, All Rights Reserved
 
 = Warranty
   This package is provided "as is" and without any express or

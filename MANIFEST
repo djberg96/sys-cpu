@@ -4,6 +4,7 @@
 * Rakefile
 * README
 * sys-cpu.gemspec
+* certs/djberg96_pub.pem
 * doc/bsd.txt
 * doc/hpux.txt
 * doc/linux.txt
@@ -14,13 +15,10 @@
 * examples/example_sys_cpu_linux.rb
 * examples/example_sys_cpu_sunos.rb
 * examples/example_sys_cpu_windows.rb
-* ext/extconf.rb
-* ext/version.h
-* ext/bsd/bsd.c
-* ext/hpux/hpux.c
-* ext/sunos/sunos.c
-* lib/linux/sys/cpu.rb
-* lib/windows/sys/cpu.rb
+* lib/sys/cpu.rb
+* lib/sys/linux/sys/cpu.rb
+* lib/sys/unix/sys/cpu.rb
+* lib/sys/windows/sys/cpu.rb
 * test/test_sys_cpu.rb
 * test/test_sys_cpu_bsd.rb
 * test/test_sys_cpu_hpux.rb

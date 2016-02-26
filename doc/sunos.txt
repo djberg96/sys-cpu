@@ -9,7 +9,7 @@
    puts "Mhz: " + CPU.cpu_freq(0).to_s
    puts "State: " + CPU.state(0)
    puts "Number of cpu's on this system: " + CPU.num_cpu.to_s
-   puts "CPU type: " + CPU.type
+   puts "CPU type: " + CPU.architecture
    puts "FPU type: " + CPU.fpu_type
    puts "CPU model: " + CPU.model
    puts "Load averages: " + CPU.load_avg.join(", ")
@@ -23,7 +23,7 @@ CPU.freq(cpu_num=0)
    Returns an integer indicating the speed (i.e. frequency in Mhz) of
    'cpu_num', or CPU 0 if no number is provided.
     
-CPU.type
+CPU.architecture
    Returns a string indicating the type of processor.  This is the
    architecture (e.g. sparcv9), not the exact model (e.g. Ultra-IIe).
    Returns nil if not found.

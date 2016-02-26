@@ -4,64 +4,78 @@
 # Test suite for sys-cpu on Solaris. This should be run
 # via the 'rake test' task.
 ###########################################################
-require 'rubygems'
-gem 'test-unit'
-
 require 'sys/cpu'
-require 'test/unit'
+require 'test-unit'
 include Sys
 
 class TC_Sys_CPU_SunOS < Test::Unit::TestCase
-   def test_cpu_freq
-      assert_respond_to(CPU, :freq)
-      assert_nothing_raised{ CPU.freq }
-      assert_nothing_raised{ CPU.freq(0) }
-      assert_kind_of(Integer, CPU.freq(0))
-   end
+  test "freq method basic functionality" do
+    assert_respond_to(CPU, :freq)
+    assert_nothing_raised{ CPU.freq }
+  end
 
-   def test_cpu_type
-      assert_respond_to(CPU, :cpu_type)
-      assert_nothing_raised{ CPU.cpu_type }
-      assert_kind_of(String, CPU.cpu_type)
-   end
+  test "freq method does not accept any arguments" do
+    assert_raise(ArgumentError){ CPU.freq(0) }
+  end
 
-   def test_fpu_type
-      assert_respond_to(CPU, :fpu_type)
-      assert_nothing_raised{ CPU.fpu_type }
-      assert_kind_of(String, CPU.fpu_type)
-   end
+  test "freq method returns a sane value" do
+    assert_kind_of(Integer, CPU.freq)
+    assert_true(CPU.freq > 100)
+  end
 
-   def test_load_avg
-      assert_respond_to(CPU, :load_avg)
-      assert_nothing_raised{ CPU.load_avg }
-      assert_kind_of(Array, CPU.load_avg)
-      assert_equal(3, CPU.load_avg.length)
-      assert_kind_of(Float, CPU.load_avg.first)
-   end
+  test "fpu_type basic functionality" do
+    assert_respond_to(CPU, :fpu_type)
+    assert_nothing_raised{ CPU.fpu_type }
+  end
 
-   def test_cpu_model
-      assert_respond_to(CPU, :model)
-      assert_nothing_raised{ CPU.model }
-      assert_kind_of(String, CPU.model)
-   end
+  test "fpu_type returns a sane value" do
+    assert_kind_of(String, CPU.fpu_type)
+    assert_false(CPU.fpu_type.empty?)
+  end
 
-   def test_num_cpu
-      assert_respond_to(CPU, :num_cpu)
-      assert_nothing_raised{ CPU.num_cpu }
-      assert_kind_of(Integer, CPU.num_cpu)
-   end
+  test "load_avg basic functionality" do
+    assert_respond_to(CPU, :load_avg)
+    assert_nothing_raised{ CPU.load_avg }
+  end
 
-   def test_state
-      assert_respond_to(CPU, :state)
-      assert_nothing_raised{ CPU.state }
-      assert_nothing_raised{ CPU.state(0) }
-      assert_kind_of(String, CPU.state(0))
-   end
+  test "load_avg method returns the expected values" do
+    assert_kind_of(Array, CPU.load_avg)
+    assert_equal(3, CPU.load_avg.length)
+    assert_kind_of(Float, CPU.load_avg.first)
+  end
 
-   def test_expected_errors
-      assert_raises(Sys::CPU::Error){ CPU.state(55) }
-      assert_raises(TypeError){ CPU.state('yo') }
-      assert_raises(Sys::CPU::Error){ CPU.freq(999) }
-      assert_raises(TypeError){ CPU.freq('yo') }
-   end
+  test "model method basic functionality" do
+    assert_respond_to(CPU, :model)
+    assert_nothing_raised{ CPU.model }
+  end
+
+  test "model method returns a sane value" do
+    assert_kind_of(String, CPU.model)
+    assert_false(CPU.model.empty?)
+  end
+
+  test "num_cpu method basic functionalty" do
+    assert_respond_to(CPU, :num_cpu)
+    assert_nothing_raised{ CPU.num_cpu }
+  end
+
+  test "num_cpu method returns a sane value" do
+    assert_kind_of(Integer, CPU.num_cpu)
+    assert_true(CPU.num_cpu > 0)
+  end
+
+  test "state basic functionality" do
+    assert_respond_to(CPU, :state)
+    assert_nothing_raised{ CPU.state }
+  end
+
+  test "state method accepts one optional argument" do
+    assert_nothing_raised{ CPU.state(0) }
+    assert_raise(ArgumentError){ CPU.state(0,0) }
+  end
+
+  test "state method returns a sane value" do
+    assert_kind_of(String, CPU.state(0))
+    assert_false(CPU.state.empty?)
+  end
 end

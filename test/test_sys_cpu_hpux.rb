@@ -4,11 +4,8 @@
 # Test suite for the HP-UX platform. This should be run via the
 # 'rake test' task.
 #####################################################################
-require 'rubygems'
-gem 'test-unit'
-
 require 'sys/cpu'
-require 'test/unit'
+require 'test-unit'
 require 'test_sys_cpu_version'
 include Sys
 
@@ -46,7 +43,7 @@ class TC_Sys_CPU_HPUX < Test::Unit::TestCase
       assert_raises(ArgumentError){ CPU.load_avg(0){ } }
       assert_kind_of(Array, CPU.load_avg, 'Invalid Type')
       assert_kind_of(Array, CPU.load_avg(0), 'Invalid Type')
-      assert_equal(3, CPU.load_avg.length, 'Bad number of elements') 
+      assert_equal(3, CPU.load_avg.length, 'Bad number of elements')
       assert_equal(3, CPU.load_avg(0).length, 'Bad number of elements')
    end
 end

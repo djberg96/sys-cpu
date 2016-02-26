@@ -1,3 +1,25 @@
+== 0.7.2 - 5-Sep-2015
+* Replaced a global array with a constant in the Linux version. Thanks go
+  to Yorick Peterse for the patch.
+* Added method comments back to the Unix version.
+* Added a sys-cpu.rb stub file for your convenience.
+* This gem is now signed.
+
+== 0.7.1 - 2-May-2013
+* Added a workaround for a win32ole bug in the Windows version.
+* Reorganized code so that there is now a single gem rather than three
+  separate platform gems.
+* Updated test-unit dependency which let me simplify the test files a bit.
+
+== 0.7.0 - 14-Dec-2011
+* Code base now uses FFI. However, HP-UX is not currently supported.
+  HP-UX users should continue to use the 0.6.x version. Note that
+  the code base remains unchanged on Linux and Windows.
+* The cpu_type method has been replaced with the architecture method
+  on Solaris to keep the interface more in line with other platforms.
+* The type method has been changed to cpu_type on Windows.
+* Some Rakefile and test suite updates.
+
 == 0.6.4 - 27-Sep-2011
 * The CPU.freq method now works on OSX.
 * The CPU.model method on OSX has been altered. Previously it

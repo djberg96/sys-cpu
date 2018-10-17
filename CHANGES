@@ -1,3 +1,9 @@
+== 0.8.0 - 17-Oct-2018
+* Switched license to Apache 2.0.
+* Updated documentation for the cpu_stats method on Linux.
+* The VERSION constant is now frozen.
+* Now uses require_relative internally where needed.
+
 == 0.7.2 - 5-Sep-2015
 * Replaced a global array with a constant in the Linux version. Thanks go
   to Yorick Peterse for the patch.

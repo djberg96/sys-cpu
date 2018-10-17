@@ -5,6 +5,8 @@ module Sys
 
   # :stopdoc:
 
+  private
+
   cpu_file   = "/proc/cpuinfo"
   cpu_hash   = {}
   CPU_ARRAY = []
@@ -36,6 +38,8 @@ module Sys
   }
 
   CPU_ARRAY.push(cpu_hash)
+
+  public
 
   # :startdoc:
 
@@ -89,9 +93,21 @@ module Sys
       IO.readlines(load_avg_file).first.split[0..2].map{ |e| e.to_f }
     end
 
-    # Returns a hash of arrays that contain the number of seconds that the
-    # system spent in user mode, user mode with low priority (nice), system
-    # mode, and the idle task, respectively.
+    # Returns a hash of arrays that contains an array of the following
+    # information (as of 2.6.33), respectively:
+    #
+    # * user: time spent in user mode.
+    # * nice: time spent in user mode with low priority.
+    # * system: time spent in system mode.
+    # * idle: time spent in the idle task.
+    # * iowait: time waiting for IO to complete.
+    # * irq: time servicing interrupts.
+    # * softirq: time servicing softirqs.
+    # * steal: time spent in other operating systems when running in a virtualized environment.
+    # * guest: time spent running a virtual CPU for guest operating systems.
+    # * guest_nice: time spent running a niced guest, i.e a virtual CPU for guest operating systems.
+    #
+    # Note that older kernels may not necessarily include some of these fields.
     #
     def self.cpu_stats
       cpu_stat_file = "/proc/stat"

@@ -5,15 +5,15 @@ require 'rbconfig'
 module Sys
   class CPU
     # The version of the sys-cpu gem.
-    VERSION = '0.7.2'
+    VERSION = '0.7.3'.freeze
   end
 end
 
 case RbConfig::CONFIG['host_os']
   when /linux/i
-    require File.join(File.dirname(__FILE__), 'linux', 'sys', 'cpu')
+    require_relative('linux/sys/cpu')
   when /windows|mswin|mingw|cygwin|dos/i
-    require File.join(File.dirname(__FILE__), 'windows', 'sys', 'cpu')
+    require_relative('windows/sys/cpu')
   else
-    require File.join(File.dirname(__FILE__), 'unix', 'sys', 'cpu')
+    require_relative('unix/sys/cpu')
 end

@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.version    = '0.8.1'
   spec.author     = 'Daniel J. Berger'
   spec.email      = 'djberg96@gmail.com'
-  spec.license    = 'Apache 2.0'
+  spec.license    = 'Apache-2.0'
   spec.homepage   = 'https://github.com/djberg96/sys-cpu'
   spec.summary    = 'A Ruby interface for providing CPU information'
   spec.test_file  = 'test/test_sys_cpu.rb'

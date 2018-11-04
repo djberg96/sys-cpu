@@ -2,7 +2,7 @@ require 'rubygems'
 
 Gem::Specification.new do |spec|
   spec.name       = 'sys-cpu'
-  spec.version    = '0.8.0'
+  spec.version    = '0.8.1'
   spec.author     = 'Daniel J. Berger'
   spec.email      = 'djberg96@gmail.com'
   spec.license    = 'Apache 2.0'
@@ -21,6 +21,15 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency('test-unit')
   spec.add_development_dependency('rake')
+
+  spec.metadata = {
+    'homepage_uri'      => 'https://github.com/djberg96/sys-cpu',
+    'bug_tracker_uri'   => 'https://github.com/djberg96/sys-cpu/issues',
+    'changelog_uri'     => 'https://github.com/djberg96/sys-cpu/blob/ffi/CHANGES',
+    'documentation_uri' => 'https://github.com/djberg96/sys-cpu/wiki',
+    'source_code_uri'   => 'https://github.com/djberg96/sys-cpu',
+    'wiki_uri'          => 'https://github.com/djberg96/sys-cpu/wiki'
+  }
 
   spec.description = <<-EOF
     The sys-cpu library provides an interface for gathering information

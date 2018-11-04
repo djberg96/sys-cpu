@@ -1,3 +1,7 @@
+== 0.8.1 - 4-Nov-2018
+* Added metadata to the gemspec.
+* Fixed missing hyphen in license name.
+
 == 0.8.0 - 17-Oct-2018
 * Switched license to Apache 2.0.
 * Updated documentation for the cpu_stats method on Linux.

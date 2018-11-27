@@ -4,6 +4,9 @@
 = Installation
   gem install sys-cpu
 
+= Adding the trusted cert
+  gem cert --add <(curl -Ls https://raw.githubusercontent.com/djberg96/sys-cpu/ffi/certs/djberg96_pub.pem)
+
 = Notes
 == Solaris
   Currently there is no 'processors()' iterative method for multi-cpu systems.

@@ -57,8 +57,8 @@ None that I'm aware of. Please report bugs on the project page at:
 https://github.com/djberg96/sys-cpu
 
 = Future Plans
-Add iterative CPU.processors method.
-Add more information in general, such as what 'prtdiag' shows.
+* Add iterative CPU.processors method.
+* Add more information in general, such as what +prtdiag+ shows.
 
 = License
 Apache-2.0

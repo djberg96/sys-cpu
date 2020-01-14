@@ -1,3 +1,7 @@
+== 0.8.2 - 14-Jan-2020
+* Added explicit .rdoc extension to README, CHANGES and MANIFEST files.
+* Fixed license name in README.
+
 == 0.8.1 - 4-Nov-2018
 * Added metadata to the gemspec.
 * Fixed missing hyphen in license name.

@@ -2,14 +2,14 @@
 A Ruby interface for getting cpu information.
 
 = Installation
-  gem install sys-cpu
+gem install sys-cpu
 
 = Adding the trusted cert
-  gem cert --add <(curl -Ls https://raw.githubusercontent.com/djberg96/sys-cpu/ffi/certs/djberg96_pub.pem)
+gem cert --add <(curl -Ls https://raw.githubusercontent.com/djberg96/sys-cpu/ffi/certs/djberg96_pub.pem)
 
 = Notes
 == Solaris
-Currently there is no 'processors()' iterative method for multi-cpu systems.
+Currently there is no +processors+ iterative method for multi-cpu systems.
 I plan to add it this in a future release.
    
 == OS X
@@ -21,14 +21,14 @@ This is pure Ruby. This version reads information out of /proc/cpuinfo and
 /proc/loadavg, so if /proc isn't mounted it won't work.
 
 The key-value information in /proc/cpuinfo is stored internally (i.e. in
-memory) as an array of hashes when you first 'require' this package.  This
+memory) as an array of hashes when you first +require+ this package. This
 overhead is exceptionally minimal, given that your average cpuinfo file
 contains less than 1k of text (and I don't store whitespace or newlines).
 
 The text documentation for Linux is dynamically generated during the
 build process because the fields vary depending on your setup. So, don't
 look at it until *after* you've installed it.  You will see a doc/linux.txt
-file after you run 'rake install' (via install.rb).
+file after you run +rake install+ (via install.rb).
 
 == HP-UX
 Unlike other platforms, you can get load averages for an individual cpu in

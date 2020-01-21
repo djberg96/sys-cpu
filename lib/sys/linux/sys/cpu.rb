@@ -2,23 +2,24 @@
 # linux.rb (sys-cpu) - pure Ruby version for Linux
 ##########################################################
 module Sys
+  class CPU; end
 
   # :stopdoc:
 
   private
 
-  cpu_file   = "/proc/cpuinfo"
-  cpu_hash   = {}
   CPU_ARRAY = []
 
   # Parse the info out of the /proc/cpuinfo file
+  cpu_file  = '/proc/cpuinfo'.freeze
+  cpu_hash  = {}
   IO.foreach(cpu_file){ |line|
     line.strip!
     next if line.empty?
 
-    key, val = line.split(":")
+    key, val = line.split(':')
     key.strip!
-    key.gsub!(/\s+/,"_")
+    key.gsub!(/\s+/, '_')
     key.downcase!
     val.strip! if val
 
@@ -27,12 +28,17 @@ module Sys
       cpu_hash.clear
     end
 
-    # Turn yes/no attributes into booleans
+    # Turn yes/no attributes into booleans, numbers into actual numbers
     if val == 'yes'
       val = true
     elsif val == 'no'
       val = false
+    else
+      val = Integer(val) rescue Float(val) rescue val
     end
+
+    # Convert numbers to actual numbers
+    Sys::CPU.send(:define_singleton_method, key){ val }
 
     cpu_hash[key] = val
   }
@@ -51,7 +57,7 @@ module Sys
 
     # :startdoc:
 
-    # In block form, yields a CPUStruct for each CPU on the system.  In
+    # In block form, yields a CPUStruct for each CPU on the system. In
     # non-block form, returns an Array of CPUStruct's.
     #
     # The exact members of the struct vary on Linux systems.
@@ -70,26 +76,13 @@ module Sys
       array unless block_given?
     end
 
-    private
-
-    # Create singleton methods for each of the attributes.
-    #
-    def self.method_missing(id, arg=0)
-      rv = CPU_ARRAY[arg][id.to_s]
-      if rv.nil?
-        id = id.to_s + "?"
-        rv = CPU_ARRAY[arg][id]
-      end
-      rv
-    end
-
     public
 
     # Returns a 3 element Array corresponding to the 1, 5 and 15 minute
     # load average for the system.
     #
     def self.load_avg
-      load_avg_file = "/proc/loadavg"
+      load_avg_file = '/proc/loadavg'.freeze
       IO.readlines(load_avg_file).first.split[0..2].map{ |e| e.to_f }
     end
 
@@ -110,7 +103,7 @@ module Sys
     # Note that older kernels may not necessarily include some of these fields.
     #
     def self.cpu_stats
-      cpu_stat_file = "/proc/stat"
+      cpu_stat_file = '/proc/stat'.freeze
       hash = {} # Hash needed for multi-cpu systems
 
       lines = IO.readlines(cpu_stat_file)
@@ -121,7 +114,7 @@ module Sys
 
         # Some machines list a 'cpu' and a 'cpu0'. In this case only
         # return values for the numbered cpu entry.
-        if lines[i].split[0] == "cpu" && lines[i+1].split[0] =~ /cpu\d/
+        if lines[i].split[0] == 'cpu' && lines[i+1].split[0] =~ /cpu\d/
           next
         end
 

@@ -1,3 +1,6 @@
+== 0.8.3 - 18-Mar-2020
+* Properly include a LICENSE file as per the Apache-2.0 license.
+
 == 0.8.2 - 14-Jan-2020
 * Added explicit .rdoc extension to README, CHANGES and MANIFEST files.
 * Fixed license name in README.

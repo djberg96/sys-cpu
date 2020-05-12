@@ -1,3 +1,10 @@
+== 0.9.0 - 12-May-2020
+* Added explicit freq, architecture, num_cpu and model methods to the Linux
+  version in an effort to create a common interface across platforms.
+* Modified the Linux version so that method_missing will raise a NoMethodError
+  if you try to call access an attribute that doesn't exist.
+* Some updates to the Linux tests.
+
 == 0.8.3 - 18-Mar-2020
 * Properly include a LICENSE file as per the Apache-2.0 license.
 

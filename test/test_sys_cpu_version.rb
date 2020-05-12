@@ -10,7 +10,7 @@ require 'test-unit'
 
 class TC_Sys_CPU_VERSION < Test::Unit::TestCase
   test "version number is set to the expected value" do
-    assert_equal('0.8.3', Sys::CPU::VERSION)
+    assert_equal('0.9.0', Sys::CPU::VERSION)
   end
 
   test "version number is frozen" do

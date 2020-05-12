@@ -2,7 +2,7 @@ require 'rubygems'
 
 Gem::Specification.new do |spec|
   spec.name       = 'sys-cpu'
-  spec.version    = '0.8.3'
+  spec.version    = '0.9.0'
   spec.author     = 'Daniel J. Berger'
   spec.email      = 'djberg96@gmail.com'
   spec.license    = 'Apache-2.0'

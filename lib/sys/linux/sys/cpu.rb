@@ -106,6 +106,7 @@ module Sys
     # Create singleton methods for each of the attributes.
     #
     def self.method_missing(id, arg=0)
+      raise NoMethodError, "'#{id}'" unless CPU_ARRAY[arg].has_key?(id.to_s)
       rv = CPU_ARRAY[arg][id.to_s]
       if rv.nil?
         id = id.to_s + "?"

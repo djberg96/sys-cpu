@@ -7,25 +7,48 @@
 require 'sys/cpu'
 require 'test-unit'
 require 'test_sys_cpu_version'
-include Sys
 
 class TC_Sys_CPU_Linux < Test::Unit::TestCase
-  def test_all_dynamic_methods
+  test "dynamic methods are defined as expected" do
     assert_nothing_raised{
-      CPU.processors{ |cs|
+      Sys::CPU.processors{ |cs|
         cs.members.each{ |m| cs[m].to_s }
       }
     }
   end
 
-  def test_load_avg
-    assert_nothing_raised{ CPU.load_avg }
-    assert_equal(3, CPU.load_avg.length)
+  test "load average works as expected" do
+    assert_nothing_raised{ Sys::CPU.load_avg }
+    assert_equal(3, Sys::CPU.load_avg.length)
   end
 
-  def test_cpu_stats
-    assert_nothing_raised{ CPU.cpu_stats }
-    assert_kind_of(Hash, CPU.cpu_stats)
-    assert_equal(true, CPU.cpu_stats['cpu0'].length >= 4)
+  test "cpu_stats works as expected" do
+    assert_nothing_raised{ Sys::CPU.cpu_stats }
+    assert_kind_of(Hash, Sys::CPU.cpu_stats)
+    assert_true(Sys::CPU.cpu_stats['cpu0'].length >= 4)
+  end
+
+  test "architecture works as expected" do
+    assert_nothing_raised{ Sys::CPU.architecture }
+    assert_kind_of(String, Sys::CPU.architecture)
+  end
+
+  test "model works as expected" do
+    assert_nothing_raised{ Sys::CPU.model }
+    assert_kind_of(String, Sys::CPU.model)
+  end
+
+  test "freq works as expected" do
+    assert_nothing_raised{ Sys::CPU.freq }
+    assert_kind_of(Numeric, Sys::CPU.freq)
+  end
+
+  test "num_cpu works as expected" do
+    assert_nothing_raised{ Sys::CPU.num_cpu }
+    assert_kind_of(Numeric, Sys::CPU.num_cpu)
+  end
+
+  test "bogus methods are not picked up by method_missing" do
+    assert_raise(NoMethodError){ Sys::CPU.bogus }
   end
 end

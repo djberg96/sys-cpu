@@ -1,4 +1,5 @@
 * install.rb
+* LICENSE
 * MANIFEST.rdoc
 * CHANGES.rdoc
 * Rakefile

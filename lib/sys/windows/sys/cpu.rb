@@ -278,7 +278,7 @@ module Sys
     # Note that this value returns nil on my system.
     #
     def self.get_cmec(num)
-      case
+      case num
         when 0
           str = "The device is working properly."
           return str

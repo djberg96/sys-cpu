@@ -13,6 +13,6 @@ RSpec.describe Sys::CPU::VERSION do
   end
 
   example "version number is frozen" do
-    expect(Sys::CPU::VERSION).to be_frozen?
+    expect(Sys::CPU::VERSION).to be_frozen
   end
 end

@@ -5,7 +5,7 @@
 #############################################################
 require 'sys/cpu'
 require 'rbconfig'
-require 'rspec'
+require 'spec_helper'
 include Sys
 
 RSpec.describe Sys::CPU, :bsd => true do

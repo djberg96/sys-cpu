@@ -1,7 +1,7 @@
 require 'rake'
 require 'rake/clean'
-require 'rake/testtask'
 require 'rbconfig'
+require 'rspec/core/rake_task'
 include RbConfig
 
 CLEAN.include('**/*.gem', '**/*.rbc', '**/*.rbx')
@@ -44,9 +44,7 @@ task :example => [:clean] do
 
 end
 
-Rake::TestTask.new do |t|
-  t.libs << 'test'
-  t.test_files = FileList['test/test_sys_cpu.rb']
-end
+desc "Run the test suite"
+RSpec::Core::RakeTask.new(:spec)
 
-task :default => :test
+task :default => :spec

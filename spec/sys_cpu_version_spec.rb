@@ -1,9 +1,8 @@
 #######################################################################
-# sys_cpu_version_spec.rb
+# sys_cpu_spec.rb
 #
-# The sole purpose of this test case is to verify the version number.
-# This reduces the pain of having separate tests for the VERSION
-# constant in every single test case.
+# Only shared specs go here. Everything else goes into its own tagged
+# spec file.
 #######################################################################
 require 'sys/cpu'
 require 'rspec'

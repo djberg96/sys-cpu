@@ -1,3 +1,5 @@
+require 'rspec'
+
 RSpec.configure do |config|
   config.filter_run_excluding(:bsd) if RbConfig::CONFIG['host_os'] !~ /bsd|darwin|mach|osx/i
   config.filter_run_excluding(:sunos) if RbConfig::CONFIG['host_os'] !~ /sunos|solaris/i

@@ -20,9 +20,10 @@
 * lib/sys/linux/sys/cpu.rb
 * lib/sys/unix/sys/cpu.rb
 * lib/sys/windows/sys/cpu.rb
-* test/test_sys_cpu.rb
-* test/test_sys_cpu_bsd.rb
-* test/test_sys_cpu_hpux.rb
-* test/test_sys_cpu_sunos.rb
-* test/test_sys_cpu_linux.rb
-* test/test_sys_cpu_windows.rb
+* spec/spec_helper.rb
+* spec/sys_cpu_spec.rb
+* spec/sys_cpu_bsd_spec.rb
+* spec/sys_cpu_hpux_spec.rb
+* spec/sys_cpu_linux_spec.rb
+* spec/sys_cpu_sunos_spec.rb
+* spec/sys_cpu_windows_spec.rb

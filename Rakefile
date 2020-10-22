@@ -4,7 +4,7 @@ require 'rbconfig'
 require 'rspec/core/rake_task'
 include RbConfig
 
-CLEAN.include('**/*.gem', '**/*.rbc', '**/*.rbx')
+CLEAN.include('**/*.gem', '**/*.rbc', '**/*.rbx', '**/*.lock')
 
 namespace 'gem' do
   desc "Create the sys-cpu gem"

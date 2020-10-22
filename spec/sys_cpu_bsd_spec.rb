@@ -4,7 +4,6 @@
 # The test case for sys-cpu on BSD flavors, including OS X.
 #############################################################
 require 'sys/cpu'
-require 'rbconfig'
 require 'spec_helper'
 
 RSpec.describe Sys::CPU, :bsd => true do

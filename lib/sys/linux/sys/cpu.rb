@@ -5,11 +5,11 @@ module Sys
 
   # :stopdoc:
 
-  private
-
   cpu_file   = "/proc/cpuinfo"
   cpu_hash   = {}
   CPU_ARRAY = []
+
+  private_constant :CPU_ARRAY
 
   # Parse the info out of the /proc/cpuinfo file
   IO.foreach(cpu_file){ |line|
@@ -39,8 +39,6 @@ module Sys
 
   CPU_ARRAY.push(cpu_hash)
 
-  public
-
   # :startdoc:
 
   class CPU
@@ -48,6 +46,8 @@ module Sys
     # :stopdoc:
 
     CPUStruct = Struct.new("CPUStruct", *CPU_ARRAY.first.keys)
+
+    private_constant :CPUStruct
 
     # :startdoc:
 
@@ -101,8 +101,6 @@ module Sys
       CPU_ARRAY.first['cpu_mhz'].to_f.round
     end
 
-    private
-
     # Create singleton methods for each of the attributes.
     #
     def self.method_missing(id, arg=0)
@@ -115,7 +113,7 @@ module Sys
       rv
     end
 
-    public
+    private_class_method :method_missing
 
     # Returns a 3 element Array corresponding to the 1, 5 and 15 minute
     # load average for the system.
@@ -157,7 +155,7 @@ module Sys
           next
         end
 
-        vals = array[1..-1].map{ |e| e = e.to_i / 100 } # 100 jiffies/sec.
+        vals = array[1..-1].map{ |e| e.to_i / 100 } # 100 jiffies/sec.
         hash[array[0]] = vals
       }
 

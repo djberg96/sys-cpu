@@ -17,10 +17,10 @@ module Sys
     # Error raised if any of the Sys::CPU methods fail.
     class Error < StandardError; end
 
-    private
-
     # Base connect string
     BASE_CS = "winmgmts:{impersonationLevel=impersonate}" # :nodoc:
+
+    private_constant :BASE_CS
 
     # Fields used in the CPUStruct
     fields = %w[
@@ -73,7 +73,7 @@ module Sys
     # The struct returned by the CPU.processors method
     CPUStruct = Struct.new("CPUStruct", *fields) # :nodoc:
 
-    public
+    private_constant :CPUStruct
 
     # Returns the +host+ CPU's architecture, or nil if it cannot be
     # determined.
@@ -398,6 +398,8 @@ module Sys
       end
     end
 
+    private_class_method :get_cmec
+
     # Convert an cpu architecture number to a string
     def self.get_cpu_arch(num)
       case num
@@ -417,6 +419,8 @@ module Sys
           return nil
       end
     end
+
+    private_class_method :get_cpu_arch
 
     # convert an Availability number into a string
     def self.get_availability(num)
@@ -468,6 +472,8 @@ module Sys
       end
     end
 
+    private_class_method :get_availability
+
     # convert CpuStatus to a string form.  Note that values 5 and 6 are
     # skipped because they're reserved.
     def self.get_status(num)
@@ -488,6 +494,8 @@ module Sys
           return nil
       end
     end
+
+    private_class_method :get_status
 
     # Convert a family number into the equivalent string
     def self.get_family(num)
@@ -703,6 +711,8 @@ module Sys
       end
     end
 
+    private_class_method :get_family
+
     # Convert power management capabilities number to its equivalent string
     def self.get_pmc(num)
       case num
@@ -727,6 +737,8 @@ module Sys
       end
     end
 
+    private_class_method :get_pmc
+
     # Convert a processor type into its equivalent string
     def self.get_processor_type(num)
       case num
@@ -746,6 +758,8 @@ module Sys
           return nil
       end
     end
+
+    private_class_method :get_processor_type
 
     # Convert an upgrade method into its equivalent string
     def self.get_upgrade_method(num)
@@ -779,6 +793,8 @@ module Sys
       end
     end
 
+    private_class_method :get_upgrade_method
+
     # Convert return values to voltage cap values (floats)
     def self.get_voltage_caps(num)
       case num
@@ -792,5 +808,7 @@ module Sys
           return nil
       end
     end
+
+    private_class_method :get_voltage_caps
   end
 end

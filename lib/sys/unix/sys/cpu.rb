@@ -95,7 +95,7 @@ module Sys
         buf = 0.chr * 257
 
         if sysinfo(SI_ARCHITECTURE, buf, buf.size) < 0
-          raise Error, "sysinfo function failed"
+          raise Error, 'sysinfo function failed'
         end
 
         buf.strip
@@ -112,7 +112,7 @@ module Sys
         end
 
         if sysctlbyname(name, optr, size, nil, 0) < 0
-          raise Error, "sysctlbyname function failed"
+          raise Error, 'sysctlbyname function failed'
         end
 
         optr.read_string
@@ -125,7 +125,7 @@ module Sys
         size.write_int(buf.size)
 
         if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, "sysctl function failed"
+          raise Error, 'sysctl function failed'
         end
 
         buf.strip
@@ -144,7 +144,7 @@ module Sys
         size.write_long(optr.size)
 
         if sysctlbyname('hw.ncpu', optr, size, nil, 0) < 0
-          raise Error, "sysctlbyname failed"
+          raise Error, 'sysctlbyname failed'
         end
 
         optr.read_long
@@ -152,7 +152,7 @@ module Sys
         num = sysconf(SC_NPROCESSORS_ONLN)
 
         if num < 0
-          raise Error, "sysconf function failed"
+          raise Error, 'sysconf function failed'
         end
 
         num
@@ -165,10 +165,10 @@ module Sys
         size.write_int(buf.size)
 
         if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, "sysctl function failed"
+          raise Error, 'sysctl function failed'
         end
 
-        buf.strip.unpack("C").first
+        buf.strip.unpack('C').first
       end
     end
 
@@ -186,7 +186,7 @@ module Sys
         size.write_int(buf.size)
 
         if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, "sysctl function failed"
+          raise Error, 'sysctl function failed'
         end
 
         buf.strip
@@ -194,7 +194,7 @@ module Sys
         buf = 0.chr * 257
 
         if sysinfo(SI_MACHINE, buf, buf.size) < 0
-          raise Error, "sysinfo function failed"
+          raise Error, 'sysinfo function failed'
         end
 
         buf.strip
@@ -210,19 +210,19 @@ module Sys
 
         size.write_long(ptr.size)
 
-        if sysctlbyname("hw.cputype", ptr, size, nil, 0) < 0
-          raise "sysctlbyname function failed"
+        if sysctlbyname('hw.cputype', ptr, size, nil, 0) < 0
+          raise 'sysctlbyname function failed'
         end
 
         case ptr.read_long
           when  CPU_TYPE_X86, CPU_TYPE_X86_64
-            "Intel"
+            'Intel'
           when CPU_TYPE_SPARC
-            "Sparc"
+            'Sparc'
           when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
-            "PowerPC"
+            'PowerPC'
           else
-            "Unknown"
+            'Unknown'
         end
       else
         if respond_to?(:sysctl, true)
@@ -234,7 +234,7 @@ module Sys
           size.write_int(buf.size)
 
           if sysctl(mib, 2, buf, size, nil, 0) < 0
-            raise Error, "sysctl function failed"
+            raise Error, 'sysctl function failed'
           end
 
           buf.strip
@@ -244,7 +244,7 @@ module Sys
           # Some systems start at 0, some at 1
           if processor_info(0, pinfo) < 0
             if processor_info(1, pinfo) < 0
-              raise Error, "process_info function failed"
+              raise Error, 'process_info function failed'
             end
           end
 
@@ -269,7 +269,7 @@ module Sys
         end
 
         if sysctlbyname(name, optr, size, nil, 0) < 0
-          raise Error, "sysctlbyname failed"
+          raise Error, 'sysctlbyname failed'
         end
 
         if RbConfig::CONFIG['host_os'] =~ /darwin/i
@@ -286,17 +286,17 @@ module Sys
         size.write_int(buf.size)
 
         if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, "sysctl function failed"
+          raise Error, 'sysctl function failed'
         end
 
-        buf.unpack("I*").first / 1000000
+        buf.unpack('I*').first / 1000000
       else
         pinfo = ProcInfo.new
 
         # Some systems start at 0, some at 1
         if processor_info(0, pinfo) < 0
           if processor_info(1, pinfo) < 0
-            raise Error, "process_info function failed"
+            raise Error, 'process_info function failed'
           end
         end
 
@@ -312,7 +312,7 @@ module Sys
         loadavg = FFI::MemoryPointer.new(:double, 3)
 
         if getloadavg(loadavg, loadavg.size) < 0
-          raise Error, "getloadavg function failed"
+          raise Error, 'getloadavg function failed'
         end
 
         loadavg.get_array_of_double(0, 3)
@@ -330,7 +330,7 @@ module Sys
 
       if processor_info(0, pinfo) < 0
         if processor_info(1, pinfo) < 0
-          raise Error, "process_info function failed"
+          raise Error, 'process_info function failed'
         end
       end
 
@@ -348,24 +348,24 @@ module Sys
       pinfo = ProcInfo.new
 
       if processor_info(num, pinfo) < 0
-        raise Error, "process_info function failed"
+        raise Error, 'process_info function failed'
       end
 
       case pinfo[:pi_state].to_i
         when P_ONLINE
-          "online"
+          'online'
         when P_OFFLINE
-          "offline"
+          'offline'
         when P_POWEROFF
-          "poweroff"
+          'poweroff'
         when P_FAULTED
-          "faulted"
+          'faulted'
         when P_NOINTR
-          "nointr"
+          'nointr'
         when P_SPARE
-          "spare"
+          'spare'
         else
-          "unknown"
+          'unknown'
       end
     end
   end

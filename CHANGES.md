@@ -1,41 +1,41 @@
-== 0.9.0 - 12-May-2020
+## 0.9.0 - 12-May-2020
 * Added explicit freq, architecture, num_cpu and model methods to the Linux
   version in an effort to create a common interface across platforms.
 * Modified the Linux version so that method_missing will raise a NoMethodError
   if you try to call access an attribute that doesn't exist.
 * Some updates to the Linux tests.
 
-== 0.8.3 - 18-Mar-2020
+## 0.8.3 - 18-Mar-2020
 * Properly include a LICENSE file as per the Apache-2.0 license.
 
-== 0.8.2 - 14-Jan-2020
+## 0.8.2 - 14-Jan-2020
 * Added explicit .rdoc extension to README, CHANGES and MANIFEST files.
 * Fixed license name in README.
 
-== 0.8.1 - 4-Nov-2018
+## 0.8.1 - 4-Nov-2018
 * Added metadata to the gemspec.
 * Fixed missing hyphen in license name.
 
-== 0.8.0 - 17-Oct-2018
+## 0.8.0 - 17-Oct-2018
 * Switched license to Apache 2.0.
 * Updated documentation for the cpu_stats method on Linux.
 * The VERSION constant is now frozen.
 * Now uses require_relative internally where needed.
 
-== 0.7.2 - 5-Sep-2015
+## 0.7.2 - 5-Sep-2015
 * Replaced a global array with a constant in the Linux version. Thanks go
   to Yorick Peterse for the patch.
 * Added method comments back to the Unix version.
 * Added a sys-cpu.rb stub file for your convenience.
 * This gem is now signed.
 
-== 0.7.1 - 2-May-2013
+## 0.7.1 - 2-May-2013
 * Added a workaround for a win32ole bug in the Windows version.
 * Reorganized code so that there is now a single gem rather than three
   separate platform gems.
 * Updated test-unit dependency which let me simplify the test files a bit.
 
-== 0.7.0 - 14-Dec-2011
+## 0.7.0 - 14-Dec-2011
 * Code base now uses FFI. However, HP-UX is not currently supported.
   HP-UX users should continue to use the 0.6.x version. Note that
   the code base remains unchanged on Linux and Windows.
@@ -44,7 +44,7 @@
 * The type method has been changed to cpu_type on Windows.
 * Some Rakefile and test suite updates.
 
-== 0.6.4 - 27-Sep-2011
+## 0.6.4 - 27-Sep-2011
 * The CPU.freq method now works on OSX.
 * The CPU.model method on OSX has been altered. Previously it
   returned the machine model. However, the information is limited.
@@ -52,7 +52,7 @@
 * The Linux and Windows gems now have a 'universal' architecture.
 * Refactored the clean task in the Rakefile.
 
-== 0.6.3 - 9-Oct-2010
+## 0.6.3 - 9-Oct-2010
 * Fixed a bug in the install.rb file and refactored it a bit. Thanks go
   to Di-an Jan for the spot. Note, however, that this file will eventually
   be removed and/or integrated into the Linux source file.
@@ -60,7 +60,7 @@
 * Fixed and updated the CPU.architecture method on MS Windows to handle IA64
   and x64 architectures.
 
-== 0.6.2 - 1-Jan-2010
+## 0.6.2 - 1-Jan-2010
 * Fixed a bug in the cpu_freq function (which would only be noticed on
   certain platforms in cases where the CPU.freq method failed). Thanks
   go to Edho P Arief for the spot.
@@ -73,13 +73,13 @@
 * Test files renamed.
 * Added test-unit 2.x as a development dependency.
 
-== 0.6.1 - 4-Jan-2009
+## 0.6.1 - 4-Jan-2009
 * Fix for OS X 10.5.x. Thanks go to Victor Costan for the spot and the patch.
 * Updated the gemspec and some other minor changes.
 * On MS Windows the impersonation level is now explicitly set to 'impersonate'
   to avoid issues where systems might be using an older version of WMI.
 
-== 0.6.0 - 26-Apr-2007
+## 0.6.0 - 26-Apr-2007
 * Added support for most BSD flavors, including OS X. The freebsd.c file is
   now just bsd.c.
 * The CPU.type method for Solaris has been changed to CPU.cpu_type to avoid
@@ -91,7 +91,7 @@
 * Improved RDoc comments in the C source files.
 * Changed CPUError to CPU::Error.
 
-== 0.5.5 - 17-Nov-2006
+## 0.5.5 - 17-Nov-2006
 * Fixed a bug in the Linux version where there could be a key but no
    associated value, causing a String#strip! call to fail.  Now the value is
    simply left at nil.
@@ -101,14 +101,14 @@
 * Modified the gemspec so that it sets the platform properly for Linux
   and Windows.
 
-== 0.5.4 - 12-Jul-2006
+## 0.5.4 - 12-Jul-2006
 * Added a gemspec (and a gem on RubyForge).
 * The CPU.architecture method on HP-UX now returns nil if it cannot be
   determined instead of "Unknown" for consistency with the other
   platforms.
 * Inlined the RDoc and made some minor cosmetic source code changes.
 
-== 0.5.3 - 4-May-2006
+## 0.5.3 - 4-May-2006
 * Fixed in a bug in the Solaris version where CPU.load_avg returned bad values
   when compiled in 64 bit mode.  Thanks go to James Hranicky for the spot and
   both James Hranicky and Peter Tribble (via comp.unix.solaris) for patches.
@@ -116,7 +116,7 @@
   which test suite to run.  All platforms now use 'ts_all.rb', which will run
   the appropriate test case behind the scenes.
 
-== 0.5.2 - 24-Jun-2005
+## 0.5.2 - 24-Jun-2005
 * Bug fixed on Linux where empty lines could cause problems.  This affected
   both the install.rb and linux.rb files, though it only seems to have been
   an issue on the 2.6+ kernel.
@@ -125,7 +125,7 @@
   is the only entry.
 * Added a sample program for Linux under the 'examples' directory.
 
-== 0.5.1 - 5-May-2005
+## 0.5.1 - 5-May-2005
 * Fixed a potential bug in the FreeBSD version of CPU.model.
 * Eliminated some warnings in the FreeBSD version.
 * Moved examples directory to the toplevel package directory.
@@ -138,7 +138,7 @@
   doc/linux.txt.
 * Some $LOAD_PATH setup changes in the unit tests.
 
-== 0.5.0 - 26-Jun-2004
+## 0.5.0 - 26-Jun-2004
 * Now requires Ruby 1.8.0 or later.
 * FreeBSD support added.
 * Replaced 'CPUException' with 'CPUError'
@@ -152,7 +152,7 @@
 * The .html files have been removed.  You can generate the html on your own
   if you like.
 
-== 0.4.0 - 18-Sep-2003
+## 0.4.0 - 18-Sep-2003
 * Added MS Windows support
 * Changed some method names.  The "cpu" has been dropped from most method
   names.  See documentation for details.
@@ -164,14 +164,14 @@
 * Minor API change for the load_avg() method on HP-UX.  It now accepts a
   CPU number as an argument.
 
-== 0.3.1 - 16-Jul-2003
+## 0.3.1 - 16-Jul-2003
 * Fixed a bug in the Solaris version that was using up and not
   freeing file descriptors.
 * Added html doc for Solaris under doc directory.
 * Minor changes to test_hpux.rb and test_sunos.rb
 * Minor README changes.
 
-== 0.3.0 - 30-Jun-2003
+## 0.3.0 - 30-Jun-2003
 * Added HP-UX support
 * Removed the VERSION class method.  Use the constant instead
 * Changed license to "Artistic"
@@ -180,7 +180,7 @@
 * Modified extconf.rb, moving some of the dynamic test generation
   into separate files
 
-== 0.2.2 - 25-Mar-2003
+## 0.2.2 - 25-Mar-2003
 * fpu_type and cpu_type now return nil if not found (Solaris)
 * CPUException is now a direct subclass of StandardError
 * Modified extconf.rb script
@@ -188,19 +188,19 @@
 * Added another test to the solaris test suite
 * Important note added to INSTALL file
 
-== 0.2.1 - 12-Mar-2003
+## 0.2.1 - 12-Mar-2003
 * Added the cpu_stats() class method for Linux, which contains the
   data from the 'cpu' lines of /proc/stat
 * Minor fix for extconf.rb (thanks Michael Granger)
 * Some tests added to Linux test suite
 * MANIFEST correction
 
-== 0.2.0 - 13-Feb-2003
+## 0.2.0 - 13-Feb-2003
 * Linux support added (pure Ruby only)
 * Many changes to extconf.rb to support Linux version
 * sys-uname prerequisite dropped
 * rd2 documentation now kept separate from source
 
-== 0.1.0 - 3-Feb-2003
+## 0.1.0 - 3-Feb-2003
 * Initial release
 * Currently supports Solaris (only)

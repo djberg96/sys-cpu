@@ -1,3 +1,10 @@
+## 1.0.0 - 20-Dec-2020
+* Switched from test-unit to rspec, along with some general reworking.
+* Switched from rdoc to markdown.
+* Fixed a bug in the private get_cmec method for Windows, which also revealed
+  a bug in core JRuby (https://github.com/jruby/jruby/issues/6440). Thanks go 
+  to G. Gibson for the spot.
+
 ## 0.9.0 - 12-May-2020
 * Added explicit freq, architecture, num_cpu and model methods to the Linux
   version in an effort to create a common interface across platforms.

@@ -2,7 +2,7 @@ require 'rubygems'
 
 Gem::Specification.new do |spec|
   spec.name       = 'sys-cpu'
-  spec.version    = '1.0.0'
+  spec.version    = '1.0.1'
   spec.author     = 'Daniel J. Berger'
   spec.email      = 'djberg96@gmail.com'
   spec.license    = 'Apache-2.0'
@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.metadata = {
     'homepage_uri'      => 'https://github.com/djberg96/sys-cpu',
     'bug_tracker_uri'   => 'https://github.com/djberg96/sys-cpu/issues',
-    'changelog_uri'     => 'https://github.com/djberg96/sys-cpu/blob/ffi/CHANGES.rdoc',
+    'changelog_uri'     => 'https://github.com/djberg96/sys-cpu/blob/ffi/CHANGES.md',
     'documentation_uri' => 'https://github.com/djberg96/sys-cpu/wiki',
     'source_code_uri'   => 'https://github.com/djberg96/sys-cpu',
     'wiki_uri'          => 'https://github.com/djberg96/sys-cpu/wiki'

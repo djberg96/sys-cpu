@@ -1,9 +1,11 @@
-## 1.0.0 - 20-Dec-2020
-* Switched from test-unit to rspec, along with some general reworking.
+## 1.0.1 - 20-Dec-2020
 * Switched from rdoc to markdown.
-* Fixed a bug in the private get_cmec method for Windows, which also revealed
-  a bug in core JRuby (https://github.com/jruby/jruby/issues/6440). Thanks go 
-  to G. Gibson for the spot.
+
+## 1.0.0 - 23-Oct-2020
+* Fixed a bug in the Windows version where the attempt to convert the ConfigManagerErrorCode
+  to a string was busted. Coincidentally, this also exposed a core bug in JRuby (see PR #6443).
+  Thanks go to G. Gibson for reporting the issue.
+* Switched the tests from test-unit to rspec.
 
 ## 0.9.0 - 12-May-2020
 * Added explicit freq, architecture, num_cpu and model methods to the Linux

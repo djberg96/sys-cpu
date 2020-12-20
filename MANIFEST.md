@@ -1,9 +1,9 @@
 * install.rb
 * LICENSE
-* MANIFEST.rdoc
-* CHANGES.rdoc
+* MANIFEST.md
+* CHANGES.md
 * Rakefile
-* README.rdoc
+* README.md
 * sys-cpu.gemspec
 * certs/djberg96_pub.pem
 * doc/bsd.txt

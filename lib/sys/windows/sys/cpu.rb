@@ -85,7 +85,7 @@ module Sys
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
-        self.get_cpu_arch(wmi.Architecture)
+        get_cpu_arch(wmi.Architecture)
       end
     end
 
@@ -211,10 +211,10 @@ module Sys
         wmi.InstancesOf('Win32_Processor').each{ |cpu|
           yield CPUStruct.new(
             cpu.AddressWidth,
-            self.get_cpu_arch(cpu.Architecture),
-            self.get_availability(cpu.Availability),
+            get_cpu_arch(cpu.Architecture),
+            get_availability(cpu.Availability),
             cpu.Caption,
-            self.get_cmec(cpu.ConfigManagerErrorCode),
+            get_cmec(cpu.ConfigManagerErrorCode),
             cpu.ConfigManagerUserConfig,
             get_status(cpu.CpuStatus),
             cpu.CreationClassName,
@@ -226,7 +226,7 @@ module Sys
             cpu.ErrorCleared,
             cpu.ErrorDescription,
             cpu.ExtClock,
-            self.get_family(cpu.Family),
+            get_family(cpu.Family),
             cpu.InstallDate,
             cpu.L2CacheSize,
             cpu.L2CacheSpeed,

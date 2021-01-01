@@ -5,20 +5,20 @@ module Sys
 
   # :stopdoc:
 
-  private
-
-  cpu_file   = "/proc/cpuinfo"
+  cpu_file   = '/proc/cpuinfo'
   cpu_hash   = {}
   CPU_ARRAY = []
+
+  private_constant :CPU_ARRAY
 
   # Parse the info out of the /proc/cpuinfo file
   IO.foreach(cpu_file){ |line|
     line.strip!
     next if line.empty?
 
-    key, val = line.split(":")
+    key, val = line.split(':')
     key.strip!
-    key.gsub!(/\s+/,"_")
+    key.gsub!(/\s+/,'_')
     key.downcase!
     val.strip! if val
 
@@ -39,15 +39,15 @@ module Sys
 
   CPU_ARRAY.push(cpu_hash)
 
-  public
-
   # :startdoc:
 
   class CPU
 
     # :stopdoc:
 
-    CPUStruct = Struct.new("CPUStruct", *CPU_ARRAY.first.keys)
+    CPUStruct = Struct.new('CPUStruct', *CPU_ARRAY.first.keys)
+
+    private_constant :CPUStruct
 
     # :startdoc:
 
@@ -81,9 +81,9 @@ module Sys
     def self.architecture
       case CPU_ARRAY.first['cpu_family']
       when '3'
-        "x86"
+        'x86'
       when '6'
-        "x86_64"
+        'x86_64'
       else
         nil
       end
@@ -101,27 +101,25 @@ module Sys
       CPU_ARRAY.first['cpu_mhz'].to_f.round
     end
 
-    private
-
     # Create singleton methods for each of the attributes.
     #
     def self.method_missing(id, arg=0)
       raise NoMethodError, "'#{id}'" unless CPU_ARRAY[arg].has_key?(id.to_s)
       rv = CPU_ARRAY[arg][id.to_s]
       if rv.nil?
-        id = id.to_s + "?"
+        id = id.to_s + '?'
         rv = CPU_ARRAY[arg][id]
       end
       rv
     end
 
-    public
+    private_class_method :method_missing
 
     # Returns a 3 element Array corresponding to the 1, 5 and 15 minute
     # load average for the system.
     #
     def self.load_avg
-      load_avg_file = "/proc/loadavg"
+      load_avg_file = '/proc/loadavg'
       IO.readlines(load_avg_file).first.split[0..2].map{ |e| e.to_f }
     end
 
@@ -142,7 +140,7 @@ module Sys
     # Note that older kernels may not necessarily include some of these fields.
     #
     def self.cpu_stats
-      cpu_stat_file = "/proc/stat"
+      cpu_stat_file = '/proc/stat'
       hash = {} # Hash needed for multi-cpu systems
 
       lines = IO.readlines(cpu_stat_file)
@@ -153,11 +151,11 @@ module Sys
 
         # Some machines list a 'cpu' and a 'cpu0'. In this case only
         # return values for the numbered cpu entry.
-        if lines[i].split[0] == "cpu" && lines[i+1].split[0] =~ /cpu\d/
+        if lines[i].split[0] == 'cpu' && lines[i+1].split[0] =~ /cpu\d/
           next
         end
 
-        vals = array[1..-1].map{ |e| e = e.to_i / 100 } # 100 jiffies/sec.
+        vals = array[1..-1].map{ |e| e.to_i / 100 } # 100 jiffies/sec.
         hash[array[0]] = vals
       }
 

@@ -17,10 +17,10 @@ module Sys
     # Error raised if any of the Sys::CPU methods fail.
     class Error < StandardError; end
 
-    private
-
     # Base connect string
-    BASE_CS = "winmgmts:{impersonationLevel=impersonate}" # :nodoc:
+    BASE_CS = 'winmgmts:{impersonationLevel=impersonate}' # :nodoc:
+
+    private_constant :BASE_CS
 
     # Fields used in the CPUStruct
     fields = %w[
@@ -71,9 +71,9 @@ module Sys
     ]
 
     # The struct returned by the CPU.processors method
-    CPUStruct = Struct.new("CPUStruct", *fields) # :nodoc:
+    CPUStruct = Struct.new('CPUStruct', *fields) # :nodoc:
 
-    public
+    private_constant :CPUStruct
 
     # Returns the +host+ CPU's architecture, or nil if it cannot be
     # determined.
@@ -85,7 +85,7 @@ module Sys
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
-        self.get_cpu_arch(wmi.Architecture)
+        get_cpu_arch(wmi.Architecture)
       end
     end
 
@@ -101,7 +101,7 @@ module Sys
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
-        return wmi.CurrentClockSpeed
+        wmi.CurrentClockSpeed
       end
     end
 
@@ -120,7 +120,7 @@ module Sys
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
-        return wmi.LoadPercentage
+        wmi.LoadPercentage
       end
     end
 
@@ -133,7 +133,7 @@ module Sys
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
-        return wmi.Name
+        wmi.Name
       end
     end
 
@@ -148,7 +148,7 @@ module Sys
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
-        return wmi.NumberOfProcessors
+        wmi.NumberOfProcessors
       end
     end
 
@@ -208,13 +208,13 @@ module Sys
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
-        wmi.InstancesOf("Win32_Processor").each{ |cpu|
+        wmi.InstancesOf('Win32_Processor').each{ |cpu|
           yield CPUStruct.new(
             cpu.AddressWidth,
-            self.get_cpu_arch(cpu.Architecture),
-            self.get_availability(cpu.Availability),
+            get_cpu_arch(cpu.Architecture),
+            get_availability(cpu.Availability),
             cpu.Caption,
-            self.get_cmec(cpu.ConfigManagerErrorCode),
+            get_cmec(cpu.ConfigManagerErrorCode),
             cpu.ConfigManagerUserConfig,
             get_status(cpu.CpuStatus),
             cpu.CreationClassName,
@@ -226,7 +226,7 @@ module Sys
             cpu.ErrorCleared,
             cpu.ErrorDescription,
             cpu.ExtClock,
-            self.get_family(cpu.Family),
+            get_family(cpu.Family),
             cpu.InstallDate,
             cpu.L2CacheSize,
             cpu.L2CacheSpeed,
@@ -268,7 +268,7 @@ module Sys
       rescue WIN32OLERuntimeError => e
         raise Error, e
       else
-        return wmi.Manufacturer
+        wmi.Manufacturer
       end
     end
 
@@ -280,517 +280,535 @@ module Sys
     def self.get_cmec(num)
       case num
         when 0
-          str = "The device is working properly."
-          return str
+          str = 'The device is working properly.'
+          str
         when 1
-          str = "The device is not configured correctly."
-          return str
+          str = 'The device is not configured correctly.'
+          str
         when 2
-          str = "Windows cannot load the driver for the device."
-          return str
+          str = 'Windows cannot load the driver for the device.'
+          str
         when 3
-          str = "The driver for the device might be corrupted, or the"
-          str << " system may be running low on memory or other"
-          str << " resources."
-          return str
+          str = 'The driver for the device might be corrupted, or the'
+          str << ' system may be running low on memory or other'
+          str << ' resources.'
+          str
         when 4
-          str = "The device is not working properly. One of the drivers"
-          str << " or the registry might be corrupted."
-          return str
+          str = 'The device is not working properly. One of the drivers'
+          str << ' or the registry might be corrupted.'
+          str
         when 5
-          str = "The driver for this device needs a resource that"
-          str << " Windows cannot manage."
-          return str
+          str = 'The driver for this device needs a resource that'
+          str << ' Windows cannot manage.'
+          str
         when 6
-          str = "The boot configuration for this device conflicts with"
-          str << " other devices."
-          return str
+          str = 'The boot configuration for this device conflicts with'
+          str << ' other devices.'
+          str
         when 7
-          str = "Cannot filter."
-          return str
+          str = 'Cannot filter.'
+          str
         when 8
-          str = "The driver loader for the device is missing."
-          return str
+          str = 'The driver loader for the device is missing.'
+          str
         when 9
-          str = "This device is not working properly because the"
-          str << " controlling firmware is reporting the resources"
-          str << " for the device incorrectly."
-          return str
+          str = 'This device is not working properly because the'
+          str << ' controlling firmware is reporting the resources'
+          str << ' for the device incorrectly.'
+          str
         when 10
-          str = "This device cannot start."
-          return str
+          str = 'This device cannot start.'
+          str
         when 11
-          str = "This device failed."
-          return str
+          str = 'This device failed.'
+          str
         when 12
-          str = "This device cannot find enough free resources that"
-          str << " it can use."
-          return str
+          str = 'This device cannot find enough free resources that'
+          str << ' it can use.'
+          str
         when 13
           str = "Windows cannot verify this device's resources."
-          return str
+          str
         when 14
-          str = "This device cannot work properly until you restart"
-          str << " your computer."
-          return str
+          str = 'This device cannot work properly until you restart'
+          str << ' your computer.'
+          str
         when 15
-          str = "This device is not working properly because there is"
-          str << " probably a re-enumeration problem."
-          return str
+          str = 'This device is not working properly because there is'
+          str << ' probably a re-enumeration problem.'
+          str
         when 16
-           str = "Windows cannot identify all the resources this device "
-           str << " uses."
-           return str
+           str = 'Windows cannot identify all the resources this device '
+           str << ' uses.'
+           str
         when 17
-          str = "This device is asking for an unknown resource type."
-          return str
+          str = 'This device is asking for an unknown resource type.'
+          str
         when 18
-          str = "Reinstall the drivers for this device."
-          return str
+          str = 'Reinstall the drivers for this device.'
+          str
         when 19
-          str = "Failure using the VXD loader."
-          return str
+          str = 'Failure using the VXD loader.'
+          str
         when 20
-          str = "Your registry might be corrupted."
-          return str
+          str = 'Your registry might be corrupted.'
+          str
         when 21
-          str = "System failure: try changing the driver for this device."
-          str << " If that does not work, see your hardware documentation."
-          str << " Windows is removing this device."
-          return str
+          str = 'System failure: try changing the driver for this device.'
+          str << ' If that does not work, see your hardware documentation.'
+          str << ' Windows is removing this device.'
+          str
         when 22
-          str = "This device is disabled."
-          return str
+          str = 'This device is disabled.'
+          str
         when 23
-          str = "System failure: try changing the driver for this device."
+          str = 'System failure: try changing the driver for this device.'
           str << "If that doesn't work, see your hardware documentation."
-          return str
+          str
         when 24
-          str = "This device is not present, not working properly, or"
-          str << " does not have all its drivers installed."
-          return str
+          str = 'This device is not present, not working properly, or'
+          str << ' does not have all its drivers installed.'
+          str
         when 25
-          str = "Windows is still setting up this device."
-          return str
+          str = 'Windows is still setting up this device.'
+          str
         when 26
-          str = "Windows is still setting up this device."
-          return str
+          str = 'Windows is still setting up this device.'
+          str
         when 27
-          str = "This device does not have valid log configuration."
-          return str
+          str = 'This device does not have valid log configuration.'
+          str
         when 28
-          str = "The drivers for this device are not installed."
-          return str
+          str = 'The drivers for this device are not installed.'
+          str
         when 29
-          str = "This device is disabled because the firmware of the"
-          str << " device did not give it the required resources."
-          return str
+          str = 'This device is disabled because the firmware of the'
+          str << ' device did not give it the required resources.'
+          str
         when 30
-          str = "This device is using an Interrupt Request (IRQ)"
-          str << " resource that another device is using."
-          return str
+          str = 'This device is using an Interrupt Request (IRQ)'
+          str << ' resource that another device is using.'
+          str
         when 31
-          str = "This device is not working properly because Windows"
-          str << " cannot load the drivers required for this device"
-          return str
+          str = 'This device is not working properly because Windows'
+          str << ' cannot load the drivers required for this device'
+          str
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_cmec
 
     # Convert an cpu architecture number to a string
     def self.get_cpu_arch(num)
       case num
         when 0
-          return "x86"
+          'x86'
         when 1
-          return "MIPS"
+          'MIPS'
         when 2
-          return "Alpha"
+          'Alpha'
         when 3
-          return "PowerPC"
+          'PowerPC'
         when 6
-          return "IA64"
+          'IA64'
         when 9
-          return "x64"
+          'x64'
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_cpu_arch
 
     # convert an Availability number into a string
     def self.get_availability(num)
       case num
         when 1
-          return "Other"
+          'Other'
         when 2
-          return "Unknown"
+          'Unknown'
         when 3
-          return "Running"
+          'Running'
         when 4
-          return "Warning"
+          'Warning'
         when 5
-          return "In Test"
+          'In Test'
         when 6
-          return "Not Applicable"
+          'Not Applicable'
         when 7
-          return "Power Off"
+          'Power Off'
         when 8
-          return "Off Line"
+          'Off Line'
         when 9
-          return "Off Duty"
+          'Off Duty'
         when 10
-          return "Degraded"
+          'Degraded'
         when 11
-          return "Not Installed"
+          'Not Installed'
         when 12
-          return "Install Error"
+          'Install Error'
         when 13
-          return "Power Save - Unknown"
+          'Power Save - Unknown'
         when 14
-          return "Power Save - Low Power Mode"
+          'Power Save - Low Power Mode'
         when 15
-          return "Power Save - Standby"
+          'Power Save - Standby'
         when 16
-          return "Power Cycle"
+          'Power Cycle'
         when 17
-          return "Power Save - Warning"
+          'Power Save - Warning'
         when 18
-          return "Paused"
+          'Paused'
         when 19
-          return "Not Ready"
+          'Not Ready'
         when 20
-          return "Not Configured"
+          'Not Configured'
         when 21
-          return "Quiesced"
+          'Quiesced'
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_availability
 
     # convert CpuStatus to a string form.  Note that values 5 and 6 are
     # skipped because they're reserved.
     def self.get_status(num)
       case num
         when 0
-          return "Unknown"
+          'Unknown'
         when 1
-          return "Enabled"
+          'Enabled'
         when 2
-          return "Disabled by User via BIOS Setup"
+          'Disabled by User via BIOS Setup'
         when 3
-          return "Disabled By BIOS (POST Error)"
+          'Disabled By BIOS (POST Error)'
         when 4
-          return "Idle"
+          'Idle'
         when 7
-          return "Other"
+          'Other'
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_status
 
     # Convert a family number into the equivalent string
     def self.get_family(num)
       case num
         when 1
-          return "Other"
+          'Other'
         when 2
-          return "Unknown"
+          'Unknown'
         when 3
-          return "8086"
+          '8086'
         when 4
-          return "80286"
+          '80286'
         when 5
-          return "80386"
+          '80386'
         when 6
-          return "80486"
+          '80486'
         when 7
-          return "8087"
+          '8087'
         when 8
-          return "80287"
+          '80287'
         when 9
-          return "80387"
+          '80387'
         when 10
-          return "80487"
+          '80487'
         when 11
-          return "Pentium?"
+          'Pentium?'
         when 12
-          return "Pentium?"
+          'Pentium?'
         when 13
-          return "Pentium?"
+          'Pentium?'
         when 14
-          return "Pentium?"
+          'Pentium?'
         when 15
-          return "Celeron?"
+          'Celeron?'
         when 16
-          return "Pentium?"
+          'Pentium?'
         when 17
-          return "Pentium?"
+          'Pentium?'
         when 18
-          return "M1"
+          'M1'
         when 19
-          return "M2"
+          'M2'
         when 24
-          return "K5"
+          'K5'
         when 25
-          return "K6"
+          'K6'
         when 26
-          return "K6-2"
+          'K6-2'
         when 27
-          return "K6-3"
+          'K6-3'
         when 28
-          return "AMD"
+          'AMD'
         when 29
-          return "AMD?"
+          'AMD?'
         when 30
-          return "AMD2900"
+          'AMD2900'
         when 31
-          return "K6-2+"
+          'K6-2+'
         when 32
-          return "Power"
+          'Power'
         when 33
-          return "Power"
+          'Power'
         when 34
-          return "Power"
+          'Power'
         when 35
-          return "Power"
+          'Power'
         when 36
-          return "Power"
+          'Power'
         when 37
-          return "Power"
+          'Power'
         when 38
-          return "Power"
+          'Power'
         when 39
-          return "Power"
+          'Power'
         when 48
-          return "Alpha"
+          'Alpha'
         when 49
-          return "Alpha"
+          'Alpha'
         when 50
-          return "Alpha"
+          'Alpha'
         when 51
-          return "Alpha"
+          'Alpha'
         when 52
-          return "Alpha"
+          'Alpha'
         when 53
-          return "Alpha"
+          'Alpha'
         when 54
-          return "Alpha"
+          'Alpha'
         when 55
-          return "Alpha"
+          'Alpha'
         when 64
-          return "MIPS"
+          'MIPS'
         when 65
-          return "MIPS"
+          'MIPS'
         when 66
-          return "MIPS"
+          'MIPS'
         when 67
-          return "MIPS"
+          'MIPS'
         when 68
-          return "MIPS"
+          'MIPS'
         when 69
-          return "MIPS"
+          'MIPS'
         when 80
-          return "SPARC"
+          'SPARC'
         when 81
-          return "SuperSPARC"
+          'SuperSPARC'
         when 82
-          return "microSPARC"
+          'microSPARC'
         when 83
-          return "microSPARC"
+          'microSPARC'
         when 84
-          return "UltraSPARC"
+          'UltraSPARC'
         when 85
-          return "UltraSPARC"
+          'UltraSPARC'
         when 86
-          return "UltraSPARC"
+          'UltraSPARC'
         when 87
-          return "UltraSPARC"
+          'UltraSPARC'
         when 88
-          return "UltraSPARC"
+          'UltraSPARC'
         when 96
-          return "68040"
+          '68040'
         when 97
-          return "68xxx"
+          '68xxx'
         when 98
-          return "68000"
+          '68000'
         when 99
-          return "68010"
+          '68010'
         when 100
-          return "68020"
+          '68020'
         when 101
-          return "68030"
+          '68030'
         when 112
-          return "Hobbit"
+          'Hobbit'
         when 120
-          return "Crusoe?"
+          'Crusoe?'
         when 121
-          return "Crusoe?"
+          'Crusoe?'
         when 128
-          return "Weitek"
+          'Weitek'
         when 130
-          return "Itanium?"
+          'Itanium?'
         when 144
-          return "PA-RISC"
+          'PA-RISC'
         when 145
-          return "PA-RISC"
+          'PA-RISC'
         when 146
-          return "PA-RISC"
+          'PA-RISC'
         when 147
-          return "PA-RISC"
+          'PA-RISC'
         when 148
-          return "PA-RISC"
+          'PA-RISC'
         when 149
-          return "PA-RISC"
+          'PA-RISC'
         when 150
-          return "PA-RISC"
+          'PA-RISC'
         when 160
-          return "V30"
+          'V30'
         when 176
-          return "Pentium?"
+          'Pentium?'
         when 177
-          return "Pentium?"
+          'Pentium?'
         when 178
-          return "Pentium?"
+          'Pentium?'
         when 179
-          return "Intel?"
+          'Intel?'
         when 180
-          return "AS400"
+          'AS400'
         when 181
-          return "Intel?"
+          'Intel?'
         when 182
-          return "AMD"
+          'AMD'
         when 183
-          return "AMD"
+          'AMD'
         when 184
-          return "Intel?"
+          'Intel?'
         when 185
-          return "AMD"
+          'AMD'
         when 190
-          return "K7"
+          'K7'
         when 200
-          return "IBM390"
+          'IBM390'
         when 201
-          return "G4"
+          'G4'
         when 202
-          return "G5"
+          'G5'
         when 250
-          return "i860"
+          'i860'
         when 251
-          return "i960"
+          'i960'
         when 260
-          return "SH-3"
+          'SH-3'
         when 261
-          return "SH-4"
+          'SH-4'
         when 280
-          return "ARM"
+          'ARM'
         when 281
-          return "StrongARM"
+          'StrongARM'
         when 300
-          return "6x86"
+          '6x86'
         when 301
-          return "MediaGX"
+          'MediaGX'
         when 302
-          return "MII"
+          'MII'
         when 320
-          return "WinChip"
+          'WinChip'
         when 350
-          return "DSP"
+          'DSP'
         when 500
-          return "Video"
+          'Video'
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_family
 
     # Convert power management capabilities number to its equivalent string
     def self.get_pmc(num)
       case num
         when 0
-          return "Unknown"
+          'Unknown'
         when 1
-          return "Not Supported"
+          'Not Supported'
         when 2
-          return "Disabled"
+          'Disabled'
         when 3
-          return "Enabled"
+          'Enabled'
         when 4
-          return "Power Saving Modes Entered Automatically"
+          'Power Saving Modes Entered Automatically'
         when 5
-          return "Power State Settable"
+          'Power State Settable'
         when 6
-          return "Power Cycling Supported"
+          'Power Cycling Supported'
         when 7
-          return "Timed Power On Supported"
+          'Timed Power On Supported'
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_pmc
 
     # Convert a processor type into its equivalent string
     def self.get_processor_type(num)
       case num
         when 1
-          return "Other"
+          'Other'
         when 2
-          return "Unknown"
+          'Unknown'
         when 3
-          return "Central Processor"
+          'Central Processor'
         when 4
-          return "Math Processor"
+          'Math Processor'
         when 5
-          return "DSP Processor"
+          'DSP Processor'
         when 6
-          return "Video Processor"
+          'Video Processor'
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_processor_type
 
     # Convert an upgrade method into its equivalent string
     def self.get_upgrade_method(num)
       case num
         when 1
-          return "Other"
+          'Other'
         when 2
-          return "Unknown"
+          'Unknown'
         when 3
-          return "Daughter Board"
+          'Daughter Board'
         when 4
-          return "ZIF Socket"
+          'ZIF Socket'
         when 5
-          return "Replacement/Piggy Back"
+          'Replacement/Piggy Back'
         when 6
-          return "None"
+          'None'
         when 7
-          return "LIF Socket"
+          'LIF Socket'
         when 8
-          return "Slot 1"
+          'Slot 1'
         when 9
-          return "Slot 2"
+          'Slot 2'
         when 10
-          return "370 Pin Socket"
+          '370 Pin Socket'
         when 11
-          return "Slot A"
+          'Slot A'
         when 12
-          return "Slot M"
+          'Slot M'
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_upgrade_method
 
     # Convert return values to voltage cap values (floats)
     def self.get_voltage_caps(num)
       case num
         when 1
-          return 5.0
+          5.0
         when 2
-          return 3.3
+          3.3
         when 4
-          return 2.9
+          2.9
         else
-          return nil
+          nil
       end
     end
+
+    private_class_method :get_voltage_caps
   end
 end

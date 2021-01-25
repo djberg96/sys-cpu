@@ -85,46 +85,23 @@ module Sys
       optr.read_string
     end
 
-=begin
     # Returns the number of cpu's on your system. Note that each core on
     # multi-core systems are counted as a cpu, e.g. one dual core cpu would
     # return 2, not 1.
     #
     def self.num_cpu
-      if respond_to?(:sysctlbyname, true)
-        optr = FFI::MemoryPointer.new(:long)
-        size = FFI::MemoryPointer.new(:size_t)
+      optr = FFI::MemoryPointer.new(:long)
+      size = FFI::MemoryPointer.new(:size_t)
 
-        size.write_long(optr.size)
+      size.write_long(optr.size)
 
-        if sysctlbyname('hw.ncpu', optr, size, nil, 0) < 0
-          raise Error, 'sysctlbyname failed'
-        end
-
-        optr.read_long
-      elsif respond_to?(:sysconf, true)
-        num = sysconf(SC_NPROCESSORS_ONLN)
-
-        if num < 0
-          raise Error, 'sysconf function failed'
-        end
-
-        num
-      else
-        buf  = 0.chr * 4
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
-
-        mib.write_array_of_int([CTL_HW, HW_NCPU])
-        size.write_int(buf.size)
-
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, 'sysctl function failed'
-        end
-
-        buf.strip.unpack('C').first
+      if sysctlbyname('hw.ncpu', optr, size, nil, 0) < 0
+        raise Error, 'sysctlbyname failed'
       end
+
+      optr.read_long
     end
+=begin
 
     # Returns the cpu's class type. On most systems this will be identical
     # to the CPU.architecture method. On OpenBSD it will be identical to the
@@ -328,4 +305,5 @@ end
 
 if $0 == __FILE__
   p Sys::CPU.architecture
+  p Sys::CPU.num_cpu
 end

@@ -144,59 +144,23 @@ module Sys
           'Unknown'
       end
     end
-=begin
 
     # Returns an integer indicating the speed of the CPU.
     #
     def self.freq
-      if respond_to?(:sysctlbyname, true)
-        optr = FFI::MemoryPointer.new(:long)
-        size = FFI::MemoryPointer.new(:size_t)
+      optr = FFI::MemoryPointer.new(:long)
+      size = FFI::MemoryPointer.new(:size_t)
 
-        size.write_long(optr.size)
+      size.write_long(optr.size)
 
-        if RbConfig::CONFIG['host_os'] =~ /bsd/i
-          name = 'hw.clockrate'
-        else
-          name = 'hw.cpufrequency'
-        end
-
-        if sysctlbyname(name, optr, size, nil, 0) < 0
-          raise Error, 'sysctlbyname failed'
-        end
-
-        if RbConfig::CONFIG['host_os'] =~ /darwin/i
-          optr.read_long / 1000000
-        else
-          optr.read_long
-        end
-      elsif respond_to?(:sysctl, true)
-        buf  = 0.chr * 16
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
-
-        mib.write_array_of_int([CTL_HW, HW_CPU_FREQ])
-        size.write_int(buf.size)
-
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, 'sysctl function failed'
-        end
-
-        buf.unpack('I*').first / 1000000
-      else
-        pinfo = ProcInfo.new
-
-        # Some systems start at 0, some at 1
-        if processor_info(0, pinfo) < 0
-          if processor_info(1, pinfo) < 0
-            raise Error, 'process_info function failed'
-          end
-        end
-
-        pinfo[:pi_clock].to_i
+      if sysctlbyname('hw.cpufrequency', optr, size, nil, 0) < 0
+        raise Error, 'sysctlbyname failed'
       end
+
+      optr.read_long / 1000000
     end
 
+=begin
     # Returns an array of three floats indicating the 1, 5 and 15 minute load
     # average.
     #
@@ -270,4 +234,5 @@ if $0 == __FILE__
   p Sys::CPU.num_cpu
   p Sys::CPU.machine
   p Sys::CPU.model
+  p Sys::CPU.freq
 end

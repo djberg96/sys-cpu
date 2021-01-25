@@ -101,88 +101,50 @@ module Sys
 
       optr.read_long
     end
-=begin
 
     # Returns the cpu's class type. On most systems this will be identical
     # to the CPU.architecture method. On OpenBSD it will be identical to the
     # CPU.model method.
     #
     def self.machine
-      if respond_to?(:sysctl, true)
-        buf  = 0.chr * 32
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
+      buf  = 0.chr * 32
+      mib  = FFI::MemoryPointer.new(:int, 2)
+      size = FFI::MemoryPointer.new(:long, 1)
 
-        mib.write_array_of_int([CTL_HW, HW_MACHINE])
-        size.write_int(buf.size)
+      mib.write_array_of_int([CTL_HW, HW_MACHINE])
+      size.write_int(buf.size)
 
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, 'sysctl function failed'
-        end
-
-        buf.strip
-      else
-        buf = 0.chr * 257
-
-        if sysinfo(SI_MACHINE, buf, buf.size) < 0
-          raise Error, 'sysinfo function failed'
-        end
-
-        buf.strip
+      if sysctl(mib, 2, buf, size, nil, 0) < 0
+        raise Error, 'sysctl function failed'
       end
+
+      buf.strip
     end
 
     # Returns a string indicating the cpu model.
     #
     def self.model
-      if RbConfig::CONFIG['host_os'] =~ /darwin/i
-        ptr  = FFI::MemoryPointer.new(:long)
-        size = FFI::MemoryPointer.new(:size_t)
+      ptr  = FFI::MemoryPointer.new(:long)
+      size = FFI::MemoryPointer.new(:size_t)
 
-        size.write_long(ptr.size)
+      size.write_long(ptr.size)
 
-        if sysctlbyname('hw.cputype', ptr, size, nil, 0) < 0
-          raise 'sysctlbyname function failed'
-        end
+      if sysctlbyname('hw.cputype', ptr, size, nil, 0) < 0
+        raise 'sysctlbyname function failed'
+      end
 
-        case ptr.read_long
-          when  CPU_TYPE_X86, CPU_TYPE_X86_64
-            'Intel'
-          when CPU_TYPE_SPARC
-            'Sparc'
-          when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
-            'PowerPC'
-          else
-            'Unknown'
-        end
-      else
-        if respond_to?(:sysctl, true)
-          buf  = 0.chr * 64
-          mib  = FFI::MemoryPointer.new(:int, 2)
-          size = FFI::MemoryPointer.new(:long, 1)
-
-          mib.write_array_of_int([CTL_HW, HW_MODEL])
-          size.write_int(buf.size)
-
-          if sysctl(mib, 2, buf, size, nil, 0) < 0
-            raise Error, 'sysctl function failed'
-          end
-
-          buf.strip
+      case ptr.read_long
+        when  CPU_TYPE_X86, CPU_TYPE_X86_64
+          'Intel'
+        when CPU_TYPE_SPARC
+          'Sparc'
+        when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
+          'PowerPC'
         else
-          pinfo = ProcInfo.new
-
-          # Some systems start at 0, some at 1
-          if processor_info(0, pinfo) < 0
-            if processor_info(1, pinfo) < 0
-              raise Error, 'process_info function failed'
-            end
-          end
-
-          pinfo[:pi_processor_type].to_s
-        end
+          'Unknown'
       end
     end
+=begin
 
     # Returns an integer indicating the speed of the CPU.
     #
@@ -306,4 +268,6 @@ end
 if $0 == __FILE__
   p Sys::CPU.architecture
   p Sys::CPU.num_cpu
+  p Sys::CPU.machine
+  p Sys::CPU.model
 end

@@ -160,22 +160,20 @@ module Sys
       optr.read_long / 1000000
     end
 
-=begin
     # Returns an array of three floats indicating the 1, 5 and 15 minute load
     # average.
     #
     def self.load_avg
-      if respond_to?(:getloadavg, true)
-        loadavg = FFI::MemoryPointer.new(:double, 3)
+      loadavg = FFI::MemoryPointer.new(:double, 3)
 
-        if getloadavg(loadavg, loadavg.size) < 0
-          raise Error, 'getloadavg function failed'
-        end
-
-        loadavg.get_array_of_double(0, 3)
+      if getloadavg(loadavg, loadavg.size) < 0
+        raise Error, 'getloadavg function failed'
       end
+
+      loadavg.get_array_of_double(0, 3)
     end
 
+=begin
     # Returns the floating point processor type.
     #
     # Not supported on all platforms.
@@ -235,4 +233,5 @@ if $0 == __FILE__
   p Sys::CPU.machine
   p Sys::CPU.model
   p Sys::CPU.freq
+  p Sys::CPU.load_avg
 end

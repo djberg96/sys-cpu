@@ -1,3 +1,6 @@
+## 1.0.2 - 25-Jan-2021
+* Fixed issues where things that were meant to be private weren't actually private.
+
 ## 1.0.1 - 20-Dec-2020
 * Switched from rdoc to markdown.
 

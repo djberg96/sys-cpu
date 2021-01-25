@@ -5,7 +5,7 @@ require 'rbconfig'
 module Sys
   class CPU
     # The version of the sys-cpu gem.
-    VERSION = '1.0.1'.freeze
+    VERSION = '1.0.2'.freeze
   end
 end
 

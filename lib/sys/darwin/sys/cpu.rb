@@ -52,21 +52,12 @@ module Sys
     private_class_method :sysctlbyname
 
     attach_function :getloadavg, [:pointer, :int], :int
-    attach_function :processor_info, [:int, :pointer], :int
+    attach_function :processor_info, [:int, :int, :string, :pointer, :pointer], :int
     attach_function :sysconf, [:int], :long
 
     private_class_method :getloadavg
     private_class_method :processor_info
     private_class_method :sysconf
-
-    class ProcInfo < FFI::Struct
-      layout(
-        :pi_state, :int,
-        :pi_processor_type, [:char, 16],
-        :pi_fputypes, [:char, 32],
-        :pi_clock, :int
-      )
-    end
 
     # Returns the cpu's architecture. On most systems this will be identical
     # to the CPU.machine method. On OpenBSD it will be identical to the CPU.model
@@ -172,66 +163,5 @@ module Sys
 
       loadavg.get_array_of_double(0, 3)
     end
-
-=begin
-    # Returns the floating point processor type.
-    #
-    # Not supported on all platforms.
-    #
-    def self.fpu_type
-      raise NoMethodError unless respond_to?(:processor_info, true)
-
-      pinfo = ProcInfo.new
-
-      if processor_info(0, pinfo) < 0
-        if processor_info(1, pinfo) < 0
-          raise Error, 'process_info function failed'
-        end
-      end
-
-      pinfo[:pi_fputypes].to_s
-    end
-
-    # Returns the current state of processor +num+, or 0 if no number is
-    # specified.
-    #
-    # Not supported on all platforms.
-    #
-    def self.state(num = 0)
-      raise NoMethodError unless respond_to?(:processor_info, true)
-
-      pinfo = ProcInfo.new
-
-      if processor_info(num, pinfo) < 0
-        raise Error, 'process_info function failed'
-      end
-
-      case pinfo[:pi_state].to_i
-        when P_ONLINE
-          'online'
-        when P_OFFLINE
-          'offline'
-        when P_POWEROFF
-          'poweroff'
-        when P_FAULTED
-          'faulted'
-        when P_NOINTR
-          'nointr'
-        when P_SPARE
-          'spare'
-        else
-          'unknown'
-      end
-    end
-=end
   end
-end
-
-if $0 == __FILE__
-  p Sys::CPU.architecture
-  p Sys::CPU.num_cpu
-  p Sys::CPU.machine
-  p Sys::CPU.model
-  p Sys::CPU.freq
-  p Sys::CPU.load_avg
 end

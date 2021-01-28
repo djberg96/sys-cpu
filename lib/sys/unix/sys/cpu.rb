@@ -105,13 +105,7 @@ module Sys
 
         size.write_int(optr.size)
 
-        if RbConfig::CONFIG['host_os'] =~ /darwin/i
-          name = 'hw.machine'
-        else
-          name = 'hw.machine_arch'
-        end
-
-        if sysctlbyname(name, optr, size, nil, 0) < 0
+        if sysctlbyname('hw.machine_arch', optr, size, nil, 0) < 0
           raise Error, 'sysctlbyname function failed'
         end
 
@@ -204,52 +198,30 @@ module Sys
     # Returns a string indicating the cpu model.
     #
     def self.model
-      if RbConfig::CONFIG['host_os'] =~ /darwin/i
-        ptr  = FFI::MemoryPointer.new(:long)
-        size = FFI::MemoryPointer.new(:size_t)
+      if respond_to?(:sysctl, true)
+        buf  = 0.chr * 64
+        mib  = FFI::MemoryPointer.new(:int, 2)
+        size = FFI::MemoryPointer.new(:long, 1)
 
-        size.write_long(ptr.size)
+        mib.write_array_of_int([CTL_HW, HW_MODEL])
+        size.write_int(buf.size)
 
-        if sysctlbyname('hw.cputype', ptr, size, nil, 0) < 0
-          raise 'sysctlbyname function failed'
+        if sysctl(mib, 2, buf, size, nil, 0) < 0
+          raise Error, 'sysctl function failed'
         end
 
-        case ptr.read_long
-          when  CPU_TYPE_X86, CPU_TYPE_X86_64
-            'Intel'
-          when CPU_TYPE_SPARC
-            'Sparc'
-          when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
-            'PowerPC'
-          else
-            'Unknown'
-        end
+        buf.strip
       else
-        if respond_to?(:sysctl, true)
-          buf  = 0.chr * 64
-          mib  = FFI::MemoryPointer.new(:int, 2)
-          size = FFI::MemoryPointer.new(:long, 1)
+        pinfo = ProcInfo.new
 
-          mib.write_array_of_int([CTL_HW, HW_MODEL])
-          size.write_int(buf.size)
-
-          if sysctl(mib, 2, buf, size, nil, 0) < 0
-            raise Error, 'sysctl function failed'
+        # Some systems start at 0, some at 1
+        if processor_info(0, pinfo) < 0
+          if processor_info(1, pinfo) < 0
+            raise Error, 'process_info function failed'
           end
-
-          buf.strip
-        else
-          pinfo = ProcInfo.new
-
-          # Some systems start at 0, some at 1
-          if processor_info(0, pinfo) < 0
-            if processor_info(1, pinfo) < 0
-              raise Error, 'process_info function failed'
-            end
-          end
-
-          pinfo[:pi_processor_type].to_s
         end
+
+        pinfo[:pi_processor_type].to_s
       end
     end
 
@@ -272,11 +244,7 @@ module Sys
           raise Error, 'sysctlbyname failed'
         end
 
-        if RbConfig::CONFIG['host_os'] =~ /darwin/i
-          optr.read_long / 1000000
-        else
-          optr.read_long
-        end
+        optr.read_long
       elsif respond_to?(:sysctl, true)
         buf  = 0.chr * 16
         mib  = FFI::MemoryPointer.new(:int, 2)

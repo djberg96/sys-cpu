@@ -1,3 +1,9 @@
+## 1.0.3 - 28-Jan-2021
+* The code for OSX was split out into its own source file. This was partly for
+  ease of maintenance, but also because there was confusion with the
+  processor_info function. The original function was only aimed at Solaris, but
+  it turns out OSX has its own, different implementation. This caused segfaults.
+
 ## 1.0.2 - 25-Jan-2021
 * Fixed issues where things that were meant to be private weren't actually private.
 

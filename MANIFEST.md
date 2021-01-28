@@ -17,6 +17,7 @@
 * examples/example_sys_cpu_sunos.rb
 * examples/example_sys_cpu_windows.rb
 * lib/sys/cpu.rb
+* lib/sys/darwin/sys/cpu.rb
 * lib/sys/linux/sys/cpu.rb
 * lib/sys/unix/sys/cpu.rb
 * lib/sys/windows/sys/cpu.rb

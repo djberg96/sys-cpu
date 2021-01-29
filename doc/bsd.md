@@ -4,7 +4,7 @@ A Ruby interface for various cpu statistics
    
 ## Synopsis
 ```ruby
-  require "sys/cpu"
+  require 'sys/cpu' # or 'sys-cpu'
 
   # BSD and OS X
   puts "Architecture: " + Sys::CPU.architecture
@@ -42,7 +42,7 @@ Returns the class of cpu (probably identical to the architecture).
 
 `CPU.model`
 
-Returns a string indicating the cpu model.
+Returns a string indicating the cpu model, e.g. "Intel".
     
 `CPU.num_cpu`
 

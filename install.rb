@@ -31,7 +31,7 @@ end
 #######################################################################
 if CONFIG['host_os'] =~ /linux/
   cpu_file  = "/proc/cpuinfo"
-  text_file = "doc/linux.txt"
+  text_file = "doc/linux.md"
   rb_file   = "lib/linux/sys/cpu.rb"
 
   if File.size(text_file) > 1400
@@ -44,7 +44,7 @@ if CONFIG['host_os'] =~ /linux/
     IO.foreach(cpu_file){ |line|
       next if line =~ /^$/
       k,v = line.split(":")
-         
+
       v = v.strip.chomp
       k = k.strip.gsub(/\s+/, '_').downcase
 

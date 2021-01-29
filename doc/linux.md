@@ -36,11 +36,11 @@ The array contains the number of seconds that the system spent in
 user mode, user mode with low priority (nice), system mode, and the
 idle task, respectively, for that cpu.
 
-`CPU.processors{ |cpu struct| block }`
+`CPU.processors{ |cpu_struct| ... }`
 
-Calls the block for each processor on your system, passing a CPUStruct as the parameter.
+Calls the block for each processor on your system, yielding a `CPUStruct` to the block.
 
-The exact members of the CPUStruct are the same as the class method names, except
-for CPU.processors (although you may optionally omit the "?" when referring to a
-struct member).  These were determined when you installed this package because they
+The exact members of the `CPUStruct` are the same as the singleton method names, except
+for `Sys::CPU.processors` (although you may optionally omit the "?" when referring to a
+struct member). These were determined when you installed this library because they
 vary from one chip architecture to another.

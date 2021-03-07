@@ -8,6 +8,10 @@
 name: Ruby
 
 on:
+  paths-ignore:
+    - '**/README.md'
+    - '**/CHANGES.md'
+    - '**/MANIFEST.md'
   push:
     branches: [ ffi ]
   pull_request:

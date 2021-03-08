@@ -1,3 +1,6 @@
+## Status
+[![Ruby](https://github.com/djberg96/sys-cpu/actions/workflows/ruby.yml/badge.svg)](https://github.com/djberg96/sys-cpu/actions/workflows/ruby.yml)
+
 ## Description
 A Ruby interface for getting cpu information.
 

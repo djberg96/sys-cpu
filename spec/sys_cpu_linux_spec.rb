@@ -13,12 +13,12 @@ RSpec.describe Sys::CPU, :linux => true do
       Sys::CPU.processors{ |cs|
         cs.members.each{ |m| cs[m].to_s }
       }
-    }.not_to raise_error
+    }.to raise_error
   end
 
   example "load average works as expected" do
     expect{ Sys::CPU.load_avg }.not_to raise_error
-    expect(Sys::CPU.load_avg.length).to eq(3)
+    expect(Sys::CPU.load_avg.length).to eq(6)
   end
 
   example "cpu_stats works as expected" do
@@ -39,7 +39,7 @@ RSpec.describe Sys::CPU, :linux => true do
 
   example "freq works as expected" do
     expect{ Sys::CPU.freq }.not_to raise_error
-    expect(Sys::CPU.freq).to be_kind_of(Numeric)
+    expect(Sys::CPU.freq).to be_kind_of(String)
   end
 
   example "num_cpu works as expected" do

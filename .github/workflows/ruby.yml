@@ -1,7 +1,6 @@
 name: Ruby Tests
-
 on: [push, pull_request]
-  - paths-ignore:
+  paths-ignore:
     - '**/README.md'
     - '**/CHANGES.md'
     - '**/MANIFEST.md'

@@ -82,8 +82,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         get_cpu_arch(wmi.Architecture)
       end
@@ -98,8 +98,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu#{cpu_num}'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.CurrentClockSpeed
       end
@@ -117,8 +117,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu#{cpu_num}'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.LoadPercentage
       end
@@ -130,8 +130,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.Name
       end
@@ -145,8 +145,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_ComputerSystem='#{host}'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.NumberOfProcessors
       end
@@ -205,8 +205,8 @@ module Sys
     def self.processors(host = Socket.gethostname) # :yields: CPUStruct
       begin
         wmi = WIN32OLE.connect(BASE_CS + "//#{host}/root/cimv2")
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.InstancesOf('Win32_Processor').each{ |cpu|
           yield CPUStruct.new(
@@ -265,8 +265,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.Manufacturer
       end
@@ -280,14 +280,11 @@ module Sys
     def self.get_cmec(num)
       case num
         when 0
-          str = 'The device is working properly.'
-          str
+          'The device is working properly.'
         when 1
-          str = 'The device is not configured correctly.'
-          str
+          'The device is not configured correctly.'
         when 2
-          str = 'Windows cannot load the driver for the device.'
-          str
+          'Windows cannot load the driver for the device.'
         when 3
           str = 'The driver for the device might be corrupted, or the'
           str << ' system may be running low on memory or other'
@@ -306,29 +303,24 @@ module Sys
           str << ' other devices.'
           str
         when 7
-          str = 'Cannot filter.'
-          str
+          'Cannot filter.'
         when 8
-          str = 'The driver loader for the device is missing.'
-          str
+          'The driver loader for the device is missing.'
         when 9
           str = 'This device is not working properly because the'
           str << ' controlling firmware is reporting the resources'
           str << ' for the device incorrectly.'
           str
         when 10
-          str = 'This device cannot start.'
-          str
+          'This device cannot start.'
         when 11
-          str = 'This device failed.'
-          str
+          'This device failed.'
         when 12
           str = 'This device cannot find enough free resources that'
           str << ' it can use.'
           str
         when 13
-          str = "Windows cannot verify this device's resources."
-          str
+          "Windows cannot verify this device's resources."
         when 14
           str = 'This device cannot work properly until you restart'
           str << ' your computer.'
@@ -338,29 +330,24 @@ module Sys
           str << ' probably a re-enumeration problem.'
           str
         when 16
-           str = 'Windows cannot identify all the resources this device '
-           str << ' uses.'
-           str
+          str = 'Windows cannot identify all the resources this device '
+          str << ' uses.'
+          str
         when 17
-          str = 'This device is asking for an unknown resource type.'
-          str
+          'This device is asking for an unknown resource type.'
         when 18
-          str = 'Reinstall the drivers for this device.'
-          str
+          'Reinstall the drivers for this device.'
         when 19
-          str = 'Failure using the VXD loader.'
-          str
+          'Failure using the VXD loader.'
         when 20
-          str = 'Your registry might be corrupted.'
-          str
+          'Your registry might be corrupted.'
         when 21
           str = 'System failure: try changing the driver for this device.'
           str << ' If that does not work, see your hardware documentation.'
           str << ' Windows is removing this device.'
           str
         when 22
-          str = 'This device is disabled.'
-          str
+          'This device is disabled.'
         when 23
           str = 'System failure: try changing the driver for this device.'
           str << "If that doesn't work, see your hardware documentation."
@@ -369,18 +356,12 @@ module Sys
           str = 'This device is not present, not working properly, or'
           str << ' does not have all its drivers installed.'
           str
-        when 25
-          str = 'Windows is still setting up this device.'
-          str
-        when 26
-          str = 'Windows is still setting up this device.'
-          str
+        when 25, 26
+          'Windows is still setting up this device.'
         when 27
-          str = 'This device does not have valid log configuration.'
-          str
+          'This device does not have valid log configuration.'
         when 28
-          str = 'The drivers for this device are not installed.'
-          str
+          'The drivers for this device are not installed.'
         when 29
           str = 'This device is disabled because the firmware of the'
           str << ' device did not give it the required resources.'
@@ -393,8 +374,6 @@ module Sys
           str = 'This device is not working properly because Windows'
           str << ' cannot load the drivers required for this device'
           str
-        else
-          nil
       end
     end
 
@@ -415,8 +394,6 @@ module Sys
           'IA64'
         when 9
           'x64'
-        else
-          nil
       end
     end
 
@@ -467,8 +444,6 @@ module Sys
           'Not Configured'
         when 21
           'Quiesced'
-        else
-          nil
       end
     end
 
@@ -490,14 +465,16 @@ module Sys
           'Idle'
         when 7
           'Other'
-        else
-          nil
       end
     end
 
     private_class_method :get_status
 
     # Convert a family number into the equivalent string
+    #
+    # NOTE: This could be out of date as new data is added occasionally.
+    # If there's a nicer way to do this, please send a PR my way.
+    #
     def self.get_family(num)
       case num
         when 1
@@ -521,19 +498,19 @@ module Sys
         when 10
           '80487'
         when 11
-          'Pentium?'
+          'Pentium'
         when 12
-          'Pentium?'
+          'Pentium Pro'
         when 13
-          'Pentium?'
+          'Pentium II'
         when 14
-          'Pentium?'
+          'Pentium with MMX'
         when 15
-          'Celeron?'
+          'Celeron'
         when 16
-          'Pentium?'
+          'Pentium II Xeon'
         when 17
-          'Pentium?'
+          'Pentium III'
         when 18
           'M1'
         when 19
@@ -547,75 +524,75 @@ module Sys
         when 27
           'K6-3'
         when 28
-          'AMD'
+          'AMD Athlon'
         when 29
-          'AMD?'
+          'AMD Duron'
         when 30
           'AMD2900'
         when 31
           'K6-2+'
         when 32
-          'Power'
+          'Power PC'
         when 33
-          'Power'
+          'Power 601'
         when 34
-          'Power'
+          'Power 603'
         when 35
-          'Power'
+          'Power 603+'
         when 36
-          'Power'
+          'Power 604'
         when 37
-          'Power'
+          'Power 620'
         when 38
-          'Power'
+          'Power X704'
         when 39
-          'Power'
+          'Power 750'
         when 48
           'Alpha'
         when 49
-          'Alpha'
+          'Alpha 21064'
         when 50
-          'Alpha'
+          'Alpha 21066'
         when 51
-          'Alpha'
+          'Alpha 21164'
         when 52
-          'Alpha'
+          'Alpha 21164PC'
         when 53
-          'Alpha'
+          'Alpha 21164a'
         when 54
-          'Alpha'
+          'Alpha 21264'
         when 55
-          'Alpha'
+          'Alpha 21364'
         when 64
           'MIPS'
         when 65
-          'MIPS'
+          'MIPS R4000'
         when 66
-          'MIPS'
+          'MIPS R4200'
         when 67
-          'MIPS'
+          'MIPS R4400'
         when 68
-          'MIPS'
+          'MIPS R4600'
         when 69
-          'MIPS'
+          'MIPS R10000'
         when 80
           'SPARC'
         when 81
           'SuperSPARC'
         when 82
-          'microSPARC'
+          'microSPARC II'
         when 83
-          'microSPARC'
+          'microSPARC IIep'
         when 84
           'UltraSPARC'
         when 85
-          'UltraSPARC'
+          'UltraSPARC II'
         when 86
-          'UltraSPARC'
+          'UltraSPARC IIi'
         when 87
-          'UltraSPARC'
+          'UltraSPARC III'
         when 88
-          'UltraSPARC'
+          'UltraSPARC IIIi'
         when 96
           '68040'
         when 97
@@ -631,57 +608,195 @@ module Sys
         when 112
           'Hobbit'
         when 120
-          'Crusoe?'
+          'Crusoe TM5000'
         when 121
-          'Crusoe?'
+          'Crusoe TM3000'
         when 128
           'Weitek'
         when 130
-          'Itanium?'
+          'Itanium'
+        when 131
+          'AMD Athlon 64'
+        when 132
+          'AMD Opteron'
+        when 133
+          'AMD Sempron'
+        when 134
+          'AMD Turion 64 Mobile'
+        when 135
+          'AMD Opteron Dual-Core'
+        when 136
+          'AMD Athlon 64 X2 Dual-Core'
+        when 137
+          'AMD Turion 64 X2 Mobile'
+        when 138
+          'AMD Opteron Quad-Core'
+        when 139
+          'AMD Opteron Third Generation'
+        when 140
+          'AMD Phenom FX Quad-Core'
+        when 141
+          'AMD Phenom X4 Quad-Core'
+        when 142
+          'AMD Phenom X2 Dual-Core'
+        when 143
+          'AMD Athlon X2 Dual-Core'
         when 144
           'PA-RISC'
         when 145
-          'PA-RISC'
+          'PA-RISC 8500'
         when 146
-          'PA-RISC'
+          'PA-RISC 8000'
         when 147
-          'PA-RISC'
+          'PA-RISC 7300LC'
         when 148
-          'PA-RISC'
+          'PA-RISC 7200'
         when 149
-          'PA-RISC'
+          'PA-RISC 7100LC'
         when 150
-          'PA-RISC'
+          'PA-RISC 7100'
         when 160
           'V30'
+        when 161
+          'Intel Xeon 3200 Quad-Core'
+        when 162
+          'Intel Xeon 3000 Dual-Core'
+        when 163
+          'Intel Xeon 5300 Quad-Core'
+        when 164
+          'Intel Xeon 5100 Dual-Core'
+        when 165
+          'Intel Xeon 5000 Dual-Core'
+        when 166
+          'Intel Xeon LV Dual-Core'
+        when 167
+          'Intel Xeon ULV Dual-Core'
+        when 168
+          'Intel Xeon 7100 Dual-Core'
+        when 169
+          'Intel Xeon 5400 Quad-Core'
+        when 170
+          'Intel Xeon Quad-Core'
+        when 171
+          'Intel Xeon 5200 Dual-Core'
+        when 172
+          'Intel Xeon 7200 Dual-Core'
+        when 173
+          'Intel Xeon 7300 Quad-Core'
+        when 174
+          'Intel Xeon 7400 Quad-Core'
+        when 175
+          'Intel Xeon 7400 Multi-Core'
         when 176
-          'Pentium?'
+          'Pentium III Xeon'
         when 177
-          'Pentium?'
+          'Pentium III with SpeedStep'
         when 178
-          'Pentium?'
+          'Pentium 4'
         when 179
-          'Intel?'
+          'Intel Xeon'
         when 180
           'AS400'
         when 181
-          'Intel?'
+          'Intel Xeon MP'
         when 182
-          'AMD'
+          'AMD Athlon XP'
         when 183
-          'AMD'
+          'AMD Athlon MP'
         when 184
-          'Intel?'
+          'Intel Itanium 2'
         when 185
-          'AMD'
+          'Intel Pentium M'
+        when 186
+          'Intel Celeron D'
+        when 187
+          'Intel Pentium D'
+        when 188
+          'Intel Pentium Extreme Edition'
+        when 189
+          'Intel Core Solo'
         when 190
           'K7'
+        when 191
+          'Intel Core2 Duo'
+        when 192
+          'Intel Core2 Solo'
+        when 193
+          'Intel Core2 Extreme'
+        when 194
+          'Intel Core2 Quad'
+        when 195
+          'Intel Core2 Extreme Mobile'
+        when 196
+          'Intel Core2 Duo Mobile'
+        when 197
+          'Intel Core2 Solo Mobile'
+        when 198
+          'Intel Core i7 Mobile'
+        when 199
+          'Intel Celeron Dual-Core'
         when 200
-          'IBM390'
+          'zSeries S/390'
         when 201
-          'G4'
+          'ESA/390 G4'
         when 202
-          'G5'
+          'ESA/390 G5'
+        when 203
+          'ESA/390 G6'
+        when 204
+          'z/Architectur'
+        when 205
+          'Intel Core i5'
+        when 206
+          'Intel Core i3'
+        when 210
+          'VIA C7-M'
+        when 211
+          'VIA C7-D'
+        when 212
+          'VIA C7'
+        when 213
+          'VIA Eden'
+        when 214
+          'Intel Xeon Multi-Core'
+        when 215
+          'Intel Xeon 3xxx Dual-Core'
+        when 216
+          'Intel Xeon 3xxx Quad-Core'
+        when 217
+          'VIA Nano'
+        when 218
+          'Intel Xeon 5xxx Dual-Core'
+        when 219
+          'Intel Xeon 5xxx Quad-Core'
+        when 221
+          'Intel Xeon 7xxx Dual-Core'
+        when 222
+          'Intel Xeon 7xxx Quad-Core'
+        when 223
+          'Intel Xeon 7xxx Multi-Core'
+        when 224
+          'Intel Xeon 3400 Multi-Core'
+        when 230
+          'AMD Opteron Embedded Quad-Core'
+        when 231
+          'AMD Phenom Triple-Core'
+        when 232
+          'AMD Turion Ultra Dual-Core Mobile'
+        when 233
+          'AMD Turion Dual-Core Mobile'
+        when 234
+          'AMD Athlon Dual-Core'
+        when 235
+          'AMD Sempron SI'
+        when 236
+          'AMD Phenom II'
+        when 237
+          'AMD Athlon II'
+        when 238
+          'AMD Opteron Six-Core'
+        when 239
+          'AMD Sempron M'
         when 250
           'i860'
         when 251
@@ -706,8 +821,6 @@ module Sys
           'DSP'
         when 500
           'Video'
-        else
-          nil
       end
     end
 
@@ -732,8 +845,6 @@ module Sys
           'Power Cycling Supported'
         when 7
           'Timed Power On Supported'
-        else
-          nil
       end
     end
 
@@ -754,8 +865,6 @@ module Sys
           'DSP Processor'
         when 6
           'Video Processor'
-        else
-          nil
       end
     end
 
@@ -788,8 +897,6 @@ module Sys
           'Slot A'
         when 12
           'Slot M'
-        else
-          nil
       end
     end
 
@@ -804,8 +911,6 @@ module Sys
           3.3
         when 4
           2.9
-        else
-          nil
       end
     end
 

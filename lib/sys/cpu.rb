@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is just a stub file that requires the appropriate version
 # depending on which platform you're on.
 require 'rbconfig'

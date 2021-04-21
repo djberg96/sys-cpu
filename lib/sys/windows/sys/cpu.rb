@@ -208,7 +208,7 @@ module Sys
       rescue WIN32OLERuntimeError => err
         raise Error, err
       else
-        wmi.InstancesOf('Win32_Processor').each{ |cpu|
+        wmi.InstancesOf('Win32_Processor').each do |cpu|
           yield CPUStruct.new(
             cpu.AddressWidth,
             get_cpu_arch(cpu.Architecture),
@@ -255,7 +255,7 @@ module Sys
             cpu.Version,
             get_voltage_caps(cpu.VoltageCaps)
           )
-        }
+        end
       end
     end
 

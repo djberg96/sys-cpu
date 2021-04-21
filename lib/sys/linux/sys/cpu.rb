@@ -12,7 +12,7 @@ module Sys
   private_constant :CPU_ARRAY
 
   # Parse the info out of the /proc/cpuinfo file
-  IO.foreach(cpu_file){ |line|
+  IO.foreach(cpu_file) do |line|
     line.strip!
     next if line.empty?
 
@@ -35,7 +35,7 @@ module Sys
     end
 
     cpu_hash[key] = val
-  }
+  end
 
   CPU_ARRAY.push(cpu_hash)
 
@@ -58,7 +58,7 @@ module Sys
     #
     def self.processors
       array = []
-      CPU_ARRAY.each{ |hash|
+      CPU_ARRAY.each do |hash|
         struct = CPUStruct.new
         struct.members.each{ |m| struct.send("#{m}=", hash["#{m}"]) }
         if block_given?
@@ -66,7 +66,7 @@ module Sys
         else
           array << struct
         end
-      }
+      end
       array unless block_given?
     end
 
@@ -145,7 +145,7 @@ module Sys
 
       lines = IO.readlines(cpu_stat_file)
 
-      lines.each_with_index{ |line, i|
+      lines.each_with_index do |line, i|
         array = line.split
         break unless array[0] =~ /cpu/   # 'cpu' entries always on top
 
@@ -157,7 +157,7 @@ module Sys
 
         vals = array[1..-1].map{ |e| e.to_i / 100 } # 100 jiffies/sec.
         hash[array[0]] = vals
-      }
+      end
 
       hash
     end

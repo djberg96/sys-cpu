@@ -280,14 +280,14 @@ module Sys
     def self.get_cmec(num)
       case num
         when 0
-          str = 'The device is working properly.'
-          str
+          'The device is working properly.'
+          
         when 1
-          str = 'The device is not configured correctly.'
-          str
+          'The device is not configured correctly.'
+          
         when 2
-          str = 'Windows cannot load the driver for the device.'
-          str
+          'Windows cannot load the driver for the device.'
+          
         when 3
           str = 'The driver for the device might be corrupted, or the'
           str << ' system may be running low on memory or other'
@@ -306,29 +306,29 @@ module Sys
           str << ' other devices.'
           str
         when 7
-          str = 'Cannot filter.'
-          str
+          'Cannot filter.'
+          
         when 8
-          str = 'The driver loader for the device is missing.'
-          str
+          'The driver loader for the device is missing.'
+          
         when 9
           str = 'This device is not working properly because the'
           str << ' controlling firmware is reporting the resources'
           str << ' for the device incorrectly.'
           str
         when 10
-          str = 'This device cannot start.'
-          str
+          'This device cannot start.'
+          
         when 11
-          str = 'This device failed.'
-          str
+          'This device failed.'
+          
         when 12
           str = 'This device cannot find enough free resources that'
           str << ' it can use.'
           str
         when 13
-          str = "Windows cannot verify this device's resources."
-          str
+          "Windows cannot verify this device's resources."
+          
         when 14
           str = 'This device cannot work properly until you restart'
           str << ' your computer.'
@@ -342,25 +342,25 @@ module Sys
            str << ' uses.'
            str
         when 17
-          str = 'This device is asking for an unknown resource type.'
-          str
+          'This device is asking for an unknown resource type.'
+          
         when 18
-          str = 'Reinstall the drivers for this device.'
-          str
+          'Reinstall the drivers for this device.'
+          
         when 19
-          str = 'Failure using the VXD loader.'
-          str
+          'Failure using the VXD loader.'
+          
         when 20
-          str = 'Your registry might be corrupted.'
-          str
+          'Your registry might be corrupted.'
+          
         when 21
           str = 'System failure: try changing the driver for this device.'
           str << ' If that does not work, see your hardware documentation.'
           str << ' Windows is removing this device.'
           str
         when 22
-          str = 'This device is disabled.'
-          str
+          'This device is disabled.'
+          
         when 23
           str = 'System failure: try changing the driver for this device.'
           str << "If that doesn't work, see your hardware documentation."
@@ -370,17 +370,17 @@ module Sys
           str << ' does not have all its drivers installed.'
           str
         when 25
-          str = 'Windows is still setting up this device.'
-          str
+          'Windows is still setting up this device.'
+          
         when 26
-          str = 'Windows is still setting up this device.'
-          str
+          'Windows is still setting up this device.'
+          
         when 27
-          str = 'This device does not have valid log configuration.'
-          str
+          'This device does not have valid log configuration.'
+          
         when 28
-          str = 'The drivers for this device are not installed.'
-          str
+          'The drivers for this device are not installed.'
+          
         when 29
           str = 'This device is disabled because the firmware of the'
           str << ' device did not give it the required resources.'

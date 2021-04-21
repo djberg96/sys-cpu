@@ -122,7 +122,7 @@ module Sys
     #
     def self.load_avg
       load_avg_file = '/proc/loadavg'
-      IO.readlines(load_avg_file).first.split[0..2].map{ |e| e.to_f }
+      IO.readlines(load_avg_file).first.split[0..2].map(&:to_f)
     end
 
     # Returns a hash of arrays that contains an array of the following

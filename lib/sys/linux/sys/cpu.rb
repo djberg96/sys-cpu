@@ -149,7 +149,7 @@ module Sys
 
       lines.each_with_index do |line, i|
         array = line.split
-        break unless array[0] =~ /cpu/   # 'cpu' entries always on top
+        break unless array[0] =~ /cpu/ # 'cpu' entries always on top
 
         # Some machines list a 'cpu' and a 'cpu0'. In this case only
         # return values for the numbered cpu entry.

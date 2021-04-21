@@ -182,17 +182,15 @@ module Sys
         if sysctl(mib, 2, buf, size, nil, 0) < 0
           raise Error, 'sysctl function failed'
         end
-
-        buf.strip
       else
         buf = 0.chr * 257
 
         if sysinfo(SI_MACHINE, buf, buf.size) < 0
           raise Error, 'sysinfo function failed'
         end
-
-        buf.strip
       end
+
+      buf.strip
     end
 
     # Returns a string indicating the cpu model.
@@ -215,10 +213,8 @@ module Sys
         pinfo = ProcInfo.new
 
         # Some systems start at 0, some at 1
-        if processor_info(0, pinfo) < 0
-          if processor_info(1, pinfo) < 0
-            raise Error, 'process_info function failed'
-          end
+        if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+          raise Error, 'processor_info function failed'
         end
 
         pinfo[:pi_processor_type].to_s
@@ -262,10 +258,8 @@ module Sys
         pinfo = ProcInfo.new
 
         # Some systems start at 0, some at 1
-        if processor_info(0, pinfo) < 0
-          if processor_info(1, pinfo) < 0
-            raise Error, 'process_info function failed'
-          end
+        if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+          raise Error, 'processor_info function failed'
         end
 
         pinfo[:pi_clock].to_i
@@ -296,10 +290,9 @@ module Sys
 
       pinfo = ProcInfo.new
 
-      if processor_info(0, pinfo) < 0
-        if processor_info(1, pinfo) < 0
-          raise Error, 'process_info function failed'
-        end
+      # Some start at 0, some start at 1
+      if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+        raise Error, 'processor_info function failed'
       end
 
       pinfo[:pi_fputypes].to_s
@@ -316,7 +309,7 @@ module Sys
       pinfo = ProcInfo.new
 
       if processor_info(num, pinfo) < 0
-        raise Error, 'process_info function failed'
+        raise Error, 'processor_info function failed'
       end
 
       case pinfo[:pi_state].to_i

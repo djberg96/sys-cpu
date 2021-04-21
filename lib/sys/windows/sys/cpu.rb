@@ -281,13 +281,13 @@ module Sys
       case num
         when 0
           'The device is working properly.'
-          
+
         when 1
           'The device is not configured correctly.'
-          
+
         when 2
           'Windows cannot load the driver for the device.'
-          
+
         when 3
           str = 'The driver for the device might be corrupted, or the'
           str << ' system may be running low on memory or other'
@@ -307,10 +307,10 @@ module Sys
           str
         when 7
           'Cannot filter.'
-          
+
         when 8
           'The driver loader for the device is missing.'
-          
+
         when 9
           str = 'This device is not working properly because the'
           str << ' controlling firmware is reporting the resources'
@@ -318,17 +318,17 @@ module Sys
           str
         when 10
           'This device cannot start.'
-          
+
         when 11
           'This device failed.'
-          
+
         when 12
           str = 'This device cannot find enough free resources that'
           str << ' it can use.'
           str
         when 13
           "Windows cannot verify this device's resources."
-          
+
         when 14
           str = 'This device cannot work properly until you restart'
           str << ' your computer.'
@@ -343,16 +343,16 @@ module Sys
            str
         when 17
           'This device is asking for an unknown resource type.'
-          
+
         when 18
           'Reinstall the drivers for this device.'
-          
+
         when 19
           'Failure using the VXD loader.'
-          
+
         when 20
           'Your registry might be corrupted.'
-          
+
         when 21
           str = 'System failure: try changing the driver for this device.'
           str << ' If that does not work, see your hardware documentation.'
@@ -360,7 +360,7 @@ module Sys
           str
         when 22
           'This device is disabled.'
-          
+
         when 23
           str = 'System failure: try changing the driver for this device.'
           str << "If that doesn't work, see your hardware documentation."
@@ -371,16 +371,16 @@ module Sys
           str
         when 25
           'Windows is still setting up this device.'
-          
+
         when 26
           'Windows is still setting up this device.'
-          
+
         when 27
           'This device does not have valid log configuration.'
-          
+
         when 28
           'The drivers for this device are not installed.'
-          
+
         when 29
           str = 'This device is disabled because the firmware of the'
           str << ' device did not give it the required resources.'

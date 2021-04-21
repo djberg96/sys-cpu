@@ -393,9 +393,7 @@ module Sys
           str = 'This device is not working properly because Windows'
           str << ' cannot load the drivers required for this device'
           str
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_cmec
@@ -415,9 +413,7 @@ module Sys
           'IA64'
         when 9
           'x64'
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_cpu_arch
@@ -467,9 +463,7 @@ module Sys
           'Not Configured'
         when 21
           'Quiesced'
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_availability
@@ -490,9 +484,7 @@ module Sys
           'Idle'
         when 7
           'Other'
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_status
@@ -848,9 +840,7 @@ module Sys
           'DSP'
         when 500
           'Video'
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_family
@@ -874,9 +864,7 @@ module Sys
           'Power Cycling Supported'
         when 7
           'Timed Power On Supported'
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_pmc
@@ -896,9 +884,7 @@ module Sys
           'DSP Processor'
         when 6
           'Video Processor'
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_processor_type
@@ -930,9 +916,7 @@ module Sys
           'Slot A'
         when 12
           'Slot M'
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_upgrade_method
@@ -946,9 +930,7 @@ module Sys
           3.3
         when 4
           2.9
-        else
-          nil
-      end
+        end
     end
 
     private_class_method :get_voltage_caps

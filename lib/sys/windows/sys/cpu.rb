@@ -521,19 +521,19 @@ module Sys
         when 10
           '80487'
         when 11
-          'Pentium?'
+          'Pentium'
         when 12
-          'Pentium?'
+          'Pentium Pro'
         when 13
-          'Pentium?'
+          'Pentium II'
         when 14
-          'Pentium?'
+          'Pentium with MMX'
         when 15
-          'Celeron?'
+          'Celeron'
         when 16
-          'Pentium?'
+          'Pentium II Xeon'
         when 17
-          'Pentium?'
+          'Pentium III'
         when 18
           'M1'
         when 19
@@ -547,75 +547,75 @@ module Sys
         when 27
           'K6-3'
         when 28
-          'AMD'
+          'AMD Athlon'
         when 29
-          'AMD?'
+          'AMD Duron'
         when 30
           'AMD2900'
         when 31
           'K6-2+'
         when 32
-          'Power'
+          'Power PC'
         when 33
-          'Power'
+          'Power 601'
         when 34
-          'Power'
+          'Power 603'
         when 35
-          'Power'
+          'Power 603+'
         when 36
-          'Power'
+          'Power 604'
         when 37
-          'Power'
+          'Power 620'
         when 38
-          'Power'
+          'Power X704'
         when 39
-          'Power'
+          'Power 750'
         when 48
           'Alpha'
         when 49
-          'Alpha'
+          'Alpha 21064'
         when 50
-          'Alpha'
+          'Alpha 21066'
         when 51
-          'Alpha'
+          'Alpha 21164'
         when 52
-          'Alpha'
+          'Alpha 21164PC'
         when 53
-          'Alpha'
+          'Alpha 21164a'
         when 54
-          'Alpha'
+          'Alpha 21264'
         when 55
-          'Alpha'
+          'Alpha 21364'
         when 64
           'MIPS'
         when 65
-          'MIPS'
+          'MIPS R4000'
         when 66
-          'MIPS'
+          'MIPS R4200'
         when 67
-          'MIPS'
+          'MIPS R4400'
         when 68
-          'MIPS'
+          'MIPS R4600'
         when 69
-          'MIPS'
+          'MIPS R10000'
         when 80
           'SPARC'
         when 81
           'SuperSPARC'
         when 82
-          'microSPARC'
+          'microSPARC II'
         when 83
-          'microSPARC'
+          'microSPARC IIep'
         when 84
           'UltraSPARC'
         when 85
-          'UltraSPARC'
+          'UltraSPARC II'
         when 86
-          'UltraSPARC'
+          'UltraSPARC IIi'
         when 87
-          'UltraSPARC'
+          'UltraSPARC III'
         when 88
-          'UltraSPARC'
+          'UltraSPARC IIIi'
         when 96
           '68040'
         when 97
@@ -631,57 +631,143 @@ module Sys
         when 112
           'Hobbit'
         when 120
-          'Crusoe?'
+          'Crusoe TM5000'
         when 121
-          'Crusoe?'
+          'Crusoe TM3000'
         when 128
           'Weitek'
         when 130
-          'Itanium?'
+          'Itanium'
+        when 131
+          'AMD Athlon 64'
+        when 132
+          'AMD Opteron'
+        when 133
+          'AMD Sempron'
+        when 134
+          'AMD Turion 64 Mobile'
+        when 135
+          'AMD Turion 64 Mobile'
+        when 136
+          'AMD Athlon 64 X2 Dual-Core'
+        when 137
+          'AMD Turion 64 X2 Mobile'
+        when 138
+          'AMD Opteron Quad-Core'
+        when 139
+          'AMD Opteron Third Generation'
+        when 140
+          'AMD Phenom FX Quad-Core'
+        when 141
+          'AMD Phenom X4 Quad-Core'
+        when 142
+          'AMD Phenom X2 Dual-Core'
+        when 143
+          'AMD Athlon X2 Dual-Core'
         when 144
           'PA-RISC'
         when 145
-          'PA-RISC'
+          'PA-RISC 8500'
         when 146
-          'PA-RISC'
+          'PA-RISC 8000'
         when 147
-          'PA-RISC'
+          'PA-RISC 7300LC'
         when 148
-          'PA-RISC'
+          'PA-RISC 7200'
         when 149
-          'PA-RISC'
+          'PA-RISC 7100LC'
         when 150
-          'PA-RISC'
+          'PA-RISC 7100'
         when 160
           'V30'
+        when 161
+          'Intel Xeon 3200 Quad-Core'
+        when 162
+          'Intel Xeon 3000 Dual-Core'
+        when 163
+          'Intel Xeon 5300 Quad-Core'
+        when 164
+          'Intel Xeon 5100 Dual-Core'
+        when 165
+          'Intel Xeon 5000 Dual-Core'
+        when 166
+          'Intel Xeon LV Dual-Core'
+        when 167
+          'Intel Xeon ULV Dual-Core'
+        when 168
+          'Intel Xeon 7100 Dual-Core'
+        when 169
+          'Intel Xeon 5400 Quad-Core'
+        when 170
+          'Intel Xeon Quad-Core'
+        when 171
+          'Intel Xeon 5200 Dual-Core'
+        when 172
+          'Intel Xeon 7200 Dual-Core'
+        when 173
+          'Intel Xeon 7300 Quad-Core'
+        when 174
+          'Intel Xeon 7400 Quad-Core'
+        when 175
+          'Intel Xeon 7400 Multi-Core'
         when 176
-          'Pentium?'
+          'Pentium III Xeon'
         when 177
-          'Pentium?'
+          'Pentium III with SpeedStep'
         when 178
-          'Pentium?'
+          'Pentium 4'
         when 179
-          'Intel?'
+          'Intel Xeon'
         when 180
           'AS400'
         when 181
-          'Intel?'
+          'Intel Xeon MP'
         when 182
-          'AMD'
+          'AMD Athlon XP'
         when 183
-          'AMD'
+          'AMD Athlon MP'
         when 184
-          'Intel?'
+          'Intel Itanium 2'
         when 185
-          'AMD'
+          'Intel Pentium M'
+        when 186
+          'Intel Celeron D'
+        when 187
+          'Intel Pentium D'
+        when 188
+          'Intel Pentium Extreme Edition'
+        when 189
+          'Intel Core Solo'
         when 190
           'K7'
+        when 191
+          'Intel Core2 Duo'
+        when 192
+          'Intel Core2 Solo'
+        when 193
+          'Intel Core2 Extreme'
+        when 194
+          'Intel Core2 Quad'
+        when 195
+          'Intel Core2 Extreme Mobile'
+        when 196
+          'Intel Core2 Duo Mobile'
+        when 197
+          'Intel Core2 Solo Mobile'
+        when 198
+          'Intel Core i7 Mobile'
+        when 199
+          'Intel Celeron Dual-Core'
         when 200
-          'IBM390'
+          'zSeries S/390'
         when 201
-          'G4'
+          'ESA/390 G4'
         when 202
-          'G5'
+          'ESA/390 G5'
+        when 203
+          'ESA/390 G6'
+        when 204
+          'z/Architectur'
         when 250
           'i860'
         when 251

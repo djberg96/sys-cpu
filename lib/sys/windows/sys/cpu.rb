@@ -498,6 +498,10 @@ module Sys
     private_class_method :get_status
 
     # Convert a family number into the equivalent string
+    #
+    # NOTE: This could be out of date as new data is added occasionally.
+    # If there's a nicer way to do this, please send a PR my way.
+    #
     def self.get_family(num)
       case num
         when 1
@@ -768,6 +772,58 @@ module Sys
           'ESA/390 G6'
         when 204
           'z/Architectur'
+        when 205
+          'Intel Core i5'
+        when 206
+          'Intel Core i3'
+        when 210
+          'VIA C7-M'
+        when 211
+          'VIA C7-D'
+        when 212
+          'VIA C7'
+        when 213
+          'VIA Eden'
+        when 214
+          'Intel Xeon Multi-Core'
+        when 215
+          'Intel Xeon 3xxx Dual-Core'
+        when 216
+          'Intel Xeon 3xxx Quad-Core'
+        when 217
+          'VIA Nano'
+        when 218
+          'Intel Xeon 5xxx Dual-Core'
+        when 219
+          'Intel Xeon 5xxx Quad-Core'
+        when 221
+          'Intel Xeon 7xxx Dual-Core'
+        when 222
+          'Intel Xeon 7xxx Quad-Core'
+        when 223
+          'Intel Xeon 7xxx Multi-Core'
+        when 224
+          'Intel Xeon 3400 Multi-Core'
+        when 230
+          'AMD Opteron Embedded Quad-Core'
+        when 231
+          'AMD Phenom Triple-Core'
+        when 232
+          'AMD Turion Ultra Dual-Core Mobile'
+        when 233
+          'AMD Turion Dual-Core Mobile'
+        when 234
+          'AMD Athlon Dual-Core'
+        when 235
+          'AMD Sempron SI'
+        when 236
+          'AMD Phenom II'
+        when 237
+          'AMD Athlon II'
+        when 238
+          'AMD Opteron Six-Core'
+        when 239
+          'AMD Sempron M'
         when 250
           'i860'
         when 251

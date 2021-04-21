@@ -71,7 +71,7 @@ module Sys
     # Returns the +host+ CPU's architecture, or nil if it cannot be
     # determined.
     #
-    def self.architecture(host=Socket.gethostname)
+    def self.architecture(host = Socket.gethostname)
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)

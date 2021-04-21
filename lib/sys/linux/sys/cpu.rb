@@ -82,9 +82,9 @@ module Sys
     #
     def self.architecture
       case CPU_ARRAY.first['cpu_family']
-      when '3'
+        when '3'
         'x86'
-      when '6'
+        when '6'
         'x86_64'
       else
         nil

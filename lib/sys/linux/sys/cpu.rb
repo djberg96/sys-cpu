@@ -3,8 +3,9 @@
 ##########################################################
 # linux.rb (sys-cpu) - pure Ruby version for Linux
 ##########################################################
-module Sys
 
+# The Sys module is a namespace only.
+module Sys
   # :stopdoc:
 
   cpu_file   = '/proc/cpuinfo'
@@ -43,6 +44,7 @@ module Sys
 
   # :startdoc:
 
+  # The CPU class encapsulates information about physical CPUs on your system.
   class CPU
 
     # :stopdoc:

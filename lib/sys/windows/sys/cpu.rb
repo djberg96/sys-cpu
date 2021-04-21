@@ -82,8 +82,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         get_cpu_arch(wmi.Architecture)
       end
@@ -98,8 +98,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu#{cpu_num}'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.CurrentClockSpeed
       end
@@ -117,8 +117,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu#{cpu_num}'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.LoadPercentage
       end
@@ -130,8 +130,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.Name
       end
@@ -145,8 +145,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_ComputerSystem='#{host}'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.NumberOfProcessors
       end
@@ -205,8 +205,8 @@ module Sys
     def self.processors(host = Socket.gethostname) # :yields: CPUStruct
       begin
         wmi = WIN32OLE.connect(BASE_CS + "//#{host}/root/cimv2")
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.InstancesOf('Win32_Processor').each{ |cpu|
           yield CPUStruct.new(
@@ -265,8 +265,8 @@ module Sys
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
-      rescue WIN32OLERuntimeError => e
-        raise Error, e
+      rescue WIN32OLERuntimeError => err
+        raise Error, err
       else
         wmi.Manufacturer
       end

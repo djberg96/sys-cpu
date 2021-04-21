@@ -3,15 +3,6 @@
 require 'win32ole'
 require 'socket'
 
-# See Ruby bugs #2618 and #7681. This is a workaround.
-BEGIN{
-  require 'win32ole'
-  if RUBY_VERSION.to_f < 2.0
-    WIN32OLE.ole_initialize
-    at_exit { WIN32OLE.ole_uninitialize }
-  end
-}
-
 # The Sys module serves only as a namespace
 module Sys
   # Encapsulates system CPU information

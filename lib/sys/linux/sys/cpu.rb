@@ -86,7 +86,7 @@ module Sys
           'x86'
         when '6'
           'x86_64'
-      else
+        else
           nil
       end
     end

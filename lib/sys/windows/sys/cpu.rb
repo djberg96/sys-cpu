@@ -241,7 +241,7 @@ module Sys
             cpu.PowerManagementSupported,
             cpu.PowerManagementCapabilities,
             cpu.ProcessorId,
-            self.get_processor_type(cpu.ProcessorType),
+            get_processor_type(cpu.ProcessorType),
             cpu.Revision,
             cpu.Role,
             cpu.SocketDesignation,
@@ -251,9 +251,9 @@ module Sys
             cpu.SystemCreationClassName,
             cpu.SystemName,
             cpu.UniqueId,
-            self.get_upgrade_method(cpu.UpgradeMethod),
+            get_upgrade_method(cpu.UpgradeMethod),
             cpu.Version,
-            self.get_voltage_caps(cpu.VoltageCaps)
+            get_voltage_caps(cpu.VoltageCaps)
           )
         }
       end

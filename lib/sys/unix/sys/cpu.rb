@@ -43,7 +43,7 @@ module Sys
     begin
       attach_function(
         :sysctl,
-        [:pointer, :uint, :pointer, :pointer, :pointer, :size_t],
+        %i[pointer uint pointer pointer pointer size_t],
         :int
       )
       private_class_method :sysctl
@@ -54,7 +54,7 @@ module Sys
     begin
       attach_function(
         :sysctlbyname,
-        [:string, :pointer, :pointer, :pointer, :size_t],
+        %i[string pointer pointer pointer size_t],
         :int
       )
       private_class_method :sysctlbyname
@@ -64,10 +64,10 @@ module Sys
 
     # Solaris
     begin
-      attach_function :getloadavg, [:pointer, :int], :int
-      attach_function :processor_info, [:int, :pointer], :int
+      attach_function :getloadavg, %i[pointer int], :int
+      attach_function :processor_info, %i[int pointer], :int
       attach_function :sysconf, [:int], :long
-      attach_function :sysinfo, [:int, :pointer, :long], :int
+      attach_function :sysinfo, %i[int pointer long], :int
 
       private_class_method :getloadavg
       private_class_method :processor_info

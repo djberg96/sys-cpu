@@ -1,5 +1,9 @@
 [![Ruby](https://github.com/djberg96/sys-cpu/actions/workflows/ruby.yml/badge.svg)](https://github.com/djberg96/sys-cpu/actions/workflows/ruby.yml)
 
+* Linux
+* Windows
+* OSX
+
 ## Description
 A Ruby interface for getting cpu information.
 

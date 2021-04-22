@@ -31,11 +31,8 @@ module Sys
     end
 
     # Turn yes/no attributes into booleans
-    if val == 'yes'
-      val = true
-    elsif val == 'no'
-      val = false
-    end
+    val = true if val == 'yes'
+    val = false if val == 'no'
 
     cpu_hash[key] = val
   end

@@ -43,7 +43,6 @@ module Sys
 
   # The CPU class encapsulates information about physical CPUs on your system.
   class CPU
-
     # :stopdoc:
 
     CPUStruct = Struct.new('CPUStruct', *CPU_ARRAY.first.keys)

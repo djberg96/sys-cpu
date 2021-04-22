@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 require 'ffi'
 require 'rbconfig'
 
+# The Sys module is a name space only.
 module Sys
+  # The CPU class encapsulates information about the physical CPU's on your system.
   class CPU
     extend FFI::Library
     ffi_lib FFI::Library::LIBC
@@ -43,7 +47,7 @@ module Sys
     begin
       attach_function(
         :sysctl,
-        [:pointer, :uint, :pointer, :pointer, :pointer, :size_t],
+        %i[pointer uint pointer pointer pointer size_t],
         :int
       )
       private_class_method :sysctl
@@ -54,7 +58,7 @@ module Sys
     begin
       attach_function(
         :sysctlbyname,
-        [:string, :pointer, :pointer, :pointer, :size_t],
+        %i[string pointer pointer pointer size_t],
         :int
       )
       private_class_method :sysctlbyname
@@ -64,10 +68,10 @@ module Sys
 
     # Solaris
     begin
-      attach_function :getloadavg, [:pointer, :int], :int
-      attach_function :processor_info, [:int, :pointer], :int
+      attach_function :getloadavg, %i[pointer int], :int
+      attach_function :processor_info, %i[int pointer], :int
       attach_function :sysconf, [:int], :long
-      attach_function :sysinfo, [:int, :pointer, :long], :int
+      attach_function :sysinfo, %i[int pointer long], :int
 
       private_class_method :getloadavg
       private_class_method :processor_info
@@ -182,17 +186,15 @@ module Sys
         if sysctl(mib, 2, buf, size, nil, 0) < 0
           raise Error, 'sysctl function failed'
         end
-
-        buf.strip
       else
         buf = 0.chr * 257
 
         if sysinfo(SI_MACHINE, buf, buf.size) < 0
           raise Error, 'sysinfo function failed'
         end
-
-        buf.strip
       end
+
+      buf.strip
     end
 
     # Returns a string indicating the cpu model.
@@ -215,10 +217,8 @@ module Sys
         pinfo = ProcInfo.new
 
         # Some systems start at 0, some at 1
-        if processor_info(0, pinfo) < 0
-          if processor_info(1, pinfo) < 0
-            raise Error, 'process_info function failed'
-          end
+        if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+          raise Error, 'processor_info function failed'
         end
 
         pinfo[:pi_processor_type].to_s
@@ -262,10 +262,8 @@ module Sys
         pinfo = ProcInfo.new
 
         # Some systems start at 0, some at 1
-        if processor_info(0, pinfo) < 0
-          if processor_info(1, pinfo) < 0
-            raise Error, 'process_info function failed'
-          end
+        if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+          raise Error, 'processor_info function failed'
         end
 
         pinfo[:pi_clock].to_i
@@ -296,10 +294,9 @@ module Sys
 
       pinfo = ProcInfo.new
 
-      if processor_info(0, pinfo) < 0
-        if processor_info(1, pinfo) < 0
-          raise Error, 'process_info function failed'
-        end
+      # Some start at 0, some start at 1
+      if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+        raise Error, 'processor_info function failed'
       end
 
       pinfo[:pi_fputypes].to_s
@@ -316,7 +313,7 @@ module Sys
       pinfo = ProcInfo.new
 
       if processor_info(num, pinfo) < 0
-        raise Error, 'process_info function failed'
+        raise Error, 'processor_info function failed'
       end
 
       case pinfo[:pi_state].to_i

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is just a stub file that requires the appropriate version
 # depending on which platform you're on.
 require 'rbconfig'
@@ -5,7 +7,7 @@ require 'rbconfig'
 module Sys
   class CPU
     # The version of the sys-cpu gem.
-    VERSION = '1.0.3'.freeze
+    VERSION = '1.0.3'
   end
 end
 

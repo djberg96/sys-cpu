@@ -1,14 +1,7 @@
+# frozen_string_literal: true
+
 require 'win32ole'
 require 'socket'
-
-# See Ruby bugs #2618 and #7681. This is a workaround.
-BEGIN{
-  require 'win32ole'
-  if RUBY_VERSION.to_f < 2.0
-    WIN32OLE.ole_initialize
-    at_exit { WIN32OLE.ole_uninitialize }
-  end
-}
 
 # The Sys module serves only as a namespace
 module Sys
@@ -78,7 +71,7 @@ module Sys
     # Returns the +host+ CPU's architecture, or nil if it cannot be
     # determined.
     #
-    def self.architecture(host=Socket.gethostname)
+    def self.architecture(host = Socket.gethostname)
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_Processor='cpu0'"
       begin
         wmi = WIN32OLE.connect(cs)
@@ -208,7 +201,7 @@ module Sys
       rescue WIN32OLERuntimeError => err
         raise Error, err
       else
-        wmi.InstancesOf('Win32_Processor').each{ |cpu|
+        wmi.InstancesOf('Win32_Processor').each do |cpu|
           yield CPUStruct.new(
             cpu.AddressWidth,
             get_cpu_arch(cpu.Architecture),
@@ -241,7 +234,7 @@ module Sys
             cpu.PowerManagementSupported,
             cpu.PowerManagementCapabilities,
             cpu.ProcessorId,
-            self.get_processor_type(cpu.ProcessorType),
+            get_processor_type(cpu.ProcessorType),
             cpu.Revision,
             cpu.Role,
             cpu.SocketDesignation,
@@ -251,11 +244,11 @@ module Sys
             cpu.SystemCreationClassName,
             cpu.SystemName,
             cpu.UniqueId,
-            self.get_upgrade_method(cpu.UpgradeMethod),
+            get_upgrade_method(cpu.UpgradeMethod),
             cpu.Version,
-            self.get_voltage_caps(cpu.VoltageCaps)
+            get_voltage_caps(cpu.VoltageCaps)
           )
-        }
+        end
       end
     end
 

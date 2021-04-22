@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 require 'ffi'
 require 'rbconfig'
 
+# The Sys module serves as a namespace only.
 module Sys
+  # The CPU class encapsulates information about the physical cpu's on your system.
   class CPU
     extend FFI::Library
     ffi_lib FFI::Library::LIBC
@@ -37,7 +41,7 @@ module Sys
 
     attach_function(
       :sysctl,
-      [:pointer, :uint, :pointer, :pointer, :pointer, :size_t],
+      %i[pointer uint pointer pointer pointer size_t],
       :int
     )
 
@@ -45,14 +49,14 @@ module Sys
 
     attach_function(
       :sysctlbyname,
-      [:string, :pointer, :pointer, :pointer, :size_t],
+      %i[string pointer pointer pointer size_t],
       :int
     )
 
     private_class_method :sysctlbyname
 
-    attach_function :getloadavg, [:pointer, :int], :int
-    attach_function :processor_info, [:int, :int, :string, :pointer, :pointer], :int
+    attach_function :getloadavg, %i[pointer int], :int
+    attach_function :processor_info, %i[int int string pointer pointer], :int
     attach_function :sysconf, [:int], :long
 
     private_class_method :getloadavg

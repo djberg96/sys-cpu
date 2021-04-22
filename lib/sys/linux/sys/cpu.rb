@@ -1,48 +1,48 @@
+# frozen_string_literal: true
+
 ##########################################################
 # linux.rb (sys-cpu) - pure Ruby version for Linux
 ##########################################################
-module Sys
 
+# The Sys module is a namespace only.
+module Sys
   # :stopdoc:
 
-  cpu_file   = '/proc/cpuinfo'
-  cpu_hash   = {}
+  cpu_file  = '/proc/cpuinfo'
+  cpu_hash  = {}
   CPU_ARRAY = []
 
   private_constant :CPU_ARRAY
 
   # Parse the info out of the /proc/cpuinfo file
-  IO.foreach(cpu_file){ |line|
+  IO.foreach(cpu_file) do |line|
     line.strip!
     next if line.empty?
 
     key, val = line.split(':')
     key.strip!
-    key.gsub!(/\s+/,'_')
+    key.gsub!(/\s+/, '_')
     key.downcase!
     val.strip! if val
 
-    if cpu_hash.has_key?(key)
+    if cpu_hash.key?(key)
       CPU_ARRAY.push(cpu_hash.dup)
       cpu_hash.clear
     end
 
     # Turn yes/no attributes into booleans
-    if val == 'yes'
-      val = true
-    elsif val == 'no'
-      val = false
-    end
+    val = true if val == 'yes'
+    val = false if val == 'no'
 
     cpu_hash[key] = val
-  }
+  end
 
   CPU_ARRAY.push(cpu_hash)
 
   # :startdoc:
 
+  # The CPU class encapsulates information about physical CPUs on your system.
   class CPU
-
     # :stopdoc:
 
     CPUStruct = Struct.new('CPUStruct', *CPU_ARRAY.first.keys)
@@ -58,15 +58,15 @@ module Sys
     #
     def self.processors
       array = []
-      CPU_ARRAY.each{ |hash|
+      CPU_ARRAY.each do |hash|
         struct = CPUStruct.new
-        struct.members.each{ |m| struct.send("#{m}=", hash["#{m}"]) }
+        struct.members.each{ |m| struct.send("#{m}=", hash[m.to_s]) }
         if block_given?
           yield struct
         else
           array << struct
         end
-      }
+      end
       array unless block_given?
     end
 
@@ -80,12 +80,10 @@ module Sys
     #
     def self.architecture
       case CPU_ARRAY.first['cpu_family']
-      when '3'
-        'x86'
-      when '6'
-        'x86_64'
-      else
-        nil
+        when '3'
+          'x86'
+        when '6'
+          'x86_64'
       end
     end
 
@@ -103,14 +101,18 @@ module Sys
 
     # Create singleton methods for each of the attributes.
     #
-    def self.method_missing(id, arg=0)
-      raise NoMethodError, "'#{id}'" unless CPU_ARRAY[arg].has_key?(id.to_s)
+    def self.method_missing(id, arg = 0)
+      raise NoMethodError, "'#{id}'" unless CPU_ARRAY[arg].key?(id.to_s)
       rv = CPU_ARRAY[arg][id.to_s]
       if rv.nil?
-        id = id.to_s + '?'
+        id = "#{id}?"
         rv = CPU_ARRAY[arg][id]
       end
       rv
+    end
+
+    def self.respond_to_missing?(method, _private_methods = false)
+      CPU_ARRAY.first.keys.include?(method.to_s)
     end
 
     private_class_method :method_missing
@@ -120,7 +122,7 @@ module Sys
     #
     def self.load_avg
       load_avg_file = '/proc/loadavg'
-      IO.readlines(load_avg_file).first.split[0..2].map{ |e| e.to_f }
+      IO.readlines(load_avg_file).first.split[0..2].map(&:to_f)
     end
 
     # Returns a hash of arrays that contains an array of the following
@@ -145,19 +147,19 @@ module Sys
 
       lines = IO.readlines(cpu_stat_file)
 
-      lines.each_with_index{ |line, i|
+      lines.each_with_index do |line, i|
         array = line.split
-        break unless array[0] =~ /cpu/   # 'cpu' entries always on top
+        break unless array[0] =~ /cpu/ # 'cpu' entries always on top
 
         # Some machines list a 'cpu' and a 'cpu0'. In this case only
         # return values for the numbered cpu entry.
-        if lines[i].split[0] == 'cpu' && lines[i+1].split[0] =~ /cpu\d/
+        if lines[i].split[0] == 'cpu' && lines[i + 1].split[0] =~ /cpu\d/
           next
         end
 
         vals = array[1..-1].map{ |e| e.to_i / 100 } # 100 jiffies/sec.
         hash[array[0]] = vals
-      }
+      end
 
       hash
     end

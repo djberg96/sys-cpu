@@ -111,7 +111,7 @@ module Sys
       raise NoMethodError, "'#{id}'" unless CPU_ARRAY[arg].key?(id.to_s)
       rv = CPU_ARRAY[arg][id.to_s]
       if rv.nil?
-        id = id.to_s + '?'
+        id = "#{id}?"
         rv = CPU_ARRAY[arg][id]
       end
       rv

@@ -153,7 +153,7 @@ module Sys
 
         # Some machines list a 'cpu' and a 'cpu0'. In this case only
         # return values for the numbered cpu entry.
-        if lines[i].split[0] == 'cpu' && lines[i+1].split[0] =~ /cpu\d/
+        if lines[i].split[0] == 'cpu' && lines[i + 1].split[0] =~ /cpu\d/
           next
         end
 

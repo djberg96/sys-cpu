@@ -12,7 +12,7 @@ module Sys
   cpu_hash  = {}
   CPU_ARRAY = []
 
-  #private_constant :CPU_ARRAY
+  private_constant :CPU_ARRAY
 
   # Parse the info out of the /proc/cpuinfo file
   IO.foreach(cpu_file) do |line|

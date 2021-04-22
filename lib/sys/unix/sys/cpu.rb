@@ -3,7 +3,9 @@
 require 'ffi'
 require 'rbconfig'
 
+# The Sys module is a name space only.
 module Sys
+  # The CPU class encapsulates information about the physical CPU's on your system.
   class CPU
     extend FFI::Library
     ffi_lib FFI::Library::LIBC

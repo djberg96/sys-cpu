@@ -21,7 +21,7 @@ module Sys
 
     key, val = line.split(':')
     key.strip!
-    key.gsub!(/\s+/,'_')
+    key.gsub!(/\s+/, '_')
     key.downcase!
     val.strip! if val
 

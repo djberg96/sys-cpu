@@ -8,11 +8,11 @@
 module Sys
   # :stopdoc:
 
-  cpu_file   = '/proc/cpuinfo'
-  cpu_hash   = {}
+  cpu_file  = '/proc/cpuinfo'
+  cpu_hash  = {}
   CPU_ARRAY = []
 
-  private_constant :CPU_ARRAY
+  #private_constant :CPU_ARRAY
 
   # Parse the info out of the /proc/cpuinfo file
   IO.foreach(cpu_file) do |line|
@@ -109,6 +109,10 @@ module Sys
         rv = CPU_ARRAY[arg][id]
       end
       rv
+    end
+
+    def self.respond_to_missing?(method, _private_methods = false)
+      CPU_ARRAY.first.keys.include?(method.to_s)
     end
 
     private_class_method :method_missing

@@ -10,7 +10,7 @@ namespace 'gem' do
   desc "Create the sys-cpu gem"
   task :create => [:clean] do
     require 'rubygems/package'
-    spec = eval(IO.read('sys-cpu.gemspec'))
+    spec = Gem::Specification.load('sys-cpu.gemspec')
     spec.signing_key = File.join(Dir.home, '.ssh', 'gem-private_key.pem')
     Gem::Package.build(spec)
   end

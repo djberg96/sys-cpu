@@ -11,7 +11,7 @@ A Ruby interface for getting cpu information.
 `gem install sys-cpu`
 
 ## Adding the trusted cert
-`gem cert --add <(curl -Ls https://raw.githubusercontent.com/djberg96/sys-cpu/ffi/certs/djberg96_pub.pem)`
+`gem cert --add <(curl -Ls https://raw.githubusercontent.com/djberg96/sys-cpu/main/certs/djberg96_pub.pem)`
 
 ## Notes
 ### Solaris

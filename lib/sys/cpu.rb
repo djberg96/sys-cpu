@@ -8,6 +8,8 @@ module Sys
   class CPU
     # The version of the sys-cpu gem.
     VERSION = '1.0.3'
+
+    private_class_method :new
   end
 end
 

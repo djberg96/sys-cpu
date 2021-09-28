@@ -15,4 +15,8 @@ RSpec.describe Sys::CPU::VERSION do
   example "version number is frozen" do
     expect(Sys::CPU::VERSION).to be_frozen
   end
+
+  example "constructor is private" do
+    expect{ described_class.new }.to raise_error(NoMethodError)
+  end
 end

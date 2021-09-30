@@ -58,6 +58,6 @@ RSpec.describe Sys::CPU, :windows => true do
 
   example "processors" do
     expect(described_class).to respond_to(:processors)
-    expect{ described_class.processors{}.not_to raise_error }
+    expect{ described_class.processors{} }.not_to raise_error
   end
 end

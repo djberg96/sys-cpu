@@ -166,7 +166,7 @@ module Sys
           raise Error, 'sysctl function failed'
         end
 
-        buf.strip.unpack('C').first
+        buf.strip.unpack1('C')
       end
     end
 
@@ -257,7 +257,7 @@ module Sys
           raise Error, 'sysctl function failed'
         end
 
-        buf.unpack('I*').first / 1000000
+        buf.unpack1('I*') / 1_000_000
       else
         pinfo = ProcInfo.new
 

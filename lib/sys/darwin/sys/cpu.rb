@@ -152,7 +152,7 @@ module Sys
         raise Error, 'sysctlbyname failed'
       end
 
-      optr.read_long / 1000000
+      optr.read_long / 1_000_000
     end
 
     # Returns an array of three floats indicating the 1, 5 and 15 minute load

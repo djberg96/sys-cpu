@@ -15,7 +15,7 @@ module Sys
   private_constant :CPU_ARRAY
 
   # Parse the info out of the /proc/cpuinfo file
-  IO.foreach(cpu_file) do |line|
+  File.foreach(cpu_file) do |line|
     line.strip!
     next if line.empty?
 
@@ -122,7 +122,7 @@ module Sys
     #
     def self.load_avg
       load_avg_file = '/proc/loadavg'
-      IO.readlines(load_avg_file).first.split[0..2].map(&:to_f)
+      File.readlines(load_avg_file).first.split[0..2].map(&:to_f)
     end
 
     # Returns a hash of arrays that contains an array of the following
@@ -145,7 +145,7 @@ module Sys
       cpu_stat_file = '/proc/stat'
       hash = {} # Hash needed for multi-cpu systems
 
-      lines = IO.readlines(cpu_stat_file)
+      lines = File.readlines(cpu_stat_file)
 
       lines.each_with_index do |line, i|
         array = line.split

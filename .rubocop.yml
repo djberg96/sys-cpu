@@ -45,4 +45,4 @@ Naming/RescuedExceptionsVariableName:
   PreferredName: 'err'
 Naming/FileName:
   Exclude:
-    - 'lib/archive-tar-external.rb'
+    - 'lib/sys-cpu.rb'

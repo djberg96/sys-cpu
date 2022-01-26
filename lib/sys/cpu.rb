@@ -4,7 +4,10 @@
 # depending on which platform you're on.
 require 'rbconfig'
 
+# The Sys module is a namespace only.
 module Sys
+  # The CPU class encapsulates information about the physical cpu's on your system.
+  # This class is reopened for each of the supported platforms/operating systems.
   class CPU
     # The version of the sys-cpu gem.
     VERSION = '1.0.3'

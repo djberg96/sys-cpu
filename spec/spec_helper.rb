@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec'
+require 'sys_cpu_spec'
 
 RSpec.configure do |config|
   config.filter_run_excluding(:bsd) if RbConfig::CONFIG['host_os'] !~ /bsd|darwin|mach|osx/i

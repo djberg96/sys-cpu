@@ -274,15 +274,10 @@ module Sys
     # average.
     #
     def self.load_avg
-      if respond_to?(:getloadavg, true)
-        loadavg = FFI::MemoryPointer.new(:double, 3)
-
-        if getloadavg(loadavg, loadavg.size) < 0
-          raise Error, 'getloadavg function failed'
-        end
-
-        loadavg.get_array_of_double(0, 3)
-      end
+      return unless respond_to?(:getloadavg, true)
+      loadavg = FFI::MemoryPointer.new(:double, 3)
+      raise Error, 'getloadavg function failed' if getloadavg(loadavg, loadavg.size) < 0
+      loadavg.get_array_of_double(0, 3)
     end
 
     # Returns the floating point processor type.

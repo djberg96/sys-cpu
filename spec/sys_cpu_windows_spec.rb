@@ -20,12 +20,15 @@ RSpec.describe Sys::CPU, :windows => true do
     expect(described_class.architecture).to be_kind_of(String)
   end
 
-  example 'freq' do
+  example 'freq basic functionality' do
     expect(described_class).to respond_to(:freq)
     expect{ described_class.freq }.not_to raise_error
+    expect(described_class.freq).to be_kind_of(Integer)
+  end
+
+  example 'freq with arguments' do
     expect{ described_class.freq(0) }.not_to raise_error
     expect{ described_class.freq(0, host) }.not_to raise_error
-    expect(described_class.freq).to be_kind_of(Integer)
   end
 
   example 'model' do

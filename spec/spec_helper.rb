@@ -4,6 +4,7 @@ require 'rspec'
 require 'sys_cpu_spec'
 
 RSpec.configure do |config|
+  config.include_context('Sys::CPU Common')
   config.filter_run_excluding(:bsd) if RbConfig::CONFIG['host_os'] !~ /bsd|darwin|mach|osx/i
   config.filter_run_excluding(:sunos) if RbConfig::CONFIG['host_os'] !~ /sunos|solaris/i
   config.filter_run_excluding(:windows) if RbConfig::CONFIG['host_os'] !~ /mswin|win32|dos|mingw|cygwin/i

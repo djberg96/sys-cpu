@@ -10,8 +10,6 @@ require 'sys/cpu'
 require 'spec_helper'
 
 RSpec.describe Sys::CPU, :linux => true do
-  include_examples 'Sys::CPU Common'
-
   example 'dynamic methods are defined as expected' do
     expect do
       described_class.processors do |cs|

@@ -9,7 +9,7 @@
 require 'sys/cpu'
 require 'rspec'
 
-RSpec.describe 'Sys::CPU Common' do
+RSpec.shared_examples 'Sys::CPU Common' do
   example 'version number is set to the expected value' do
     expect(Sys::CPU::VERSION).to eq('1.0.3')
   end

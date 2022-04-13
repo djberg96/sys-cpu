@@ -2,6 +2,7 @@ require 'rake'
 require 'rake/clean'
 require 'rbconfig'
 require 'rspec/core/rake_task'
+require 'rubocop/rake_task'
 include RbConfig
 
 CLEAN.include('**/*.gem', '**/*.rbc', '**/*.rbx', '**/*.lock')
@@ -43,6 +44,8 @@ task :example => [:clean] do
   end
 
 end
+
+RuboCop::RakeTask.new
 
 desc "Run the test suite"
 RSpec::Core::RakeTask.new(:spec)

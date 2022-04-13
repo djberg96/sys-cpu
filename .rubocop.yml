@@ -11,6 +11,9 @@ RSpec/InstanceVariable:
 
 AllCops:
   NewCops: enable
+  Exclude:
+    - sys-cpu.gemspec
+    - Gemfile
 Lint/AssignmentInCondition:
   Enabled: false
 Style/MethodCallWithoutArgsParentheses:

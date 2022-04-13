@@ -39,8 +39,8 @@ RSpec.describe Sys::CPU, :hpux => true do
     expect(described_class).to respond_to(:load_avg)
     expect{ described_class.load_avg }.not_to raise_error
     expect{ described_class.load_avg(0) }.not_to raise_error
-    expect{ described_class.load_avg{ |e| }.not_to raise_error }
-    expect{ described_class.load_avg(0){}.to raise_error(ArgumentError) }
+    expect{ described_class.load_avg{} }.not_to raise_error
+    expect{ described_class.load_avg(0){} }.to raise_error(ArgumentError)
   end
 
   example 'load_avg expected results' do

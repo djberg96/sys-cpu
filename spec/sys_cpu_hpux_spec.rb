@@ -35,9 +35,12 @@ RSpec.describe Sys::CPU, :hpux => true do
     expect(described_class.architecture).to be_kind_of(String)
   end
 
-  example 'load_avg sanity check' do
+  example 'load_avg basic sanity check' do
     expect(described_class).to respond_to(:load_avg)
     expect{ described_class.load_avg }.not_to raise_error
+  end
+
+  example 'load_avg with arguments and/or block sanity check' do
     expect{ described_class.load_avg(0) }.not_to raise_error
     expect{ described_class.load_avg{} }.not_to raise_error
     expect{ described_class.load_avg(0){} }.to raise_error(ArgumentError)

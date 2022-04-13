@@ -194,7 +194,8 @@ module Sys
     # * voltage_caps
     #
     # Note that not all of these members will necessarily be defined.
-    #
+    #--
+    # rubocop:disable Metrics/BlockLength
     def self.processors(host = Socket.gethostname) # :yields: CPUStruct
       begin
         wmi = WIN32OLE.connect(BASE_CS + "//#{host}/root/cimv2")
@@ -251,6 +252,8 @@ module Sys
         end
       end
     end
+
+    # rubocop:enable Metrics/BlockLength
 
     # Returns a string indicating the type of processor, e.g. GenuineIntel.
     #

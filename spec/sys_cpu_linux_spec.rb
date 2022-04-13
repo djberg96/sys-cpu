@@ -52,4 +52,8 @@ RSpec.describe Sys::CPU, :linux => true do
   example 'bogus methods are not picked up by method_missing' do
     expect{ described_class.bogus }.to raise_error(NoMethodError)
   end
+
+  example 'constructor is private' do
+    expect{ described_class.new }.to raise_error(NoMethodError)
+  end
 end

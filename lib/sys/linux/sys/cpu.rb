@@ -43,6 +43,9 @@ module Sys
 
   # The CPU class encapsulates information about physical CPUs on your system.
   class CPU
+    # This class is not meant to be instantiated.
+    private_class_method :new
+
     # :stopdoc:
 
     CPUStruct = Struct.new('CPUStruct', *CPU_ARRAY.first.keys)

@@ -1,4 +1,4 @@
-## 1.0.4 - ???
+## 1.0.4 - 10-Jun-2022
 * The OSX code for the CPU.freq method was updated for arm64 systems.
 * Some refactoring to the specs and uses shared examples now.
 * Now makes the new method a private class method. The constructor was never
@@ -7,6 +7,9 @@
   a rubocop rake task, and applied some suggested changes.
 * Fixed the global Gemfile source issue. Just use the gemspec.
 * Added some new cpu families for Windows.
+* Added a respond_to_missing? method to the Linux version since it uses
+  method_missing.
+* The MS Windows version now assumes Ruby 2.0 or later.
 
 ## 1.0.3 - 28-Jan-2021
 * The code for OSX was split out into its own source file. This was partly for

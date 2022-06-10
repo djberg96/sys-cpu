@@ -63,6 +63,16 @@ module Sys
     private_class_method :processor_info
     private_class_method :sysconf
 
+    class ClockInfo < FFI::Struct
+      layout(
+        :hz, :int,
+        :tick, :int,
+        :spare, :int,
+        :stathz, :int,
+        :profhz, :int
+      )
+    end
+
     # Returns the cpu's architecture. On most systems this will be identical
     # to the CPU.machine method. On OpenBSD it will be identical to the CPU.model
     # method.
@@ -148,11 +158,26 @@ module Sys
 
       size.write_long(optr.size)
 
-      if sysctlbyname('hw.cpufrequency', optr, size, nil, 0) < 0
-        raise Error, 'sysctlbyname failed'
-      end
+      if RbConfig::CONFIG['host_cpu'].downcase == 'arm64'
+        if sysctlbyname('hw.tbfrequency', optr, size, nil, 0) < 0
+          raise Error, 'sysctlbyname failed on hw.tbfrequency'
+        end
 
-      optr.read_long / 1_000_000
+        size.clear
+        clock = ClockInfo.new
+        size.write_long(clock.size)
+
+        if sysctlbyname('kern.clockrate', clock, size, nil, 0) < 0
+          raise Error, 'sysctlbyname failed on kern.clockrate'
+        end
+
+        (optr.read_long * clock[:hz]) / 1_000_000
+      else
+        if sysctlbyname('hw.cpufrequency', optr, size, nil, 0) < 0
+          raise Error, 'sysctlbyname failed on hw.cpufrequency' if result < 0
+        end
+        optr.read_long / 1_000_000
+      end
     end
 
     # Returns an array of three floats indicating the 1, 5 and 15 minute load
@@ -169,3 +194,5 @@ module Sys
     end
   end
 end
+
+p Sys::CPU.freq

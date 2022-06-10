@@ -1,3 +1,13 @@
+## 1.0.4 - ???
+* The OSX code for the CPU.freq method was updated for arm64 systems.
+* Some refactoring to the specs and uses shared examples now.
+* Now makes the new method a private class method. The constructor was never
+  meant to be used with this library, so now it's explicitly forbidden.
+* Added rubocop and rubocop-rspec as development dependencies, as well as
+  a rubocop rake task, and applied some suggested changes.
+* Fixed the global Gemfile source issue. Just use the gemspec.
+* Added some new cpu families for Windows.
+
 ## 1.0.3 - 28-Jan-2021
 * The code for OSX was split out into its own source file. This was partly for
   ease of maintenance, but also because there was confusion with the

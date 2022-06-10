@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 #############################################################
-# test_sys_cpu_bsd.rb
+# sys_cpu_bsd_spec.rb
 #
-# The test case for sys-cpu on BSD flavors, including OS X.
+# Specs for sys-cpu on BSD flavors, including OS X.
 #############################################################
 require 'sys/cpu'
 require 'spec_helper'

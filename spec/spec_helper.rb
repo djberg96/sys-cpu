@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec'
-require 'sys_cpu_spec'
+require 'sys_cpu_shared'
 
 RSpec.configure do |config|
   config.include_context(Sys::CPU)

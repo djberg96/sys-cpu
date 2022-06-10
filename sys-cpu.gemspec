@@ -2,7 +2,7 @@ require 'rubygems'
 
 Gem::Specification.new do |spec|
   spec.name       = 'sys-cpu'
-  spec.version    = '1.0.3'
+  spec.version    = '1.0.4'
   spec.author     = 'Daniel J. Berger'
   spec.email      = 'djberg96@gmail.com'
   spec.license    = 'Apache-2.0'
@@ -11,8 +11,6 @@ Gem::Specification.new do |spec|
   spec.test_files = Dir['spec/*.rb']
   spec.files      = Dir['**/*'].reject{ |f| f.include?('git') }
   spec.cert_chain = ['certs/djberg96_pub.pem']
-
-  spec.extra_rdoc_files = Dir['*.rdoc']
 
   # The ffi dependency is only relevent for the Unix version. Given the
   # ubiquity of ffi these days, I felt a bogus dependency on ffi for Windows

@@ -1,3 +1,7 @@
+## 1.0.5 - 10-Aug-2022
+* Updated the cpu detection handling for Mac M1 systems. Thanks go to
+  Julien W for the spot.
+
 ## 1.0.4 - 10-Jun-2022
 * The OSX code for the CPU.freq method was updated for arm64 systems.
 * Some refactoring to the specs and uses shared examples now.

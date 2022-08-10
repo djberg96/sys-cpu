@@ -158,7 +158,7 @@ module Sys
 
       size.write_long(optr.size)
 
-      if RbConfig::CONFIG['host_cpu'].downcase == 'arm64'
+      if RbConfig::CONFIG['host_cpu'] =~ /^arm|^aarch/i
         if sysctlbyname('hw.tbfrequency', optr, size, nil, 0) < 0
           raise Error, 'sysctlbyname failed on hw.tbfrequency'
         end

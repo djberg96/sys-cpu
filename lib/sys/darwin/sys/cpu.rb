@@ -194,5 +194,3 @@ module Sys
     end
   end
 end
-
-p Sys::CPU.freq

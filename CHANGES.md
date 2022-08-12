@@ -1,3 +1,7 @@
+## 1.0.6 - 12-Aug-2022
+* The Sys::CPU.model method will now return "ARM" for machines using an
+  ARM-based processor instead of "Uknown".
+
 ## 1.0.5 - 10-Aug-2022
 * Updated the cpu detection handling for Mac M1 systems. Thanks go to
   Julien W for the spot.

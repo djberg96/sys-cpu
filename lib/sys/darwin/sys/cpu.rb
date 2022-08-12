@@ -47,6 +47,7 @@ module Sys
     CPU_TYPE_SPARC     = 14
     CPU_TYPE_POWERPC   = 18
     CPU_TYPE_POWERPC64 = CPU_TYPE_POWERPC | CPU_ARCH_ABI64
+    CPU_TYPE_ARM64     = CPU_TYPE_ARM | CPU_ARCH_ABI64
 
     private_constant :CPU_ARCH_ABI64, :CPU_TYPE_X86, :CPU_TYPE_X86_64, :CPU_TYPE_ARM
     private_constant :CPU_TYPE_SPARC, :CPU_TYPE_POWERPC, :CPU_TYPE_POWERPC64
@@ -159,7 +160,7 @@ module Sys
           'Sparc'
         when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
           'PowerPC'
-        when CPU_TYPE_ARM
+        when CPU_TYPE_ARM, CPU_TYPE_ARM64
           'ARM'
         else
           'Unknown'

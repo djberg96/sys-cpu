@@ -15,15 +15,21 @@ module Sys
 
     CTL_HW = 6 # Generic hardware/cpu
 
+    private_constant :CTL_HW
+
     HW_MACHINE      = 1  # Machine class
     HW_MODEL        = 2  # Specific machine model
     HW_NCPU         = 3  # Number of CPU's
     HW_CPU_FREQ     = 15 # CPU frequency
     HW_MACHINE_ARCH = 12 # Machine architecture
 
+    private_constant :HW_MACHINE, :HW_MODEL, :HW_NCPU, :HW_CPU_FREQ, :HW_MACHINE_ARCH
+
     SI_MACHINE          = 5
     SI_ARCHITECTURE     = 6
     SC_NPROCESSORS_ONLN = 15
+
+    private_constant :SI_MACHINE, :SI_ARCHITECTURE, :SC_NPROCESSORS_ONLN
 
     P_OFFLINE  = 1
     P_ONLINE   = 2
@@ -32,12 +38,19 @@ module Sys
     P_NOINTR   = 6
     P_SPARE    = 7
 
+    private_constant :P_OFFLINE, :P_ONLINE, :P_FAULTED, :P_POWEROFF, :P_NOINTR, :P_SPARE
+
     CPU_ARCH_ABI64     = 0x01000000
     CPU_TYPE_X86       = 7
     CPU_TYPE_X86_64    = (CPU_TYPE_X86 | CPU_ARCH_ABI64)
+    CPU_TYPE_ARM		   = 12
     CPU_TYPE_SPARC     = 14
     CPU_TYPE_POWERPC   = 18
     CPU_TYPE_POWERPC64 = CPU_TYPE_POWERPC | CPU_ARCH_ABI64
+    CPU_TYPE_ARM64     = CPU_TYPE_ARM | CPU_ARCH_ABI64
+
+    private_constant :CPU_ARCH_ABI64, :CPU_TYPE_X86, :CPU_TYPE_X86_64, :CPU_TYPE_ARM
+    private_constant :CPU_TYPE_SPARC, :CPU_TYPE_POWERPC, :CPU_TYPE_POWERPC64
 
     attach_function(
       :sysctl,
@@ -72,6 +85,8 @@ module Sys
         :profhz, :int
       )
     end
+
+    private_constant :ClockInfo
 
     # Returns the cpu's architecture. On most systems this will be identical
     # to the CPU.machine method. On OpenBSD it will be identical to the CPU.model
@@ -145,6 +160,8 @@ module Sys
           'Sparc'
         when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
           'PowerPC'
+        when CPU_TYPE_ARM, CPU_TYPE_ARM64
+          'ARM'
         else
           'Unknown'
       end

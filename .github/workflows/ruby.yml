@@ -4,15 +4,13 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - '**/README.md'
-      - '**/CHANGES.md'
-      - '**/MANIFEST.md'
+      - '**/*.md'
+      - '**/*.txt'
   pull_request:
     branches: [ main ]
     paths-ignore:
-      - '**/README.md'
-      - '**/CHANGES.md'
-      - '**/MANIFEST.md'
+      - '**/*.md'
+      - '**/*.txt'
 
 jobs:
   test:

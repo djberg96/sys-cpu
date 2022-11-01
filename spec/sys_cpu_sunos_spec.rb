@@ -20,7 +20,7 @@ RSpec.describe Sys::CPU, :sunos => true do
   end
 
   example 'freq method returns a sane value' do
-    expect(described_class.freq).to be_kind_of(Integer)
+    expect(described_class.freq).to be_a(Integer)
     expect(described_class.freq).to be > 100
   end
 
@@ -30,7 +30,7 @@ RSpec.describe Sys::CPU, :sunos => true do
   end
 
   example 'fpu_type returns a sane value' do
-    expect(described_class.fpu_type).to be_kind_of(String)
+    expect(described_class.fpu_type).to be_a(String)
     expect(described_class.fpu_type).not_to be_empty
   end
 
@@ -40,9 +40,9 @@ RSpec.describe Sys::CPU, :sunos => true do
   end
 
   example 'load_avg method returns the expected values' do
-    expect(described_class.load_avg).to be_kind_of(Array)
+    expect(described_class.load_avg).to be_a(Array)
     expect(described_class.load_avg.length).to eq(3)
-    expect(described_class.load_avg.first).to be_kind_of(Float)
+    expect(described_class.load_avg.first).to be_a(Float)
   end
 
   example 'model method basic functionality' do
@@ -51,7 +51,7 @@ RSpec.describe Sys::CPU, :sunos => true do
   end
 
   example 'model method returns a sane value' do
-    expect(described_class.model).to be_kind_of(String)
+    expect(described_class.model).to be_a(String)
     expect(described_class.model).not_to be_empty
   end
 
@@ -61,7 +61,7 @@ RSpec.describe Sys::CPU, :sunos => true do
   end
 
   example 'num_cpu method returns a sane value' do
-    expect(described_class.num_cpu).to be_kind_of(Integer)
+    expect(described_class.num_cpu).to be_a(Integer)
     expect(described_class.num_cpu).to be > 0
   end
 
@@ -76,7 +76,7 @@ RSpec.describe Sys::CPU, :sunos => true do
   end
 
   example 'state method returns a sane value' do
-    expect(described_class.state(0)).to be_kind_of(String)
+    expect(described_class.state(0)).to be_a(String)
     expect(described_class.state.empty?).to be false
   end
 end

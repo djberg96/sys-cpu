@@ -15,7 +15,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'architecture method returns a sane value' do
-    expect(described_class.architecture).to be_kind_of(String)
+    expect(described_class.architecture).to be_a(String)
     expect(described_class.architecture.size).to be > 0
   end
 
@@ -29,7 +29,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'freq method returns expected value' do
-    expect(described_class.freq).to be_kind_of(Integer)
+    expect(described_class.freq).to be_a(Integer)
     expect(described_class.freq).to be > 0
   end
 
@@ -43,9 +43,9 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'load_avg returns the expected results' do
-    expect(described_class.load_avg).to be_kind_of(Array)
+    expect(described_class.load_avg).to be_a(Array)
     expect(described_class.load_avg.length).to eq(3)
-    expect(described_class.load_avg[0]).to be_kind_of(Float)
+    expect(described_class.load_avg[0]).to be_a(Float)
   end
 
   example 'load_avg does not accept any arguments' do
@@ -58,7 +58,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'machine method returns sane value' do
-    expect(described_class.machine).to be_kind_of(String)
+    expect(described_class.machine).to be_a(String)
     expect(described_class.machine.size).to be > 0
   end
 
@@ -72,7 +72,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'model method returns sane value' do
-    expect(described_class.model).to be_kind_of(String)
+    expect(described_class.model).to be_a(String)
     expect(described_class.model.length).to be > 0
   end
 
@@ -86,7 +86,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'num_cpu method returns expected value' do
-    expect(described_class.num_cpu).to be_kind_of(Integer)
+    expect(described_class.num_cpu).to be_a(Integer)
     expect(described_class.num_cpu).to be > 0
   end
 

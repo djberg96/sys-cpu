@@ -104,7 +104,13 @@ RSpec.describe Sys::CPU, :bsd => true do
       expect(constants).not_to include(:ClockInfo)
     end
 
-    example "ffi methods are private" do
+    example "ffi core methods are private" do
+      methods = described_class.methods(false)
+      expect(methods).not_to include(:attach_function)
+      expect(methods).not_to include(:bitmask)
+    end
+
+    example "ffi attached methods are private" do
       methods = described_class.methods(false)
       expect(methods).not_to include(:sysctl)
       expect(methods).not_to include(:sysctlbyname)

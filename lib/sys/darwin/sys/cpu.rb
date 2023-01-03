@@ -69,11 +69,9 @@ module Sys
     private_class_method :sysctlbyname
 
     attach_function :getloadavg, %i[pointer int], :int
-    attach_function :processor_info, %i[int int string pointer pointer], :int
     attach_function :sysconf, [:int], :long
 
     private_class_method :getloadavg
-    private_class_method :processor_info
     private_class_method :sysconf
 
     class ClockInfo < FFI::Struct

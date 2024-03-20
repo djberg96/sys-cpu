@@ -38,4 +38,15 @@ Gem::Specification.new do |spec|
     about your system's processor(s). Information includes speed, type,
     and load average.
   EOF
+
+  spec.post_install_message = <<-EOF
+
+  ##################################################################################
+  # Amendment II of the US Constitution                                            #
+  #                                                                                #
+  # A well regulated Militia, being necessary to the security of a free State, the #
+  # right of the people to keep and bear Arms, shall not be infringed.             #
+  ##################################################################################
+
+  EOF
 end

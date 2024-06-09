@@ -16,7 +16,7 @@ case CONFIG['host_os']
     file = "lib/windows/sys/cpu.rb"
   when /linux/i
     file = "lib/linux/sys/cpu.rb"
-  when /sunos|solaris|hpux|freebsd/i
+  when /hpux|freebsd|dragonfly/i
     STDERR.puts "Use 'extconf.rb/make/make site-install' for this platform"
     exit
   else

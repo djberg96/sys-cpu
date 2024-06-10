@@ -9,12 +9,10 @@
 * doc/bsd.txt
 * doc/hpux.txt
 * doc/linux.txt
-* doc/sunos.txt
 * doc/windows.txt
 * examples/example_sys_cpu_freebsd.rb
 * examples/example_sys_cpu_hpux.rb
 * examples/example_sys_cpu_linux.rb
-* examples/example_sys_cpu_sunos.rb
 * examples/example_sys_cpu_windows.rb
 * lib/sys/cpu.rb
 * lib/sys/darwin/sys/cpu.rb
@@ -26,5 +24,4 @@
 * spec/sys_cpu_bsd_spec.rb
 * spec/sys_cpu_hpux_spec.rb
 * spec/sys_cpu_linux_spec.rb
-* spec/sys_cpu_sunos_spec.rb
 * spec/sys_cpu_windows_spec.rb

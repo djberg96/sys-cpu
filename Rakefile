@@ -26,23 +26,19 @@ end
 desc "Run the example program"
 task :example => [:clean] do
   case CONFIG['host_os']
-  when /bsd|darwin|osx/i
+  when /bsd|darwin|osx|dragonfly/i
     file = "examples/example_sys_cpu_bsd.rb"
-    sh "ruby -Ilib/unix #{file}"
+    sh "ruby -Ilib #{file}"
   when /hpux/i
     file = "examples/example_sys_cpu_hpux.rb"
-    sh "ruby -Ilib/unix #{file}"
+    sh "ruby -Ilib #{file}"
   when /linux/i
     file = "examples/example_sys_cpu_linux.rb"
-    sh "ruby -Ilib/linux #{file}"
+    sh "ruby -Ilib #{file}"
   when /windows|win32|cygwin|mingw|dos/i
     file = "examples/example_sys_cpu_windows.rb"
-    sh "ruby -Ilib/windows #{file}"
-  when /sunos|solaris/i
-    file = "examples/example_sys_cpu_sunos.rb"
-    sh "ruby -Ilib/unix #{file}"
+    sh "ruby -Ilib #{file}"
   end
-
 end
 
 RuboCop::RakeTask.new

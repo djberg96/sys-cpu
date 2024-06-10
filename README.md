@@ -3,6 +3,7 @@
 * Linux
 * Windows
 * OSX
+* DragonflyBSD
 
 ## Description
 A Ruby interface for getting cpu information.
@@ -71,7 +72,7 @@ https://github.com/djberg96/sys-cpu
 Apache-2.0
 
 ## Copyright
-(C) 2003-2022 Daniel J. Berger, All Rights Reserved
+(C) 2003-2024 Daniel J. Berger, All Rights Reserved
 
 ## Warranty
 This package is provided "as is" and without any express or

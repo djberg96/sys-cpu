@@ -4,6 +4,8 @@
 * Fixed example task.
 * Made some constants private in the generic Unix code that should
   have been private.
+* The architecture method on Linux will now interpret values 4, 5
+  and 15. If it's not any of those values it will return 'Unknown'.
 
 ## 1.0.6 - 12-Aug-2022
 * The Sys::CPU.model method will now return "ARM" for machines using an

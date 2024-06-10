@@ -82,8 +82,16 @@ module Sys
       case CPU_ARRAY.first['cpu_family']
         when '3'
           'x86'
+        when '4'
+          'i486'
+        when '5'
+          'Pentium'
         when '6'
           'x86_64'
+        when '15'
+          'Netburst'
+        else
+          'Unknown'
       end
     end
 

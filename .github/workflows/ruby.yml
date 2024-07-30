@@ -34,3 +34,19 @@ jobs:
         bundler-cache: true
     - name: Run tests
       run: bundle exec rake
+  freebsd:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test in FreeBSD
+      id: test
+      uses: vmactions/freebsd-vm@v1
+      with:
+        usesh: true
+        prepare: |
+          pkg install -y ruby devel/ruby-gems
+
+        run: |
+          gem install bundler --no-document
+          bundle install --quiet
+          bundle exec rspec

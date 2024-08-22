@@ -94,8 +94,8 @@ RSpec.describe Sys::CPU, :bsd do
     expect{ described_class.num_cpu(0) }.to raise_error(ArgumentError)
   end
 
-  context "ffi methods and constants are private" do
-    example "ffi constants are private" do
+  context 'ffi methods and constants are private' do
+    example 'ffi constants are private' do
       constants = described_class.constants
       expect(constants).not_to include(:CTL_HW)
       expect(constants).not_to include(:CPU_TYPE_X86)
@@ -104,13 +104,13 @@ RSpec.describe Sys::CPU, :bsd do
       expect(constants).not_to include(:ClockInfo)
     end
 
-    example "ffi core methods are private" do
+    example 'ffi core methods are private' do
       methods = described_class.methods(false)
       expect(methods).not_to include(:attach_function)
       expect(methods).not_to include(:bitmask)
     end
 
-    example "ffi attached methods are private" do
+    example 'ffi attached methods are private' do
       methods = described_class.methods(false)
       expect(methods).not_to include(:sysctl)
       expect(methods).not_to include(:sysctlbyname)

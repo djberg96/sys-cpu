@@ -38,6 +38,8 @@ Style/RedundantBegin:
   Enabled: false   
 Style/SafeNavigation:
   Enabled: false
+Style/SlicingWithRange:
+  Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Layout/CaseIndentation:

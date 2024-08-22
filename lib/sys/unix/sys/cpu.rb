@@ -92,6 +92,7 @@ module Sys
       # Do nothing, not supported on this platform.
     end
 
+    # Private wrapper class for the procinfo struct
     class ProcInfo < FFI::Struct
       layout(
         :pi_state, :int,
@@ -100,6 +101,8 @@ module Sys
         :pi_clock, :int
       )
     end
+
+    private_constant :ProcInfo
 
     # Returns the cpu's architecture. On most systems this will be identical
     # to the CPU.machine method. On OpenBSD it will be identical to the CPU.model

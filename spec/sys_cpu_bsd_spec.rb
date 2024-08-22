@@ -8,7 +8,7 @@
 require 'sys/cpu'
 require 'spec_helper'
 
-RSpec.describe Sys::CPU, :bsd => true do
+RSpec.describe Sys::CPU, :bsd do
   example 'architecture method basic functionality' do
     expect(described_class).to respond_to(:architecture)
     expect{ described_class.architecture }.not_to raise_error

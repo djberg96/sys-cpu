@@ -10,7 +10,7 @@ require 'spec_helper'
 require 'sys/cpu'
 require 'socket'
 
-RSpec.describe Sys::CPU, :windows => true do
+RSpec.describe Sys::CPU, :windows do
   let(:host) { Socket.gethostname }
 
   example 'architecture' do

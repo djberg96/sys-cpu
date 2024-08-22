@@ -9,7 +9,7 @@
 require 'sys/cpu'
 require 'spec_helper'
 
-RSpec.describe Sys::CPU, :hpux => true do
+RSpec.describe Sys::CPU, :hpux do
   example 'cpu_freq' do
     expect(described_class).to respond_to(:freq)
     expect{ described_class.freq }.not_to raise_error

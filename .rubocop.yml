@@ -56,6 +56,8 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
+Naming/VariableNumber:
+  Enabled: false
 Naming/RescuedExceptionsVariableName:
   PreferredName: 'err'
 Naming/FileName:

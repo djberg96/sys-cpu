@@ -8,14 +8,14 @@
 require 'sys/cpu'
 require 'spec_helper'
 
-RSpec.describe Sys::CPU, :bsd => true do
+RSpec.describe Sys::CPU, :bsd do
   example 'architecture method basic functionality' do
     expect(described_class).to respond_to(:architecture)
     expect{ described_class.architecture }.not_to raise_error
   end
 
   example 'architecture method returns a sane value' do
-    expect(described_class.architecture).to be_kind_of(String)
+    expect(described_class.architecture).to be_a(String)
     expect(described_class.architecture.size).to be > 0
   end
 
@@ -29,7 +29,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'freq method returns expected value' do
-    expect(described_class.freq).to be_kind_of(Integer)
+    expect(described_class.freq).to be_a(Integer)
     expect(described_class.freq).to be > 0
   end
 
@@ -43,9 +43,9 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'load_avg returns the expected results' do
-    expect(described_class.load_avg).to be_kind_of(Array)
+    expect(described_class.load_avg).to be_a(Array)
     expect(described_class.load_avg.length).to eq(3)
-    expect(described_class.load_avg[0]).to be_kind_of(Float)
+    expect(described_class.load_avg[0]).to be_a(Float)
   end
 
   example 'load_avg does not accept any arguments' do
@@ -58,7 +58,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'machine method returns sane value' do
-    expect(described_class.machine).to be_kind_of(String)
+    expect(described_class.machine).to be_a(String)
     expect(described_class.machine.size).to be > 0
   end
 
@@ -72,7 +72,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'model method returns sane value' do
-    expect(described_class.model).to be_kind_of(String)
+    expect(described_class.model).to be_a(String)
     expect(described_class.model.length).to be > 0
   end
 
@@ -86,7 +86,7 @@ RSpec.describe Sys::CPU, :bsd => true do
   end
 
   example 'num_cpu method returns expected value' do
-    expect(described_class.num_cpu).to be_kind_of(Integer)
+    expect(described_class.num_cpu).to be_a(Integer)
     expect(described_class.num_cpu).to be > 0
   end
 
@@ -94,8 +94,8 @@ RSpec.describe Sys::CPU, :bsd => true do
     expect{ described_class.num_cpu(0) }.to raise_error(ArgumentError)
   end
 
-  context "ffi methods and constants are private" do
-    example "ffi constants are private" do
+  context 'ffi methods and constants are private' do
+    example 'ffi constants are private' do
       constants = described_class.constants
       expect(constants).not_to include(:CTL_HW)
       expect(constants).not_to include(:CPU_TYPE_X86)
@@ -104,13 +104,13 @@ RSpec.describe Sys::CPU, :bsd => true do
       expect(constants).not_to include(:ClockInfo)
     end
 
-    example "ffi core methods are private" do
+    example 'ffi core methods are private' do
       methods = described_class.methods(false)
       expect(methods).not_to include(:attach_function)
       expect(methods).not_to include(:bitmask)
     end
 
-    example "ffi attached methods are private" do
+    example 'ffi attached methods are private' do
       methods = described_class.methods(false)
       expect(methods).not_to include(:sysctl)
       expect(methods).not_to include(:sysctlbyname)

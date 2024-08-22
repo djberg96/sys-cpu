@@ -10,7 +10,10 @@ module Sys
 
   cpu_file  = '/proc/cpuinfo'
   cpu_hash  = {}
+
+  # rubocop:disable Style/MutableConstant
   CPU_ARRAY = []
+  # rubocop:enable Style/MutableConstant
 
   private_constant :CPU_ARRAY
 

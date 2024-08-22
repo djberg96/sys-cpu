@@ -43,7 +43,7 @@ module Sys
     CPU_ARCH_ABI64     = 0x01000000
     CPU_TYPE_X86       = 7
     CPU_TYPE_X86_64    = (CPU_TYPE_X86 | CPU_ARCH_ABI64)
-    CPU_TYPE_ARM		   = 12
+    CPU_TYPE_ARM       = 12
     CPU_TYPE_SPARC     = 14
     CPU_TYPE_POWERPC   = 18
     CPU_TYPE_POWERPC64 = CPU_TYPE_POWERPC | CPU_ARCH_ABI64
@@ -74,6 +74,7 @@ module Sys
     private_class_method :getloadavg
     private_class_method :sysconf
 
+    # Private wrapper class for struct clockinfo
     class ClockInfo < FFI::Struct
       layout(
         :hz, :int,
@@ -189,7 +190,7 @@ module Sys
         (optr.read_long * clock[:hz]) / 1_000_000
       else
         if sysctlbyname('hw.cpufrequency', optr, size, nil, 0) < 0
-          raise Error, 'sysctlbyname failed on hw.cpufrequency' if result < 0
+          raise Error, 'sysctlbyname failed on hw.cpufrequency'
         end
         optr.read_long / 1_000_000
       end

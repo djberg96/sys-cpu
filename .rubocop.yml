@@ -1,12 +1,14 @@
 require: rubocop-rspec
 
 RSpec/MultipleExpectations:
-  Max: 4
+  Max: 5
 RSpec/ContextWording:
   Enabled: false
-RSpec/FilePath:
-  SpecSuffixOnly: true
+RSpec/ExampleLength:
+  Max: 6
 RSpec/InstanceVariable:
+  Enabled: false
+RSpec/SpecFilePathFormat:
   Enabled: false
 
 AllCops:
@@ -38,6 +40,8 @@ Style/RedundantBegin:
   Enabled: false   
 Style/SafeNavigation:
   Enabled: false
+Style/SlicingWithRange:
+  Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Layout/CaseIndentation:
@@ -47,7 +51,7 @@ Layout/SpaceBeforeBlockBraces:
 Metrics/AbcSize:
   Enabled: false
 Metrics/BlockLength:
-  IgnoredMethods: ['describe', 'context']
+  AllowedMethods: ['describe', 'context']
 Metrics/ClassLength:
   Enabled: false
 Metrics/MethodLength:
@@ -55,6 +59,8 @@ Metrics/MethodLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 Metrics/PerceivedComplexity:
+  Enabled: false
+Naming/VariableNumber:
   Enabled: false
 Naming/RescuedExceptionsVariableName:
   PreferredName: 'err'

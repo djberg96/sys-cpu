@@ -6,6 +6,8 @@ RSpec/ContextWording:
   Enabled: false
 RSpec/InstanceVariable:
   Enabled: false
+RSpec/SpecFilePathFormat:
+  Enabled: false
 
 AllCops:
   NewCops: enable

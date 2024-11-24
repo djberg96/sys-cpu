@@ -30,7 +30,8 @@ Gem::Specification.new do |spec|
     'source_code_uri'       => 'https://github.com/djberg96/sys-cpu',
     'wiki_uri'              => 'https://github.com/djberg96/sys-cpu/wiki',
     'rubygems_mfa_required' => 'true',
-    'github_repo'           => 'https://github.com/djberg96/sys-cpu'
+    'github_repo'           => 'https://github.com/djberg96/sys-cpu',
+    'funding_uri'           => 'https://github.com/sponsors/djberg96'
   }
 
   spec.description = <<-EOF

@@ -76,38 +76,40 @@ module Sys
     # Return the total number of logical CPU on the system.
     #
     def self.num_cpu
-      CPU_ARRAY.size
+      @num_cpu ||= CPU_ARRAY.size
     end
 
     # Return the architecture of the CPU.
     #
     def self.architecture
-      case CPU_ARRAY.first['cpu_family']
-        when '3'
-          'x86'
-        when '4'
-          'i486'
-        when '5'
-          'Pentium'
-        when '6'
-          'x86_64'
-        when '15'
-          'Netburst'
-        else
-          'Unknown'
+      @architecture ||= begin
+        case CPU_ARRAY.first['cpu_family']
+          when '3'
+            'x86'
+          when '4'
+            'i486'
+          when '5'
+            'Pentium'
+          when '6'
+            'x86_64'
+          when '15'
+            'Netburst'
+          else
+            'Unknown'
+        end
       end
     end
 
     # Returns a string indicating the CPU model.
     #
     def self.model
-      CPU_ARRAY.first['model_name']
+      @mode ||= CPU_ARRAY.first['model_name']
     end
 
     # Returns an integer indicating the speed of the CPU.
     #
     def self.freq
-      CPU_ARRAY.first['cpu_mhz'].to_f.round
+      @freq ||= CPU_ARRAY.first['cpu_mhz'].to_f.round
     end
 
     # Create singleton methods for each of the attributes.

@@ -109,38 +109,40 @@ module Sys
     # method.
     #
     def self.architecture
-      if respond_to?(:sysinfo, true)
-        buf = 0.chr * 257
+      @architecture ||= begin
+        if respond_to?(:sysinfo, true)
+          buf = 0.chr * 257
 
-        if sysinfo(SI_ARCHITECTURE, buf, buf.size) < 0
-          raise Error, 'sysinfo function failed'
+          if sysinfo(SI_ARCHITECTURE, buf, buf.size) < 0
+            raise Error, 'sysinfo function failed'
+          end
+
+          buf.strip
+        elsif respond_to?(:sysctlbyname, true)
+          optr = FFI::MemoryPointer.new(:char, 256)
+          size = FFI::MemoryPointer.new(:size_t)
+
+          size.write_int(optr.size)
+
+          if sysctlbyname('hw.machine_arch', optr, size, nil, 0) < 0
+            raise Error, 'sysctlbyname function failed'
+          end
+
+          optr.read_string
+        else
+          buf  = 0.chr * 64
+          mib  = FFI::MemoryPointer.new(:int, 2)
+          size = FFI::MemoryPointer.new(:long, 1)
+
+          mib.write_array_of_int([CTL_HW, HW_MACHINE_ARCH])
+          size.write_int(buf.size)
+
+          if sysctl(mib, 2, buf, size, nil, 0) < 0
+            raise Error, 'sysctl function failed'
+          end
+
+          buf.strip
         end
-
-        buf.strip
-      elsif respond_to?(:sysctlbyname, true)
-        optr = FFI::MemoryPointer.new(:char, 256)
-        size = FFI::MemoryPointer.new(:size_t)
-
-        size.write_int(optr.size)
-
-        if sysctlbyname('hw.machine_arch', optr, size, nil, 0) < 0
-          raise Error, 'sysctlbyname function failed'
-        end
-
-        optr.read_string
-      else
-        buf  = 0.chr * 64
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
-
-        mib.write_array_of_int([CTL_HW, HW_MACHINE_ARCH])
-        size.write_int(buf.size)
-
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, 'sysctl function failed'
-        end
-
-        buf.strip
       end
     end
 
@@ -149,38 +151,40 @@ module Sys
     # return 2, not 1.
     #
     def self.num_cpu
-      if respond_to?(:sysctlbyname, true)
-        optr = FFI::MemoryPointer.new(:long)
-        size = FFI::MemoryPointer.new(:size_t)
+      @num_cpu ||= begin
+        if respond_to?(:sysctlbyname, true)
+          optr = FFI::MemoryPointer.new(:long)
+          size = FFI::MemoryPointer.new(:size_t)
 
-        size.write_long(optr.size)
+          size.write_long(optr.size)
 
-        if sysctlbyname('hw.ncpu', optr, size, nil, 0) < 0
-          raise Error, 'sysctlbyname failed'
+          if sysctlbyname('hw.ncpu', optr, size, nil, 0) < 0
+            raise Error, 'sysctlbyname failed'
+          end
+
+          optr.read_long
+        elsif respond_to?(:sysconf, true)
+          num = sysconf(SC_NPROCESSORS_ONLN)
+
+          if num < 0
+            raise Error, 'sysconf function failed'
+          end
+
+          num
+        else
+          buf  = 0.chr * 4
+          mib  = FFI::MemoryPointer.new(:int, 2)
+          size = FFI::MemoryPointer.new(:long, 1)
+
+          mib.write_array_of_int([CTL_HW, HW_NCPU])
+          size.write_int(buf.size)
+
+          if sysctl(mib, 2, buf, size, nil, 0) < 0
+            raise Error, 'sysctl function failed'
+          end
+
+          buf.strip.unpack1('C')
         end
-
-        optr.read_long
-      elsif respond_to?(:sysconf, true)
-        num = sysconf(SC_NPROCESSORS_ONLN)
-
-        if num < 0
-          raise Error, 'sysconf function failed'
-        end
-
-        num
-      else
-        buf  = 0.chr * 4
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
-
-        mib.write_array_of_int([CTL_HW, HW_NCPU])
-        size.write_int(buf.size)
-
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, 'sysctl function failed'
-        end
-
-        buf.strip.unpack1('C')
       end
     end
 
@@ -189,98 +193,104 @@ module Sys
     # CPU.model method.
     #
     def self.machine
-      if respond_to?(:sysctl, true)
-        buf  = 0.chr * 32
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
+      @machine ||= begin
+        if respond_to?(:sysctl, true)
+          buf  = 0.chr * 32
+          mib  = FFI::MemoryPointer.new(:int, 2)
+          size = FFI::MemoryPointer.new(:long, 1)
 
-        mib.write_array_of_int([CTL_HW, HW_MACHINE])
-        size.write_int(buf.size)
+          mib.write_array_of_int([CTL_HW, HW_MACHINE])
+          size.write_int(buf.size)
 
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, 'sysctl function failed'
+          if sysctl(mib, 2, buf, size, nil, 0) < 0
+            raise Error, 'sysctl function failed'
+          end
+        else
+          buf = 0.chr * 257
+
+          if sysinfo(SI_MACHINE, buf, buf.size) < 0
+            raise Error, 'sysinfo function failed'
+          end
         end
-      else
-        buf = 0.chr * 257
 
-        if sysinfo(SI_MACHINE, buf, buf.size) < 0
-          raise Error, 'sysinfo function failed'
-        end
+        buf.strip
       end
-
-      buf.strip
     end
 
     # Returns a string indicating the cpu model.
     #
     def self.model
-      if respond_to?(:sysctl, true)
-        buf  = 0.chr * 64
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
+      @model ||= begin
+        if respond_to?(:sysctl, true)
+          buf  = 0.chr * 64
+          mib  = FFI::MemoryPointer.new(:int, 2)
+          size = FFI::MemoryPointer.new(:long, 1)
 
-        mib.write_array_of_int([CTL_HW, HW_MODEL])
-        size.write_int(buf.size)
+          mib.write_array_of_int([CTL_HW, HW_MODEL])
+          size.write_int(buf.size)
 
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, 'sysctl function failed'
+          if sysctl(mib, 2, buf, size, nil, 0) < 0
+            raise Error, 'sysctl function failed'
+          end
+
+          buf.strip
+        else
+          pinfo = ProcInfo.new
+
+          # Some systems start at 0, some at 1
+          if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+            raise Error, 'processor_info function failed'
+          end
+
+          pinfo[:pi_processor_type].to_s
         end
-
-        buf.strip
-      else
-        pinfo = ProcInfo.new
-
-        # Some systems start at 0, some at 1
-        if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
-          raise Error, 'processor_info function failed'
-        end
-
-        pinfo[:pi_processor_type].to_s
       end
     end
 
     # Returns an integer indicating the speed of the CPU.
     #
     def self.freq
-      if respond_to?(:sysctlbyname, true)
-        optr = FFI::MemoryPointer.new(:long)
-        size = FFI::MemoryPointer.new(:size_t)
+      @freq ||= begin
+        if respond_to?(:sysctlbyname, true)
+          optr = FFI::MemoryPointer.new(:long)
+          size = FFI::MemoryPointer.new(:size_t)
 
-        size.write_long(optr.size)
+          size.write_long(optr.size)
 
-        if RbConfig::CONFIG['host_os'] =~ /bsd|dragonfly/i
-          name = 'hw.clockrate'
+          if RbConfig::CONFIG['host_os'] =~ /bsd|dragonfly/i
+            name = 'hw.clockrate'
+          else
+            name = 'hw.cpufrequency'
+          end
+
+          if sysctlbyname(name, optr, size, nil, 0) < 0
+            raise Error, 'sysctlbyname failed'
+          end
+
+          optr.read_long
+        elsif respond_to?(:sysctl, true)
+          buf  = 0.chr * 16
+          mib  = FFI::MemoryPointer.new(:int, 2)
+          size = FFI::MemoryPointer.new(:long, 1)
+
+          mib.write_array_of_int([CTL_HW, HW_CPU_FREQ])
+          size.write_int(buf.size)
+
+          if sysctl(mib, 2, buf, size, nil, 0) < 0
+            raise Error, 'sysctl function failed'
+          end
+
+          buf.unpack1('I*') / 1_000_000
         else
-          name = 'hw.cpufrequency'
+          pinfo = ProcInfo.new
+
+          # Some systems start at 0, some at 1
+          if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+            raise Error, 'processor_info function failed'
+          end
+
+          pinfo[:pi_clock].to_i
         end
-
-        if sysctlbyname(name, optr, size, nil, 0) < 0
-          raise Error, 'sysctlbyname failed'
-        end
-
-        optr.read_long
-      elsif respond_to?(:sysctl, true)
-        buf  = 0.chr * 16
-        mib  = FFI::MemoryPointer.new(:int, 2)
-        size = FFI::MemoryPointer.new(:long, 1)
-
-        mib.write_array_of_int([CTL_HW, HW_CPU_FREQ])
-        size.write_int(buf.size)
-
-        if sysctl(mib, 2, buf, size, nil, 0) < 0
-          raise Error, 'sysctl function failed'
-        end
-
-        buf.unpack1('I*') / 1_000_000
-      else
-        pinfo = ProcInfo.new
-
-        # Some systems start at 0, some at 1
-        if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
-          raise Error, 'processor_info function failed'
-        end
-
-        pinfo[:pi_clock].to_i
       end
     end
 
@@ -301,14 +311,16 @@ module Sys
     def self.fpu_type
       raise NoMethodError unless respond_to?(:processor_info, true)
 
-      pinfo = ProcInfo.new
+      @fpu_type ||= begin
+        pinfo = ProcInfo.new
 
-      # Some start at 0, some start at 1
-      if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
-        raise Error, 'processor_info function failed'
+        # Some start at 0, some start at 1
+        if processor_info(0, pinfo) < 0 && processor_info(1, pinfo) < 0
+          raise Error, 'processor_info function failed'
+        end
+
+        pinfo[:pi_fputypes].to_s
       end
-
-      pinfo[:pi_fputypes].to_s
     end
 
     # Returns the current state of processor +num+, or 0 if no number is

@@ -8,6 +8,7 @@ module Sys
   # The CPU class encapsulates information about the physical cpu's on your system.
   class CPU
     extend FFI::Library
+
     ffi_lib FFI::Library::LIBC
 
     # Error raised if any of the CPU methods fail.
@@ -50,7 +51,7 @@ module Sys
     CPU_TYPE_ARM64     = CPU_TYPE_ARM | CPU_ARCH_ABI64
 
     private_constant :CPU_ARCH_ABI64, :CPU_TYPE_X86, :CPU_TYPE_X86_64, :CPU_TYPE_ARM
-    private_constant :CPU_TYPE_SPARC, :CPU_TYPE_POWERPC, :CPU_TYPE_POWERPC64
+    private_constant :CPU_TYPE_SPARC, :CPU_TYPE_POWERPC, :CPU_TYPE_POWERPC64, :CPU_TYPE_ARM64
 
     attach_function(
       :sysctl,
@@ -92,16 +93,18 @@ module Sys
     # method.
     #
     def self.architecture
-      optr = FFI::MemoryPointer.new(:char, 256)
-      size = FFI::MemoryPointer.new(:size_t)
+      @architecture ||= begin
+        optr = FFI::MemoryPointer.new(:char, 256)
+        size = FFI::MemoryPointer.new(:size_t)
 
-      size.write_int(optr.size)
+        size.write_int(optr.size)
 
-      if sysctlbyname('hw.machine', optr, size, nil, 0) < 0
-        raise Error, 'sysctlbyname function failed'
+        if sysctlbyname('hw.machine', optr, size, nil, 0) < 0
+          raise Error, 'sysctlbyname function failed'
+        end
+
+        optr.read_string
       end
-
-      optr.read_string
     end
 
     # Returns the number of cpu's on your system. Note that each core on
@@ -109,16 +112,18 @@ module Sys
     # return 2, not 1.
     #
     def self.num_cpu
-      optr = FFI::MemoryPointer.new(:long)
-      size = FFI::MemoryPointer.new(:size_t)
+      @num_cpu ||= begin
+        optr = FFI::MemoryPointer.new(:long)
+        size = FFI::MemoryPointer.new(:size_t)
 
-      size.write_long(optr.size)
+        size.write_long(optr.size)
 
-      if sysctlbyname('hw.ncpu', optr, size, nil, 0) < 0
-        raise Error, 'sysctlbyname failed'
+        if sysctlbyname('hw.ncpu', optr, size, nil, 0) < 0
+          raise Error, 'sysctlbyname failed'
+        end
+
+        optr.read_long
       end
-
-      optr.read_long
     end
 
     # Returns the cpu's class type. On most systems this will be identical
@@ -126,73 +131,79 @@ module Sys
     # CPU.model method.
     #
     def self.machine
-      buf  = 0.chr * 32
-      mib  = FFI::MemoryPointer.new(:int, 2)
-      size = FFI::MemoryPointer.new(:long, 1)
+      @machine ||= begin
+        buf  = 0.chr * 32
+        mib  = FFI::MemoryPointer.new(:int, 2)
+        size = FFI::MemoryPointer.new(:long, 1)
 
-      mib.write_array_of_int([CTL_HW, HW_MACHINE])
-      size.write_int(buf.size)
+        mib.write_array_of_int([CTL_HW, HW_MACHINE])
+        size.write_int(buf.size)
 
-      if sysctl(mib, 2, buf, size, nil, 0) < 0
-        raise Error, 'sysctl function failed'
+        if sysctl(mib, 2, buf, size, nil, 0) < 0
+          raise Error, 'sysctl function failed'
+        end
+
+        buf.strip
       end
-
-      buf.strip
     end
 
     # Returns a string indicating the cpu model.
     #
     def self.model
-      ptr  = FFI::MemoryPointer.new(:long)
-      size = FFI::MemoryPointer.new(:size_t)
+      @model ||= begin
+        ptr  = FFI::MemoryPointer.new(:long)
+        size = FFI::MemoryPointer.new(:size_t)
 
-      size.write_long(ptr.size)
+        size.write_long(ptr.size)
 
-      if sysctlbyname('hw.cputype', ptr, size, nil, 0) < 0
-        raise 'sysctlbyname function failed'
-      end
+        if sysctlbyname('hw.cputype', ptr, size, nil, 0) < 0
+          raise 'sysctlbyname function failed'
+        end
 
-      case ptr.read_long
-        when  CPU_TYPE_X86, CPU_TYPE_X86_64
-          'Intel'
-        when CPU_TYPE_SPARC
-          'Sparc'
-        when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
-          'PowerPC'
-        when CPU_TYPE_ARM, CPU_TYPE_ARM64
-          'ARM'
-        else
-          'Unknown'
+        case ptr.read_long
+          when  CPU_TYPE_X86, CPU_TYPE_X86_64
+            'Intel'
+          when CPU_TYPE_SPARC
+            'Sparc'
+          when CPU_TYPE_POWERPC, CPU_TYPE_POWERPC64
+            'PowerPC'
+          when CPU_TYPE_ARM, CPU_TYPE_ARM64
+            'ARM'
+          else
+            'Unknown'
+        end
       end
     end
 
     # Returns an integer indicating the speed of the CPU.
     #
     def self.freq
-      optr = FFI::MemoryPointer.new(:long)
-      size = FFI::MemoryPointer.new(:size_t)
+      @freq ||= begin
+        optr = FFI::MemoryPointer.new(:long)
+        size = FFI::MemoryPointer.new(:size_t)
 
-      size.write_long(optr.size)
+        size.write_long(optr.size)
 
-      if RbConfig::CONFIG['host_cpu'] =~ /^arm|^aarch/i
-        if sysctlbyname('hw.tbfrequency', optr, size, nil, 0) < 0
-          raise Error, 'sysctlbyname failed on hw.tbfrequency'
+        if RbConfig::CONFIG['host_cpu'] =~ /^arm|^aarch/i
+          if sysctlbyname('hw.tbfrequency', optr, size, nil, 0) < 0
+            raise Error, 'sysctlbyname failed on hw.tbfrequency'
+          end
+
+          size.clear
+          clock = ClockInfo.new
+          size.write_long(clock.size)
+
+          if sysctlbyname('kern.clockrate', clock, size, nil, 0) < 0
+            raise Error, 'sysctlbyname failed on kern.clockrate'
+          end
+
+          (optr.read_long * clock[:hz]) / 1_000_000
+        else
+          if sysctlbyname('hw.cpufrequency', optr, size, nil, 0) < 0
+            raise Error, 'sysctlbyname failed on hw.cpufrequency'
+          end
+          optr.read_long / 1_000_000
         end
-
-        size.clear
-        clock = ClockInfo.new
-        size.write_long(clock.size)
-
-        if sysctlbyname('kern.clockrate', clock, size, nil, 0) < 0
-          raise Error, 'sysctlbyname failed on kern.clockrate'
-        end
-
-        (optr.read_long * clock[:hz]) / 1_000_000
-      else
-        if sysctlbyname('hw.cpufrequency', optr, size, nil, 0) < 0
-          raise Error, 'sysctlbyname failed on hw.cpufrequency'
-        end
-        optr.read_long / 1_000_000
       end
     end
 

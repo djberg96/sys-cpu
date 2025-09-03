@@ -17,6 +17,24 @@ module Sys
 
   private_constant :CPU_ARRAY
 
+  CPU_IMPLEMENTOR = {
+    '0x41' => 'ARM',
+    '0x42' => 'Broadcom',
+    '0x43' => 'Cavium',
+    '0x44' => 'DEC',
+    '0x46' => "Fujitsu",
+    '0x48' => "HiSilicon",
+    '0x49' => "Infineon",
+    '0x4d' => "Motorola/Freescale",
+    '0x4e' => "NVIDIA",
+    '0x50' => "APM",
+    '0x51' => "Qualcomm",
+    '0x56' => "Marvell",
+    '0x61' => "Apple",
+    '0x69' => "Intel",
+    '0xc0' => "Ampere"
+  }
+
   # Parse the info out of the /proc/cpuinfo file
   File.foreach(cpu_file) do |line|
     line.strip!
@@ -50,6 +68,14 @@ module Sys
 
     CPUStruct = Struct.new('CPUStruct', *CPU_ARRAY.first.keys)
 
+    class CPUStruct
+      def to_s
+        struct = self.dup
+        struct[:cpu_implementer] = CPU_IMPLEMENTOR[cpu_implementer]
+        struct
+      end
+    end
+
     private_constant :CPUStruct
 
     # :startdoc:
@@ -63,13 +89,18 @@ module Sys
       array = []
       CPU_ARRAY.each do |hash|
         struct = CPUStruct.new
-        struct.members.each{ |m| struct.send("#{m}=", hash[m.to_s]) }
+
+        struct.members.each do |m|
+          struct.send("#{m}=", hash[m.to_s])
+        end
+
         if block_given?
           yield struct
         else
           array << struct
         end
       end
+
       array unless block_given?
     end
 
@@ -175,4 +206,12 @@ module Sys
       hash
     end
   end
+end
+
+if $0 == __FILE__
+  cpu = Sys::CPU.processors.last
+  #p cpu.members
+  #p cpu[:cpu_implementer]
+  # cpu.cpu_implementer_string
+  p cpu.to_s
 end

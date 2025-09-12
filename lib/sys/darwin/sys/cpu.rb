@@ -104,6 +104,45 @@ module Sys
       optr.read_string
     end
 
+    def self.logical_cpu
+      optr = FFI::MemoryPointer.new(:long)
+      size = FFI::MemoryPointer.new(:size_t)
+
+      size.write_long(optr.size)
+
+      if sysctlbyname('hw.logicalcpu', optr, size, nil, 0) < 0
+        raise Error, 'sysctlbyname failed'
+      end
+
+      optr.read_long
+    end
+
+    def self.physical_cpu
+      optr = FFI::MemoryPointer.new(:long)
+      size = FFI::MemoryPointer.new(:size_t)
+
+      size.write_long(optr.size)
+
+      if sysctlbyname('hw.physicalcpu', optr, size, nil, 0) < 0
+        raise Error, 'sysctlbyname failed'
+      end
+
+      optr.read_long
+    end
+
+    def self.active_cpu
+      optr = FFI::MemoryPointer.new(:long)
+      size = FFI::MemoryPointer.new(:size_t)
+
+      size.write_long(optr.size)
+
+      if sysctlbyname('hw.activecpu', optr, size, nil, 0) < 0
+        raise Error, 'sysctlbyname failed'
+      end
+
+      optr.read_long
+    end
+
     # Returns the number of cpu's on your system. Note that each core on
     # multi-core systems are counted as a cpu, e.g. one dual core cpu would
     # return 2, not 1.
@@ -142,7 +181,7 @@ module Sys
 
     # Returns a string indicating the cpu model.
     #
-    def self.model
+    def self.model(subtype: false)
       ptr  = FFI::MemoryPointer.new(:long)
       size = FFI::MemoryPointer.new(:size_t)
 
@@ -152,8 +191,8 @@ module Sys
         raise 'sysctlbyname function failed'
       end
 
-      case ptr.read_long
-        when  CPU_TYPE_X86, CPU_TYPE_X86_64
+      str = case ptr.read_long
+        when CPU_TYPE_X86, CPU_TYPE_X86_64
           'Intel'
         when CPU_TYPE_SPARC
           'Sparc'
@@ -164,6 +203,20 @@ module Sys
         else
           'Unknown'
       end
+
+      if subtype
+        ptr.clear
+        if sysctlbyname('hw.cpusubtype', ptr, size, nil, 0) < 0
+          raise 'sysctlbyname function failed'
+        end
+
+        case ptr.read_long
+          when 2
+            str += '64'
+        end
+      end
+
+      str
     end
 
     # Returns an integer indicating the speed of the CPU.
@@ -209,4 +262,11 @@ module Sys
       loadavg.get_array_of_double(0, 3)
     end
   end
+end
+
+if $0 == __FILE__
+  p Sys::CPU.active_cpu
+  p Sys::CPU.architecture
+  p Sys::CPU.machine
+  p Sys::CPU.model(subtype: true)
 end

@@ -19,10 +19,13 @@ A Ruby interface for getting cpu information.
 There is no `processors` iterative method for multi-cpu systems. I was going to
 add this originally, but since Solaris is basically dead at this point I've
 dropped the idea.
-   
+
 ### OS X
-The `CPU.model` method returns very limited information. I do not yet know
-how to get more detailed information.
+The `CPU.model` method returns very limited information. However, the new
+`CPU.info` method (added in version 1.0.6) returns comprehensive CPU
+information including architecture, core counts, cache details, performance
+levels (Apple Silicon), feature flags, and much more in a single hash.
+See `examples/example_sys_cpu_info_darwin.rb` for a detailed demonstration.
 
 ### Linux
 This is pure Ruby. This version reads information out of /proc/cpuinfo and
@@ -48,13 +51,13 @@ will work just fine.
 
 ### MS Windows
 This is a pure Ruby implementation using the win32ole package + WMI. The C
-version has been scrapped. 
+version has been scrapped.
 
 As of version 0.5.0, the `CPU.usage` method has been removed in favor of the
 `CPU.load_avg` method. This does not (currently) use a perf counter, so there
 is no longer any delay. Also, the `processors` method has been added and the
 `supported` method has been dropped. See the documentation for other changes.
-   
+
 ## Acknowledgements
 Thanks go to the MPlayer team for some source code that helped me on
 certain versions of FreeBSD in the original C version.

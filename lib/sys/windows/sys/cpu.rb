@@ -253,6 +253,14 @@ module Sys
       end
     end
 
+    # Abbreviated version of the +processors+ method, just returns the first CPU struct.
+    #
+    def self.info(host = Socket.gethostname)
+      arr = []
+      processors(host){ |cpu| arr << cpu }
+      arr.first
+    end
+
     # rubocop:enable Metrics/BlockLength
 
     # Returns a string indicating the type of processor, e.g. GenuineIntel.

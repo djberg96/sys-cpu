@@ -19,10 +19,11 @@ module Sys
     HW_MODEL        = 2  # Specific machine model
     HW_NCPU         = 3  # Number of CPU's
     HW_CPU_FREQ     = 15 # CPU frequency
+    HOST_OS         = RbConfig::CONFIG['host_os']
 
     private_constant :CTL_HW, :HW_MACHINE, :HW_MODEL, :HW_NCPU, :HW_CPU_FREQ
 
-    if RbConfig::CONFIG['host_os'] =~ /bsd|dragonfly/
+    if HOST_OS =~ /bsd|dragonfly/
       HW_MACHINE_ARCH = 11 # Machine architecture
     else
       HW_MACHINE_ARCH = 12 # Machine architecture
@@ -248,8 +249,8 @@ module Sys
 
         size.write_long(optr.size)
 
-        if RbConfig::CONFIG['host_os'] =~ /bsd|dragonfly/i
-          name = 'hw.clockrate'
+        if HOST_OS =~ /bsd|dragonfly/i
+          name = 'kern.hz'
         else
           name = 'hw.cpufrequency'
         end

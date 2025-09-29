@@ -242,6 +242,10 @@ module Sys
 
     # Returns an integer indicating the speed of the CPU.
     #
+    # Note that for BSD systems running on an aarch64 cpu this method
+    # will default to a hardclock timer value rather than the actual
+    # CPU frequency. This will typically be 1000 (or 100 on VM's).
+    #
     def self.freq
       if respond_to?(:sysctlbyname, true)
         optr = FFI::MemoryPointer.new(:long)
@@ -250,7 +254,11 @@ module Sys
         size.write_long(optr.size)
 
         if HOST_OS =~ /bsd|dragonfly/i
-          name = 'kern.hz'
+          if architecture =~ /aarch/i
+            name = 'kern.hz'
+          else
+            name = 'hw.clockrate'
+          end
         else
           name = 'hw.cpufrequency'
         end

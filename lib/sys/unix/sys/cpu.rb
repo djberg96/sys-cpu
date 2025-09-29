@@ -245,6 +245,12 @@ module Sys
     # Note that for BSD systems running on an aarch64 cpu this method
     # will default to a hardclock timer value rather than the actual
     # CPU frequency. This will typically be 1000 (or 100 on VM's).
+    #--
+    # If there's a better way please let me know. In my experiments locally
+    # stuff like dev.cpu.0 did NOT have the information that you might
+    # expect to find there, so we cannot rely on that either. In my defense,
+    # stuff like lscpu or dmesg did not have the freq information either,
+    # not on my aarch64 VM anyway.
     #
     def self.freq
       if respond_to?(:sysctlbyname, true)

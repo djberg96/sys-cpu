@@ -19,10 +19,11 @@ module Sys
     HW_MODEL        = 2  # Specific machine model
     HW_NCPU         = 3  # Number of CPU's
     HW_CPU_FREQ     = 15 # CPU frequency
+    HOST_OS         = RbConfig::CONFIG['host_os']
 
     private_constant :CTL_HW, :HW_MACHINE, :HW_MODEL, :HW_NCPU, :HW_CPU_FREQ
 
-    if RbConfig::CONFIG['host_os'] =~ /bsd|dragonfly/
+    if HOST_OS =~ /bsd|dragonfly/
       HW_MACHINE_ARCH = 11 # Machine architecture
     else
       HW_MACHINE_ARCH = 12 # Machine architecture
@@ -241,6 +242,16 @@ module Sys
 
     # Returns an integer indicating the speed of the CPU.
     #
+    # Note that for BSD systems running on an aarch64 cpu this method
+    # will default to a hardclock timer value rather than the actual
+    # CPU frequency. This will typically be 1000 (or 100 on VM's).
+    #--
+    # If there's a better way please let me know. In my experiments locally
+    # stuff like dev.cpu.0 did NOT have the information that you might
+    # expect to find there, so we cannot rely on that either. In my defense,
+    # stuff like lscpu or dmesg did not have the freq information either,
+    # not on my aarch64 VM anyway.
+    #
     def self.freq
       if respond_to?(:sysctlbyname, true)
         optr = FFI::MemoryPointer.new(:long)
@@ -248,8 +259,12 @@ module Sys
 
         size.write_long(optr.size)
 
-        if RbConfig::CONFIG['host_os'] =~ /bsd|dragonfly/i
-          name = 'hw.clockrate'
+        if HOST_OS =~ /bsd|dragonfly/i
+          if architecture =~ /aarch/i
+            name = 'kern.hz'
+          else
+            name = 'hw.clockrate'
+          end
         else
           name = 'hw.cpufrequency'
         end

@@ -357,5 +357,31 @@ module Sys
           'unknown'
       end
     end
+
+    # Returns a hash of the following information:
+    #
+    # - architecture
+    # - fpu_type (if supported)
+    # - freq
+    # - load_avg
+    # - model
+    # - machine
+    # - num_cpu
+    # - state (if supported)
+    #
+    def self.info
+      info_hash = {}
+
+      info_hash[:architecture] = architecture
+      info_hash[:fpu_type] = respond_to?(:processor_info, true) ? fpu_type : nil
+      info_hash[:freq] = freq
+      info_hash[:load_avg] = load_avg
+      info_hash[:model] = model
+      info_hash[:machine] = machine
+      info_hash[:num_cpu] = num_cpu
+      info_hash[:state] = respond_to?(:processor_info, true) ? state : nil
+
+      info_hash
+    end
   end
 end

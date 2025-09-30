@@ -11,7 +11,7 @@ require 'rspec'
 
 RSpec.shared_examples Sys::CPU do
   example 'version number is set to the expected value' do
-    expect(Sys::CPU::VERSION).to eq('1.1.0')
+    expect(Sys::CPU::VERSION).to eq('1.1.1')
   end
 
   example 'version number is frozen' do

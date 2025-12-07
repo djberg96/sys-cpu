@@ -46,7 +46,7 @@ RuboCop::RakeTask.new
 desc "Run the test suite"
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.verbose = false
-  t.rspec_opts = '-f documentation'
+  t.rspec_opts = '-f documentation -w'
 end
 
 task :default => :spec

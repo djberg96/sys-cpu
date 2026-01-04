@@ -17,6 +17,10 @@ Gem::Specification.new do |spec|
   # and Linux was worth the tradeoff of not having to create 3 separate gems.
   spec.add_dependency('ffi', '~> 1.1')
 
+  if Gem.win_platform?
+    spec.add_dependency('win32ole')
+  end
+
   spec.add_development_dependency('rake')
   spec.add_development_dependency('rubocop')
   spec.add_development_dependency('rspec', '~> 3.9')

@@ -390,6 +390,8 @@ module Sys
           'IA64'
         when 9
           'x64'
+        when 12
+          'ARM64'
       end
     end
 

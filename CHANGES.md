@@ -2,6 +2,7 @@
 * The win32ole gem is now a dependency since Ruby 4.x no longer bundles it.
 * The freq method was updated for BSD platforms on aarch64. It now defaults
   to the hardclock timer value as a best guess.
+* The architecture method now recognizes ARM64 on Windows.
 
 ## 1.1.0 - 9-Jun-2024
 * Removed Solaris support.

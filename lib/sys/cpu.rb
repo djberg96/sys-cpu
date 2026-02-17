@@ -10,7 +10,7 @@ module Sys
   # This class is reopened for each of the supported platforms/operating systems.
   class CPU
     # The version of the sys-cpu gem.
-    VERSION = '1.1.0'
+    VERSION = '1.2.0'
 
     private_class_method :new
   end

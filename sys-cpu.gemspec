@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency('ffi', '~> 1.1')
 
   if Gem.win_platform?
+    spec.platform = Gem::Platform.new(['universal', 'mingw32'])
     spec.add_dependency('win32ole')
   end
 

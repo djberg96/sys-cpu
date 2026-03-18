@@ -121,9 +121,9 @@ module Sys
     #
     # This currently delegates to Win32_Processor.LoadPercentage, which is
     # already averaged over a short interval. The +sample_time+ parameter is
-    # accepted for compatibility with other platforms.
+    # accepted for interface compatibility with other platforms but does nothing.
     #
-    def self.cpu_usage(sample_time = 0, cpu_num = 0, host = Socket.gethostname)
+    def self.cpu_usage(_sample_time = 0, cpu_num = 0, host = Socket.gethostname)
       load_avg(cpu_num, host)
     end
 

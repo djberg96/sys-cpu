@@ -119,13 +119,16 @@ module Sys
 
     # Returns CPU usage as a percentage.
     #
-    # The Win32_Processor.LoadPercentage value is per-processor (usually per
-    # physical socket), while Windows Task Manager reports a total value.
-    # When no +cpu_num+ is given it uses the _Total performance counter, which
-    # better matches what Task Manager reports.
-    #
     # The +sample_time+ parameter is accepted for interface compatibility with
     # other platforms but does nothing in this implementation.
+    #--
+    # This method uses the _Total Win32_PerfFormattedData_PerfOS_Processor
+    # instance (unless a specific +cpu_num+ is requested) to better match
+    # Task Manager's total view.
+    #
+    # Note that the Task Manager reports the total CPU usage across all cores.
+    # Win32_Processor.LoadPercentage is per-processor (usually per physical socket),
+    # so it can differ from what Task Manager shows if it falls back to that.
     #
     def self.cpu_usage(_sample_time = 0, cpu_num = 0, host = Socket.gethostname)
       instance = cpu_num.zero? ? '_Total' : cpu_num.to_s
@@ -137,7 +140,8 @@ module Sys
         # fall back to the older Win32_Processor.LoadPercentage behavior
         return load_avg(cpu_num, host)
       else
-        wmi.PercentProcessorTime
+        result = wmi.PercentProcessorTime
+        result.nil? ? nil : result.to_i
       end
     end
 

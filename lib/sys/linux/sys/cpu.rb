@@ -110,6 +110,48 @@ module Sys
       CPU_ARRAY.first['cpu_mhz'].to_f.round
     end
 
+    def self.cpu_usage(sample_time = 0)
+      if sample_time && sample_time > 0
+        stats1 = cpu_stats
+        sleep(sample_time)
+        stats2 = cpu_stats
+
+        total_diff = 0.0
+        idle_diff = 0.0
+
+        # Use aggregate 'cpu' line if present, else sum all
+        keys = stats1.key?('cpu') ? ['cpu'] : stats1.keys
+        keys.each do |key|
+          arr1 = stats1[key]
+          arr2 = stats2[key]
+          next unless arr1 && arr2
+          t1 = arr1.sum
+          t2 = arr2.sum
+          total = t2 - t1
+          idle = (arr2[3] || 0) - (arr1[3] || 0) # idle is 4th field
+          total_diff += total
+          idle_diff += idle
+        end
+
+        return nil if total_diff <= 0
+        usage = (1.0 - (idle_diff / total_diff)) * 100
+        usage.round
+      else
+        # Single snapshot, 100 - iowait%
+        stats = cpu_stats
+        total = 0.0
+        iowait = 0.0
+        stats.each_value do |arr|
+          total += arr.sum
+          iowait += (arr[4] || 0).to_f
+        end
+        return nil if total <= 0
+        (100 - ((iowait / total) * 100)).to_i
+      end
+    rescue StandardError
+      nil
+    end
+
     # Create singleton methods for each of the attributes.
     #
     def self.method_missing(id, arg = 0)

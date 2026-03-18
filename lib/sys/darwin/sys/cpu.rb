@@ -215,7 +215,51 @@ module Sys
     # average over that interval. If +sample_time+ is 0 (default), returns the
     # current utilization estimate based on the last set of CPU times.
     #
+    HOST_CPU_LOAD_INFO = 3
+    HOST_CPU_LOAD_INFO_COUNT = 4
+
+    private_constant :HOST_CPU_LOAD_INFO, :HOST_CPU_LOAD_INFO_COUNT
+
+    attach_function :mach_host_self, [], :int
+    attach_function :host_statistics, %i[int int pointer pointer], :int
+
+    private_class_method :mach_host_self, :host_statistics
+
     def self.cpu_usage(sample_time = 0)
+      ticks = if (t = cpu_ticks_sysctl)
+        t
+      else
+        cpu_ticks_host
+      end
+
+      return nil unless ticks
+
+      if sample_time && sample_time > 0
+        sleep(sample_time)
+        ticks2 = if (t = cpu_ticks_sysctl)
+          t
+        else
+          cpu_ticks_host
+        end
+
+        return nil unless ticks2
+
+        base = ticks
+        diff = ticks2.map.with_index { |v, i| v - base[i] }
+      else
+        diff = ticks
+      end
+
+      total = diff.sum
+      idle = diff[3] || 0
+      return nil if total <= 0
+
+      ((1.0 - (idle.to_f / total)) * 100).round
+    rescue StandardError
+      nil
+    end
+
+    def self.cpu_ticks_sysctl
       cp_time = proc { |ptr|
         len = 5
         size = FFI::MemoryPointer.new(:size_t)
@@ -228,31 +272,21 @@ module Sys
         ptr.read_array_of_ulong(len)
       }
 
-      if sample_time && sample_time > 0
-        t1 = cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
-        sleep(sample_time)
-        t2 = cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
+      cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
+    rescue StandardError
+      nil
+    end
 
-        total1 = t1.sum
-        total2 = t2.sum
-        idle1 = t1[4] || 0
-        idle2 = t2[4] || 0
+    def self.cpu_ticks_host
+      host = mach_host_self
+      info = FFI::MemoryPointer.new(:int, HOST_CPU_LOAD_INFO_COUNT)
+      count = FFI::MemoryPointer.new(:uint)
+      count.write_uint(HOST_CPU_LOAD_INFO_COUNT)
 
-        total_diff = total2 - total1
-        idle_diff = idle2 - idle1
+      kr = host_statistics(host, HOST_CPU_LOAD_INFO, info, count)
+      return nil unless kr == 0
 
-        return nil if total_diff <= 0
-
-        ((1.0 - (idle_diff.to_f / total_diff)) * 100).round
-      else
-        # Fallback: use a single snapshot and interpret idle as the last element.
-        t = cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
-        total = t.sum
-        idle = t[4] || 0
-
-        return nil if total <= 0
-        ((1.0 - (idle.to_f / total)) * 100).round
-      end
+      info.read_array_of_int(HOST_CPU_LOAD_INFO_COUNT)
     rescue StandardError
       nil
     end

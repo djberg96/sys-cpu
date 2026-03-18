@@ -220,8 +220,8 @@ module Sys
 
     private_constant :HOST_CPU_LOAD_INFO, :HOST_CPU_LOAD_INFO_COUNT
 
-    attach_function :mach_host_self, [], :int
-    attach_function :host_statistics, %i[int int pointer pointer], :int
+    attach_function :mach_host_self, [], :uint
+    attach_function :host_statistics, %i[uint int pointer pointer], :int
 
     private_class_method :mach_host_self, :host_statistics
 
@@ -251,7 +251,12 @@ module Sys
       end
 
       total = diff.sum
-      idle = diff[3] || 0
+      idle = if diff.size >= 5
+        diff[4] || 0
+      else
+        diff[2] || 0
+      end
+
       return nil if total <= 0
 
       ((1.0 - (idle.to_f / total)) * 100).round
@@ -279,14 +284,14 @@ module Sys
 
     def self.cpu_ticks_host
       host = mach_host_self
-      info = FFI::MemoryPointer.new(:int, HOST_CPU_LOAD_INFO_COUNT)
+      info = FFI::MemoryPointer.new(:uint, HOST_CPU_LOAD_INFO_COUNT)
       count = FFI::MemoryPointer.new(:uint)
       count.write_uint(HOST_CPU_LOAD_INFO_COUNT)
 
       kr = host_statistics(host, HOST_CPU_LOAD_INFO, info, count)
       return nil unless kr == 0
 
-      info.read_array_of_int(HOST_CPU_LOAD_INFO_COUNT)
+      info.read_array_of_uint(HOST_CPU_LOAD_INFO_COUNT)
     rescue StandardError
       nil
     end

@@ -216,6 +216,7 @@ module Sys
     # consecutive measurements.
     #
     # If +sample_time+ is 0 (default), uses a 1-second sample window by default.
+    # Default value for +samples+ is 2 (averages two measurements).
     #
     HOST_CPU_LOAD_INFO = 3
     HOST_CPU_LOAD_INFO_COUNT = 4
@@ -227,12 +228,12 @@ module Sys
 
     private_class_method :mach_host_self, :host_statistics
 
-    def self.cpu_usage(sample_time = 1.0, samples = 1)
+    def self.cpu_usage(sample_time = 1.0, samples = 2)
       # On modern macOS, tick counts are cumulative since boot. To get a meaningful
       # CPU utilization percentage, we sample over an interval and average.
       # Default to a 1-second sample window when no duration is provided.
       sample_time = 1.0 if sample_time.nil? || sample_time <= 0
-      samples = 1 if samples.nil? || samples <= 0
+      samples = 2 if samples.nil? || samples <= 0
 
       usages = []
 

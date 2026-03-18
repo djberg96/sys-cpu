@@ -49,6 +49,11 @@ RSpec.describe Sys::CPU, :linux do
     expect(described_class.num_cpu).to be_a(Numeric)
   end
 
+  example 'cpu_usage works as expected' do
+    expect{ described_class.cpu_usage }.not_to raise_error
+    expect(described_class.cpu_usage).to be_a(Numeric)
+  end
+
   example 'bogus methods are not picked up by method_missing' do
     expect{ described_class.bogus }.to raise_error(NoMethodError)
   end

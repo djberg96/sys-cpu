@@ -100,8 +100,15 @@ module Sys
 
     # Returns a string indicating the CPU model.
     #
+    # Some systems may use slightly different keys in /proc/cpuinfo, so
+    # we fall back to other common names and ensure we always return a
+    # String.
     def self.model
-      CPU_ARRAY.first['model_name']
+      CPU_ARRAY.first['model_name'] ||
+        CPU_ARRAY.first['model'] ||
+        CPU_ARRAY.first['cpu'] ||
+        CPU_ARRAY.first['processor'] ||
+        ''.dup
     end
 
     # Returns an integer indicating the speed of the CPU.

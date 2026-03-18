@@ -117,6 +117,16 @@ module Sys
       end
     end
 
+    # Returns CPU usage as a percentage.
+    #
+    # This currently delegates to Win32_Processor.LoadPercentage, which is
+    # already averaged over a short interval. The +sample_time+ parameter is
+    # accepted for compatibility with other platforms.
+    #
+    def self.cpu_usage(sample_time = 0, cpu_num = 0, host = Socket.gethostname)
+      load_avg(cpu_num, host)
+    end
+
     # Returns a string indicating the cpu model, e.g. Intel Pentium 4.
     #
     def self.model(host = Socket.gethostname)

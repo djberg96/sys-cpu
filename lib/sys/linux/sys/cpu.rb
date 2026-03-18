@@ -217,7 +217,9 @@ module Sys
           next
         end
 
-        vals = array[1..-1].map{ |e| e.to_i / 100 } # 100 jiffies/sec.
+        # Keep raw jiffies counts (do not scale by hz) so deltas over short
+        # intervals still produce meaningful values.
+        vals = array[1..-1].map{ |e| e.to_i }
         hash[array[0]] = vals
       end
 

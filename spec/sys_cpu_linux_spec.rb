@@ -54,6 +54,14 @@ RSpec.describe Sys::CPU, :linux do
     expect(described_class.cpu_usage).to be_a(Numeric)
   end
 
+  example 'cpu_usage sampling produces a valid range' do
+    # Sampled usage should be a number between 0 and 100.
+    result = described_class.cpu_usage(0.1)
+    expect(result).to be_a(Numeric)
+    expect(result).to be >= 0
+    expect(result).to be <= 100
+  end
+
   example 'bogus methods are not picked up by method_missing' do
     expect{ described_class.bogus }.to raise_error(NoMethodError)
   end

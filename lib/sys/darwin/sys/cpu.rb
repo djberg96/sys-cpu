@@ -226,42 +226,47 @@ module Sys
     private_class_method :mach_host_self, :host_statistics
 
     def self.cpu_usage(sample_time = 0)
-      ticks = if (t = cpu_ticks_sysctl)
-        t
+      # On modern macOS, tick counts are cumulative since boot. To get a meaningful
+      # CPU utilization percentage, we sample over a short interval and average.
+      if sample_time.nil? || sample_time <= 0
+        sample_time = 0.2
+        samples = 4
       else
-        cpu_ticks_host
+        samples = 1
       end
 
-      return nil unless ticks
+      usages = []
 
-      if sample_time && sample_time > 0
+      samples.times do
+        t1 = current_ticks
         sleep(sample_time)
-        ticks2 = if (t = cpu_ticks_sysctl)
-          t
-        else
-          cpu_ticks_host
+        t2 = current_ticks
+        next unless t1 && t2
+
+        if (u = usage_between_ticks(t1, t2))
+          usages << u
         end
-
-        return nil unless ticks2
-
-        base = ticks
-        diff = ticks2.map.with_index { |v, i| v - base[i] }
-      else
-        diff = ticks
       end
 
-      total = diff.sum
-      idle = if diff.size >= 5
-        diff[4] || 0
-      else
-        diff[2] || 0
-      end
+      return nil if usages.empty?
 
-      return nil if total <= 0
-
-      ((1.0 - (idle.to_f / total)) * 100).round
+      (usages.sum / usages.size.to_f).round(1)
     rescue StandardError
       nil
+    end
+
+    def self.current_ticks
+      cpu_ticks_sysctl || cpu_ticks_host
+    end
+
+    def self.usage_between_ticks(t1, t2)
+      diff = t2.map.with_index { |v, i| v - t1[i] }
+      total = diff.sum
+      return nil if total <= 0
+
+      # host_statistics returns [user, system, idle, nice]
+      idle = diff[2] || 0
+      (1.0 - (idle.to_f / total)) * 100
     end
 
     def self.cpu_ticks_sysctl

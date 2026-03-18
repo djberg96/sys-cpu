@@ -119,12 +119,26 @@ module Sys
 
     # Returns CPU usage as a percentage.
     #
-    # This currently delegates to Win32_Processor.LoadPercentage, which is
-    # already averaged over a short interval. The +sample_time+ parameter is
-    # accepted for interface compatibility with other platforms but does nothing.
+    # The Win32_Processor.LoadPercentage value is per-processor (usually per
+    # physical socket), while Windows Task Manager reports a total value.
+    # When no +cpu_num+ is given it uses the _Total performance counter, which
+    # better matches what Task Manager reports.
+    #
+    # The +sample_time+ parameter is accepted for interface compatibility with
+    # other platforms but does nothing in this implementation.
     #
     def self.cpu_usage(_sample_time = 0, cpu_num = 0, host = Socket.gethostname)
-      load_avg(cpu_num, host)
+      instance = cpu_num.zero? ? '_Total' : cpu_num.to_s
+      cs = BASE_CS + "//#{host}/root/cimv2:Win32_PerfFormattedData_PerfOS_Processor='#{instance}'"
+
+      begin
+        wmi = WIN32OLE.connect(cs)
+      rescue WIN32OLERuntimeError
+        # fall back to the older Win32_Processor.LoadPercentage behavior
+        return load_avg(cpu_num, host)
+      else
+        wmi.PercentProcessorTime
+      end
     end
 
     # Returns a string indicating the cpu model, e.g. Intel Pentium 4.

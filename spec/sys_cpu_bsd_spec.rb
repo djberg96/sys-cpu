@@ -52,6 +52,20 @@ RSpec.describe Sys::CPU, :bsd do
     expect{ described_class.load_avg(0) }.to raise_error(ArgumentError)
   end
 
+  example 'cpu_usage works as expected' do
+    expect(described_class).to respond_to(:cpu_usage)
+    expect{ described_class.cpu_usage }.not_to raise_error
+    expect{ described_class.cpu_usage(0.1) }.not_to raise_error
+    expect(described_class.cpu_usage).to be_a(Numeric).or be_nil
+  end
+
+  example 'cpu_usage sampling produces a valid range' do
+    result = described_class.cpu_usage(0.1)
+    expect(result).to be_a(Numeric).or be_nil
+    expect(result).to be >= 0 if result
+    expect(result).to be <= 100 if result
+  end
+
   example 'machine method basic functionality' do
     expect(described_class).to respond_to(:machine)
     expect{ described_class.machine }.not_to raise_error

@@ -59,6 +59,21 @@ RSpec.describe Sys::CPU, :windows do
     expect(described_class.load_avg).to be_a(Integer).or be_a(NilClass)
   end
 
+  example 'cpu_usage works as expected' do
+    expect(described_class).to respond_to(:cpu_usage)
+    expect{ described_class.cpu_usage }.not_to raise_error
+    expect{ described_class.cpu_usage(0.1, 0, host) }.not_to raise_error
+    expect(described_class.cpu_usage).to be_a(Integer).or be_a(NilClass)
+  end
+
+  example 'cpu_usage sampling produces a valid range' do
+    # Sampled usage should be a number between 0 and 100.
+    result = described_class.cpu_usage(0.1)
+    expect(result).to be_a(Numeric).or be_nil
+    expect(result).to be >= 0 if result
+    expect(result).to be <= 100 if result
+  end
+
   example 'processors' do
     expect(described_class).to respond_to(:processors)
     expect{ described_class.processors{} }.not_to raise_error

@@ -117,23 +117,23 @@ module Sys
       end
     end
 
-    # Returns CPU usage as a percentage.
+    # Returns CPU usage as a percentage, averaged over multiple samples.
     #
-    # The +sample_time+ parameter is accepted for interface compatibility with
-    # other platforms but does nothing in this implementation.
-    #--
-    # This method uses the _Total Win32_PerfFormattedData_PerfOS_Processor
-    # instance (unless a specific +cpu_num+ is requested) to better match
-    # Task Manager's total view.
+    # The +sample_time+ parameter specifies the interval (in seconds) between samples.
+    # The +samples+ parameter specifies how many samples to take and average.
+    # The +cpu_num+ parameter selects which CPU to query (0 for total).
+    # The +host+ parameter specifies the target machine (defaults to local).
     #
-    # Note that the Task Manager reports the total CPU usage across all cores.
-    # Win32_Processor.LoadPercentage is per-processor (usually per physical socket),
-    # so it can differ from what Task Manager shows if it falls back to that.
+    # This method uses the _Total Win32_PerfFormattedData_PerfOS_Processor instance
+    # (unless a specific +cpu_num+ is requested) to better match Task Manager's total view.
     #
+    # Note: Task Manager reports total CPU usage across all cores. Win32_Processor.LoadPercentage
+    # is per-processor (usually per physical socket), so it can differ from Task Manager if it falls back.
     def self.cpu_usage(sample_time = 1.0, samples = 2, cpu_num = 0, host = Socket.gethostname)
       sample_time = 1.0 if sample_time.nil? || sample_time <= 0
       samples = 2 if samples.nil? || samples <= 0
-      instance = cpu_num.zero? ? '_Total' : cpu_num.to_s
+      cpu_num = cpu_num.to_i if cpu_num.respond_to?(:to_i)
+      instance = cpu_num == 0 ? '_Total' : cpu_num.to_s
       cs = BASE_CS + "//#{host}/root/cimv2:Win32_PerfFormattedData_PerfOS_Processor='#{instance}'"
 
       usages = []

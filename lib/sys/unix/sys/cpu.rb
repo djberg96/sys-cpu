@@ -315,7 +315,7 @@ module Sys
     # average over that interval. If +sample_time+ is 0 (default), returns the
     # current utilization estimate based on the last set of CPU times.
     #
-    def self.cpu_usage(sample_time = 0)
+    def self.cpu_usage(sample_time = 1.0, samples = 2)
       cp_time = proc { |ptr|
         len = 5
         size = FFI::MemoryPointer.new(:size_t)
@@ -328,7 +328,12 @@ module Sys
         ptr.read_array_of_ulong(len)
       }
 
-      if sample_time && sample_time > 0
+      sample_time = 1.0 if sample_time.nil? || sample_time <= 0
+      samples = 2 if samples.nil? || samples <= 0
+
+      usages = []
+
+      samples.times do
         t1 = cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
         sleep(sample_time)
         t2 = cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
@@ -341,18 +346,11 @@ module Sys
         total_diff = total2 - total1
         idle_diff = idle2 - idle1
 
-        return nil if total_diff <= 0
-
-        ((1.0 - (idle_diff.to_f / total_diff)) * 100).round
-      else
-        # Fallback: use a single snapshot and interpret idle as the last element.
-        t = cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
-        total = t.sum
-        idle = t[4] || 0
-
-        return nil if total <= 0
-        ((1.0 - (idle.to_f / total)) * 100).round
+        usages << ((1.0 - (idle_diff.to_f / total_diff)) * 100) if total_diff > 0
       end
+
+      return nil if usages.empty?
+      (usages.sum / usages.size.to_f).round(1)
     rescue StandardError
       nil
     end

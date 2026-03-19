@@ -63,7 +63,7 @@ RSpec.describe Sys::CPU, :windows do
     expect(described_class).to respond_to(:cpu_usage)
     expect{ described_class.cpu_usage }.not_to raise_error
     expect{ described_class.cpu_usage(0.1, 0, host) }.not_to raise_error
-    expect(described_class.cpu_usage).to be_a(Integer).or be_a(NilClass)
+    expect(described_class.cpu_usage).to be_a(Numeric).or be_a(NilClass)
   end
 
   example 'cpu_usage sampling produces a valid range' do

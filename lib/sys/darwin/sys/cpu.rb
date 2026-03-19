@@ -228,12 +228,40 @@ module Sys
 
     private_class_method :mach_host_self, :host_statistics
 
+    # Returns the current CPU usage as a percentage, averaged over a sampling interval.
+    #
+    # By default, this method samples CPU usage over a 1-second interval and averages two measurements.
+    # You can customize the interval and number of samples by passing the +sample_time+ (in seconds)
+    # and +samples+ arguments. For example, +cpu_usage(0.5, 4)+ will take four samples, each 0.5 seconds apart,
+    # and return the average CPU usage over that period.
+    #
+    # If you pass 0 for either +sample_time+ or +samples+, the method returns the raw CPU tick counts
+    # since boot (as an array of counters), which can be used for advanced or custom calculations.
+    #
+    # Returns a Float (percentage) by default, or an Array of tick counts if 0 is passed for either argument.
+    # Returns nil if CPU usage cannot be determined.
+    #
+    # Example usage:
+    #   Sys::CPU.cpu_usage          #=> 12.3
+    #   Sys::CPU.cpu_usage(2, 3)    #=> 10.7
+    #   Sys::CPU.cpu_usage(0, 0)    #=> [123456, 78910, 1112, 1314]
+    #
+    #--
+    # On modern macOS, tick counts are cumulative since boot. To get a meaningful
+    # CPU utilization percentage, you will generally want to sample over an
+    # interval and average. If sample_time or samples are nil, default to 1.0
+    # and 2, respectively. If either is explicitly 0, return tick counts since boot.
+    #
     def self.cpu_usage(sample_time = 1.0, samples = 2)
-      # On modern macOS, tick counts are cumulative since boot. To get a meaningful
-      # CPU utilization percentage, we sample over an interval and average.
-      # Default to a 1-second sample window when no duration is provided.
-      sample_time = 1.0 if sample_time.nil? || sample_time <= 0
-      samples = 2 if samples.nil? || samples <= 0
+      if sample_time.nil?
+        sample_time = 1.0
+      end
+      if samples.nil?
+        samples = 2
+      end
+      if sample_time == 0 || samples == 0
+        return current_ticks
+      end
 
       usages = []
 
@@ -259,6 +287,8 @@ module Sys
       cpu_ticks_sysctl || cpu_ticks_host
     end
 
+    private_class_method :current_ticks
+
     def self.usage_between_ticks(t1, t2)
       diff = t2.map.with_index { |v, i| v - t1[i] }
       total = diff.sum
@@ -268,6 +298,8 @@ module Sys
       idle = diff[2] || 0
       (1.0 - (idle.to_f / total)) * 100
     end
+
+    private_class_method :usage_between_ticks
 
     def self.cpu_ticks_sysctl
       cp_time = proc { |ptr|
@@ -287,6 +319,8 @@ module Sys
       nil
     end
 
+    private_class_method :cpu_ticks_sysctl
+
     def self.cpu_ticks_host
       host = mach_host_self
       info = FFI::MemoryPointer.new(:uint, HOST_CPU_LOAD_INFO_COUNT)
@@ -300,5 +334,7 @@ module Sys
     rescue StandardError
       nil
     end
+
+    private_class_method :cpu_ticks_host
   end
 end

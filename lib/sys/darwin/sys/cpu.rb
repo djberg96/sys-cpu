@@ -253,15 +253,10 @@ module Sys
     # and 2, respectively. If either is explicitly 0, return tick counts since boot.
     #
     def self.cpu_usage(sample_time = 1.0, samples = 2)
-      if sample_time.nil?
-        sample_time = 1.0
-      end
-      if samples.nil?
-        samples = 2
-      end
-      if sample_time == 0 || samples == 0
-        return current_ticks
-      end
+      sample_time = 1.0 if sample_time.nil?
+      samples = 2 if samples.nil?
+
+      return current_ticks if sample_time == 0 || samples == 0
 
       usages = []
 

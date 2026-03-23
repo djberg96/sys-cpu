@@ -311,11 +311,11 @@ module Sys
 
     # Returns CPU usage as a percentage, averaged over a sampling interval.
     #
-    # By default, samples CPU times twice, 1 second apart. Passing nil, 0, or a
-    # negative value for +sample_time+ or +samples+ falls back to these
-    # defaults for cross-platform consistency.
+    # By default, samples CPU times twice, 1 second apart. Arguments are keyword-based
+    # (+sample_time:+, +samples:+). Passing nil, 0, or a negative value for either
+    # falls back to these defaults for cross-platform consistency.
     #
-    def self.cpu_usage(sample_time = 1.0, samples = 2)
+    def self.cpu_usage(sample_time: 1.0, samples: 2)
       cp_time = proc { |ptr|
         len = 5
         size = FFI::MemoryPointer.new(:size_t)

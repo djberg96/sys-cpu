@@ -121,7 +121,8 @@ module Sys
     #
     # By default, this method samples CPU usage over a 1-second interval and averages two measurements.
     # You can customize the interval and number of samples by passing the +sample_time+ (in seconds)
-    # and +samples+ arguments. For example, +cpu_usage(0.5, 4)+ will take four samples, each 0.5 seconds apart,
+    # and +samples+ keyword arguments. For example, +cpu_usage(sample_time: 0.5, samples: 4)+ will take four
+    # samples, each 0.5 seconds apart,
     # and return the average CPU usage over that period.
     #
     # Passing nil, 0, or a negative value for either argument falls back to the defaults (1.0 seconds and
@@ -130,11 +131,11 @@ module Sys
     # Returns a Float (percentage), rounded to one decimal place, or nil if CPU usage cannot be determined.
     #
     # Example usage:
-    #   Sys::CPU.cpu_usage          #=> 12.3
-    #   Sys::CPU.cpu_usage(2, 3)    #=> 10.7
-    #   Sys::CPU.cpu_usage(0, 0)    #=> 12.3   # zeros fall back to defaults
+    #   Sys::CPU.cpu_usage                              #=> 12.3
+    #   Sys::CPU.cpu_usage(sample_time: 2, samples: 3)  #=> 10.7
+    #   Sys::CPU.cpu_usage(sample_time: 0, samples: 0)  #=> 12.3   # zeros fall back to defaults
     #
-    def self.cpu_usage(sample_time = 1.0, samples = 2)
+    def self.cpu_usage(sample_time: 1.0, samples: 2)
       sample_time = 1.0 if sample_time.nil? || sample_time <= 0
       samples = 2 if samples.nil? || samples <= 0
 

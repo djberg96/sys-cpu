@@ -119,17 +119,17 @@ module Sys
 
     # Returns CPU usage as a percentage, averaged over multiple samples.
     #
-    # The +sample_time+ parameter specifies the interval (in seconds) between samples.
-    # The +samples+ parameter specifies how many samples to take and average.
-    # The +cpu_num+ parameter selects which CPU to query (0 for total).
-    # The +host+ parameter specifies the target machine (defaults to local).
+    # The +sample_time+ keyword specifies the interval (in seconds) between samples.
+    # The +samples+ keyword specifies how many samples to take and average.
+    # The +cpu_num+ keyword selects which CPU to query (0 for total).
+    # The +host+ keyword specifies the target machine (defaults to local).
     #
     # This method uses the _Total Win32_PerfFormattedData_PerfOS_Processor instance
     # (unless a specific +cpu_num+ is requested) to better match Task Manager's total view.
     #
     # Note: Task Manager reports total CPU usage across all cores. Win32_Processor.LoadPercentage
     # is per-processor (usually per physical socket), so it can differ from Task Manager if it falls back.
-    def self.cpu_usage(sample_time = 1.0, samples = 2, cpu_num = 0, host = Socket.gethostname)
+    def self.cpu_usage(sample_time: 1.0, samples: 2, cpu_num: 0, host: Socket.gethostname)
       sample_time = 1.0 if sample_time.nil? || sample_time <= 0
       samples = 2 if samples.nil? || samples <= 0
       cpu_num = cpu_num.to_i if cpu_num.respond_to?(:to_i)

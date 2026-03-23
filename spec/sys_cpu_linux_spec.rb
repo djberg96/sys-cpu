@@ -56,7 +56,7 @@ RSpec.describe Sys::CPU, :linux do
 
   example 'cpu_usage sampling produces a valid range' do
     # Sampled usage should be a number between 0 and 100.
-    result = described_class.cpu_usage(0.1)
+    result = described_class.cpu_usage(sample_time: 0.1)
     expect(result).to be_a(Numeric)
     expect(result).to be >= 0
     expect(result).to be <= 100

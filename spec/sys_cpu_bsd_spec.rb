@@ -55,12 +55,12 @@ RSpec.describe Sys::CPU, :bsd do
   example 'cpu_usage works as expected' do
     expect(described_class).to respond_to(:cpu_usage)
     expect{ described_class.cpu_usage }.not_to raise_error
-    expect{ described_class.cpu_usage(0.1) }.not_to raise_error
+    expect{ described_class.cpu_usage(sample_time: 0.1) }.not_to raise_error
     expect(described_class.cpu_usage).to be_a(Numeric).or be_nil
   end
 
   example 'cpu_usage sampling produces a valid range' do
-    result = described_class.cpu_usage(0.1)
+    result = described_class.cpu_usage(sample_time: 0.1)
     expect(result).to be_a(Numeric).or be_nil
     expect(result).to be >= 0 if result
     expect(result).to be <= 100 if result

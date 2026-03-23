@@ -309,11 +309,11 @@ module Sys
       loadavg.get_array_of_double(0, 3)
     end
 
-    # Returns CPU usage as a percentage.
+    # Returns CPU usage as a percentage, averaged over a sampling interval.
     #
-    # If +sample_time+ is positive, samples CPU times twice and calculates an
-    # average over that interval. If +sample_time+ is 0 (default), returns the
-    # current utilization estimate based on the last set of CPU times.
+    # By default, samples CPU times twice, 1 second apart. Passing nil, 0, or a
+    # negative value for +sample_time+ or +samples+ falls back to these
+    # defaults for cross-platform consistency.
     #
     def self.cpu_usage(sample_time = 1.0, samples = 2)
       cp_time = proc { |ptr|

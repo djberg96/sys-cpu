@@ -124,15 +124,15 @@ module Sys
     # and +samples+ arguments. For example, +cpu_usage(0.5, 4)+ will take four samples, each 0.5 seconds apart,
     # and return the average CPU usage over that period.
     #
-    # Unlike the macOS implementation, passing 0 or a negative value for either argument falls back to the
-    # defaults (1.0 seconds and 2 samples) rather than returning raw tick counts.
+    # Passing nil, 0, or a negative value for either argument falls back to the defaults (1.0 seconds and
+    # 2 samples) for cross-platform consistency.
     #
     # Returns a Float (percentage), rounded to one decimal place, or nil if CPU usage cannot be determined.
     #
     # Example usage:
     #   Sys::CPU.cpu_usage          #=> 12.3
     #   Sys::CPU.cpu_usage(2, 3)    #=> 10.7
-    #   Sys::CPU.cpu_usage(0, 0)    #=> 12.3   # zeros fall back to defaults on Linux
+    #   Sys::CPU.cpu_usage(0, 0)    #=> 12.3   # zeros fall back to defaults
     #
     def self.cpu_usage(sample_time = 1.0, samples = 2)
       sample_time = 1.0 if sample_time.nil? || sample_time <= 0

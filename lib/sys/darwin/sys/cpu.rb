@@ -235,16 +235,15 @@ module Sys
     # and +samples+ arguments. For example, +cpu_usage(0.5, 4)+ will take four samples, each 0.5 seconds apart,
     # and return the average CPU usage over that period.
     #
-    # If you pass 0 for either +sample_time+ or +samples+, the method returns the raw CPU tick counts
-    # since boot (as an array of counters), which can be used for advanced or custom calculations.
+    # Passing nil, 0, or a negative value for either argument falls back to the defaults (1.0 seconds
+    # and 2 samples) to keep behavior consistent across platforms.
     #
-    # Returns a Float (percentage) by default, or an Array of tick counts if 0 is passed for either argument.
-    # Returns nil if CPU usage cannot be determined.
+    # Returns a Float (percentage), rounded to one decimal place, or nil if CPU usage cannot be determined.
     #
     # Example usage:
     #   Sys::CPU.cpu_usage          #=> 12.3
     #   Sys::CPU.cpu_usage(2, 3)    #=> 10.7
-    #   Sys::CPU.cpu_usage(0, 0)    #=> [123456, 78910, 1112, 1314]
+    #   Sys::CPU.cpu_usage(0, 0)    #=> 12.3   # zeros fall back to defaults
     #
     #--
     # On modern macOS, tick counts are cumulative since boot. To get a meaningful
@@ -253,10 +252,8 @@ module Sys
     # and 2, respectively. If either is explicitly 0, return tick counts since boot.
     #
     def self.cpu_usage(sample_time = 1.0, samples = 2)
-      sample_time = 1.0 if sample_time.nil?
-      samples = 2 if samples.nil?
-
-      return current_ticks if sample_time == 0 || samples == 0
+      sample_time = 1.0 if sample_time.nil? || sample_time <= 0
+      samples = 2 if samples.nil? || samples <= 0
 
       usages = []
 

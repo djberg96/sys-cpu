@@ -66,6 +66,12 @@ RSpec.describe Sys::CPU, :windows do
     expect(described_class.cpu_usage).to be_a(Numeric).or be_a(NilClass)
   end
 
+  example 'cpu_usage falls back on non-positive values' do
+    expect{ described_class.cpu_usage(sample_time: 0, samples: 0, host: host) }.not_to raise_error
+    expect{ described_class.cpu_usage(sample_time: -1, samples: -1, host: host) }.not_to raise_error
+    expect(described_class.cpu_usage(sample_time: 0, samples: 0, host: host)).to be_a(Numeric).or be_a(NilClass)
+  end
+
   example 'cpu_usage sampling produces a valid range' do
     # Sampled usage should be a number between 0 and 100.
     result = described_class.cpu_usage(sample_time: 0.1)

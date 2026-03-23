@@ -124,11 +124,13 @@ module Sys
     # The +cpu_num+ keyword selects which CPU to query (0 for total).
     # The +host+ keyword specifies the target machine (defaults to local).
     #
+    #--
     # This method uses the _Total Win32_PerfFormattedData_PerfOS_Processor instance
     # (unless a specific +cpu_num+ is requested) to better match Task Manager's total view.
     #
     # Note: Task Manager reports total CPU usage across all cores. Win32_Processor.LoadPercentage
     # is per-processor (usually per physical socket), so it can differ from Task Manager if it falls back.
+    #
     def self.cpu_usage(sample_time: 1.0, samples: 2, cpu_num: 0, host: Socket.gethostname)
       sample_time = 1.0 if sample_time.nil? || sample_time <= 0
       samples = 2 if samples.nil? || samples <= 0

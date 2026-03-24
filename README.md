@@ -1,3 +1,4 @@
+[![Hypercommit](https://img.shields.io/badge/Hypercommit-DB2475)](https://hypercommit.com/sys-cpu)
 [![Ruby](https://github.com/djberg96/sys-cpu/actions/workflows/ruby.yml/badge.svg)](https://github.com/djberg96/sys-cpu/actions/workflows/ruby.yml)
 
 * Linux

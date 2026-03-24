@@ -1,3 +1,6 @@
+## 1.3.0 - 24-Mar-2026
+* Added the cpu_usage method.
+
 ## 1.2.0 - 17-Feb-2026
 * The win32ole gem is now a dependency since Ruby 4.x no longer bundles it.
 * The freq method was updated for BSD platforms on aarch64. It now defaults

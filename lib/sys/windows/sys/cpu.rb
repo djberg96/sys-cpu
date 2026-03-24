@@ -117,6 +117,46 @@ module Sys
       end
     end
 
+    # Returns CPU usage as a percentage, averaged over multiple samples.
+    #
+    # The +sample_time+ keyword specifies the interval (in seconds) between samples.
+    # The +samples+ keyword specifies how many samples to take and average.
+    # The +cpu_num+ keyword selects which CPU to query (0 for total).
+    # The +host+ keyword specifies the target machine (defaults to local).
+    #
+    #--
+    # This method uses the _Total Win32_PerfFormattedData_PerfOS_Processor instance
+    # (unless a specific +cpu_num+ is requested) to better match Task Manager's total view.
+    #
+    # Note: Task Manager reports total CPU usage across all cores. Win32_Processor.LoadPercentage
+    # is per-processor (usually per physical socket), so it can differ from Task Manager if it falls back.
+    #
+    def self.cpu_usage(sample_time: 1.0, samples: 2, cpu_num: 0, host: Socket.gethostname)
+      sample_time = 1.0 if sample_time.nil? || sample_time <= 0
+      samples = 2 if samples.nil? || samples <= 0
+      cpu_num = cpu_num.to_i if cpu_num.respond_to?(:to_i)
+      instance = cpu_num == 0 ? '_Total' : cpu_num.to_s
+      cs = BASE_CS + "//#{host}/root/cimv2:Win32_PerfFormattedData_PerfOS_Processor='#{instance}'"
+
+      usages = []
+
+      samples.times do
+        begin
+          wmi = WIN32OLE.connect(cs)
+        rescue WIN32OLERuntimeError
+          usages << load_avg(cpu_num, host)
+        else
+          result = wmi.PercentProcessorTime
+          usages << result.to_i if result
+        end
+        sleep(sample_time)
+      end
+
+      usages.compact!
+      return nil if usages.empty?
+      (usages.sum / usages.size.to_f).round(1)
+    end
+
     # Returns a string indicating the cpu model, e.g. Intel Pentium 4.
     #
     def self.model(host = Socket.gethostname)

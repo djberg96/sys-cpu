@@ -208,5 +208,119 @@ module Sys
 
       loadavg.get_array_of_double(0, 3)
     end
+
+    # Returns CPU usage as a percentage.
+    #
+    # If +sample_time+ is positive, samples CPU times and calculates an average
+    # over that interval. You can also specify +samples+ to average multiple
+    # consecutive measurements.
+    #
+    # If +sample_time+ is 0 (default), uses a 1-second sample window by default.
+    # Default value for +samples+ is 2 (averages two measurements).
+    #
+    HOST_CPU_LOAD_INFO = 3
+    HOST_CPU_LOAD_INFO_COUNT = 4
+
+    private_constant :HOST_CPU_LOAD_INFO, :HOST_CPU_LOAD_INFO_COUNT
+
+    attach_function :mach_host_self, [], :uint
+    attach_function :host_statistics, %i[uint int pointer pointer], :int
+
+    private_class_method :mach_host_self, :host_statistics
+
+    # Returns the current CPU usage as a percentage, averaged over a sampling interval.
+    #
+    # By default, this method samples CPU usage over a 1-second interval and averages two measurements.
+    # You can customize the interval and number of samples by passing the +sample_time+ (in seconds)
+    # and +samples+ keyword arguments. For example, +cpu_usage(sample_time: 0.5, samples: 4)+ will take four
+    # samples, each 0.5 seconds apart, and return the average CPU usage over that period.
+    #
+    # Passing nil, 0, or a negative value for either argument falls back to the defaults (1.0 seconds
+    # and 2 samples) to keep behavior consistent across platforms.
+    #
+    # Returns a Float (percentage), rounded to one decimal place, or nil if CPU usage cannot be determined.
+    #
+    # Example usage:
+    #   Sys::CPU.cpu_usage                              #=> 12.3
+    #   Sys::CPU.cpu_usage(sample_time: 2, samples: 3)  #=> 10.7
+    #   Sys::CPU.cpu_usage(sample_time: 0, samples: 0)  #=> 12.3   # zeros fall back to defaults
+    #
+    def self.cpu_usage(sample_time: 1.0, samples: 2)
+      sample_time = 1.0 if sample_time.nil? || sample_time <= 0
+      samples = 2 if samples.nil? || samples <= 0
+
+      usages = []
+
+      samples.times do
+        t1 = current_ticks
+        sleep(sample_time)
+        t2 = current_ticks
+        next unless t1 && t2
+
+        if (u = usage_between_ticks(t1, t2))
+          usages << u
+        end
+      end
+
+      return nil if usages.empty?
+
+      (usages.sum / usages.size.to_f).round(1)
+    rescue StandardError
+      nil
+    end
+
+    def self.current_ticks
+      cpu_ticks_sysctl || cpu_ticks_host
+    end
+
+    private_class_method :current_ticks
+
+    def self.usage_between_ticks(t1, t2)
+      diff = t2.map.with_index { |v, i| v - t1[i] }
+      total = diff.sum
+      return nil if total <= 0
+
+      # host_statistics returns [user, system, idle, nice]
+      idle = diff[2] || 0
+      (1.0 - (idle.to_f / total)) * 100
+    end
+
+    private_class_method :usage_between_ticks
+
+    def self.cpu_ticks_sysctl
+      cp_time = proc { |ptr|
+        len = 5
+        size = FFI::MemoryPointer.new(:size_t)
+        size.write_ulong(ptr.size)
+
+        if sysctlbyname('kern.cp_time', ptr, size, nil, 0) < 0
+          raise Error, 'sysctlbyname failed'
+        end
+
+        ptr.read_array_of_ulong(len)
+      }
+
+      cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
+    rescue StandardError
+      nil
+    end
+
+    private_class_method :cpu_ticks_sysctl
+
+    def self.cpu_ticks_host
+      host = mach_host_self
+      info = FFI::MemoryPointer.new(:uint, HOST_CPU_LOAD_INFO_COUNT)
+      count = FFI::MemoryPointer.new(:uint)
+      count.write_uint(HOST_CPU_LOAD_INFO_COUNT)
+
+      kr = host_statistics(host, HOST_CPU_LOAD_INFO, info, count)
+      return nil unless kr == 0
+
+      info.read_array_of_uint(HOST_CPU_LOAD_INFO_COUNT)
+    rescue StandardError
+      nil
+    end
+
+    private_class_method :cpu_ticks_host
   end
 end

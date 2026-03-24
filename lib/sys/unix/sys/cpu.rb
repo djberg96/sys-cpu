@@ -309,6 +309,52 @@ module Sys
       loadavg.get_array_of_double(0, 3)
     end
 
+    # Returns CPU usage as a percentage, averaged over a sampling interval.
+    #
+    # By default, samples CPU times twice, 1 second apart. Arguments are keyword-based
+    # (+sample_time:+, +samples:+). Passing nil, 0, or a negative value for either
+    # falls back to these defaults for cross-platform consistency.
+    #
+    def self.cpu_usage(sample_time: 1.0, samples: 2)
+      cp_time = proc { |ptr|
+        len = 5
+        size = FFI::MemoryPointer.new(:size_t)
+        size.write_ulong(ptr.size)
+
+        if sysctlbyname('kern.cp_time', ptr, size, nil, 0) < 0
+          raise Error, 'sysctlbyname failed'
+        end
+
+        ptr.read_array_of_ulong(len)
+      }
+
+      sample_time = 1.0 if sample_time.nil? || sample_time <= 0
+      samples = 2 if samples.nil? || samples <= 0
+
+      usages = []
+
+      samples.times do
+        t1 = cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
+        sleep(sample_time)
+        t2 = cp_time.call(FFI::MemoryPointer.new(:ulong, 5))
+
+        total1 = t1.sum
+        total2 = t2.sum
+        idle1 = t1[4] || 0
+        idle2 = t2[4] || 0
+
+        total_diff = total2 - total1
+        idle_diff = idle2 - idle1
+
+        usages << ((1.0 - (idle_diff.to_f / total_diff)) * 100) if total_diff > 0
+      end
+
+      return nil if usages.empty?
+      (usages.sum / usages.size.to_f).round(1)
+    rescue StandardError
+      nil
+    end
+
     # Returns the floating point processor type.
     #
     # Not supported on all platforms.

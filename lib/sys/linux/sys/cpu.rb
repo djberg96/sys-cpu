@@ -100,14 +100,77 @@ module Sys
 
     # Returns a string indicating the CPU model.
     #
+    # Some systems may use slightly different keys in /proc/cpuinfo, so
+    # we fall back to other common names and ensure we always return a
+    # String.
     def self.model
-      CPU_ARRAY.first['model_name']
+      CPU_ARRAY.first['model_name'] ||
+        CPU_ARRAY.first['model'] ||
+        CPU_ARRAY.first['cpu'] ||
+        CPU_ARRAY.first['processor'] ||
+        ''.dup
     end
 
     # Returns an integer indicating the speed of the CPU.
     #
     def self.freq
       CPU_ARRAY.first['cpu_mhz'].to_f.round
+    end
+
+    # Returns the current CPU usage as a percentage, averaged over a sampling interval.
+    #
+    # By default, this method samples CPU usage over a 1-second interval and averages two measurements.
+    # You can customize the interval and number of samples by passing the +sample_time+ (in seconds)
+    # and +samples+ keyword arguments. For example, +cpu_usage(sample_time: 0.5, samples: 4)+ will take four
+    # samples, each 0.5 seconds apart,
+    # and return the average CPU usage over that period.
+    #
+    # Passing nil, 0, or a negative value for either argument falls back to the defaults (1.0 seconds and
+    # 2 samples) for cross-platform consistency.
+    #
+    # Returns a Float (percentage), rounded to one decimal place, or nil if CPU usage cannot be determined.
+    #
+    # Example usage:
+    #   Sys::CPU.cpu_usage                              #=> 12.3
+    #   Sys::CPU.cpu_usage(sample_time: 2, samples: 3)  #=> 10.7
+    #   Sys::CPU.cpu_usage(sample_time: 0, samples: 0)  #=> 12.3   # zeros fall back to defaults
+    #
+    def self.cpu_usage(sample_time: 1.0, samples: 2)
+      sample_time = 1.0 if sample_time.nil? || sample_time <= 0
+      samples = 2 if samples.nil? || samples <= 0
+
+      usages = []
+
+      samples.times do
+        stats1 = cpu_stats
+        sleep(sample_time)
+        stats2 = cpu_stats
+
+        total_diff = 0.0
+        idle_diff = 0.0
+
+        keys = stats1.key?('cpu') ? ['cpu'] : stats1.keys
+        keys.each do |key|
+          arr1 = stats1[key]
+          arr2 = stats2[key]
+          next unless arr1 && arr2
+          t1 = arr1.sum
+          t2 = arr2.sum
+          total = t2 - t1
+          idle = (arr2[3] || 0) - (arr1[3] || 0)
+          total_diff += total
+          idle_diff += idle
+        end
+
+        if total_diff > 0
+          usages << ((1.0 - (idle_diff / total_diff)) * 100)
+        end
+      end
+
+      return nil if usages.empty?
+      (usages.sum / usages.size.to_f).round(1)
+    rescue StandardError
+      nil
     end
 
     # Create singleton methods for each of the attributes.
@@ -168,7 +231,9 @@ module Sys
           next
         end
 
-        vals = array[1..-1].map{ |e| e.to_i / 100 } # 100 jiffies/sec.
+        # Keep raw jiffies counts (do not scale by hz) so deltas over short
+        # intervals still produce meaningful values.
+        vals = array[1..-1].map{ |e| e.to_i }
         hash[array[0]] = vals
       end
 

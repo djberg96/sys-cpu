@@ -3,7 +3,7 @@
 * Linux
 * Windows
 * OSX
-* DragonflyBSD
+* FreeBSD and DragonflyBSD
 
 ## Description
 A Ruby interface for getting cpu information.
